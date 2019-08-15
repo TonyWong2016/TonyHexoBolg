@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/hexo/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/hexo/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/hexo/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/hexo/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="开发笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在多终端交互的场景中（比如消费者下单，商家收费），及时的将系统的处理结果推送给相关的用户，是很有必要，也非常有效的一种方式，我在这里结合实际项目，向大家推荐两种推送方式，一个是极光推送，一个是阿里云的移动推送，在实际测试中，这两种的推送都是比较好用的，极光的推送API相对灵活，完整一些，但是阿里云的商用接口费用比较便宜，大家在选择的时候，可以结合实际情况来选择。一、极光推送首先，当选择推送服务商的">
+<meta name="keywords" content="开发笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="极光推送和阿里云移动推送的服务端实例（基于.net）">
+<meta property="og:url" content="https://tony_df.gitee.io/2019/04/25/极光推送和阿里云移动推送服务端实例（基于-net）/index.html">
+<meta property="og:site_name" content="Tony&#39;s blog">
+<meta property="og:description" content="在多终端交互的场景中（比如消费者下单，商家收费），及时的将系统的处理结果推送给相关的用户，是很有必要，也非常有效的一种方式，我在这里结合实际项目，向大家推荐两种推送方式，一个是极光推送，一个是阿里云的移动推送，在实际测试中，这两种的推送都是比较好用的，极光的推送API相对灵活，完整一些，但是阿里云的商用接口费用比较便宜，大家在选择的时候，可以结合实际情况来选择。一、极光推送首先，当选择推送服务商的">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-04-25T06:53:32.911Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="极光推送和阿里云移动推送的服务端实例（基于.net）">
+<meta name="twitter:description" content="在多终端交互的场景中（比如消费者下单，商家收费），及时的将系统的处理结果推送给相关的用户，是很有必要，也非常有效的一种方式，我在这里结合实际项目，向大家推荐两种推送方式，一个是极光推送，一个是阿里云的移动推送，在实际测试中，这两种的推送都是比较好用的，极光的推送API相对灵活，完整一些，但是阿里云的商用接口费用比较便宜，大家在选择的时候，可以结合实际情况来选择。一、极光推送首先，当选择推送服务商的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hexo/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Tony'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tony_df.gitee.io/2019/04/25/极光推送和阿里云移动推送服务端实例（基于-net）/">
+
+
+
+
+
+  <title>极光推送和阿里云移动推送的服务端实例（基于.net） | Tony's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hexo/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tony's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学着码代码,学着码人生;</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/hexo/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/hexo/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/hexo/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.gitee.io/hexo/2019/04/25/极光推送和阿里云移动推送服务端实例（基于-net）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tony's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">极光推送和阿里云移动推送的服务端实例（基于.net）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-04-25T09:52:15+08:00">
+                2019-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在多终端交互的场景中（比如消费者下单，商家收费），及时的将系统的处理结果推送给相关的用户，是很有必要，也非常有效的一种方式，我在这里结合实际项目，向大家推荐两种推送方式，一个是极光推送，一个是阿里云的移动推送，在实际测试中，这两种的推送都是比较好用的，极光的推送API相对灵活，完整一些，但是阿里云的商用接口费用比较便宜，大家在选择的时候，可以结合实际情况来选择。<br>一、极光推送<br>首先，当选择推送服务商的时候，首先要做的还是先查看官方提供的API文档，极光的文档还是比较完善的，也比较容易理解，传送门：<a href="https://docs.jiguang.cn/jpush/guideline/intro/，而且极光提供的服务端SDK也比较丰富（连ruby都有哦，手动@一下用rails的同学），我也建议大家尽可能采用官方提供的SDK来讲推送功能集成到自己的项目中，一是会节省大量的时间，二是官方SDK都是经过测试，可以确保稳定的成品，我们自己封装的话，多数情况下不一定比官方提供的SDK要好。" target="_blank" rel="noopener">https://docs.jiguang.cn/jpush/guideline/intro/，而且极光提供的服务端SDK也比较丰富（连ruby都有哦，手动@一下用rails的同学），我也建议大家尽可能采用官方提供的SDK来讲推送功能集成到自己的项目中，一是会节省大量的时间，二是官方SDK都是经过测试，可以确保稳定的成品，我们自己封装的话，多数情况下不一定比官方提供的SDK要好。</a><br>这里我分享的例子也是用的官方SDK，简单做了一下加工，各位在实际应用中，可以结合具体项目来处理。<br>先看代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br></pre></td><td class="code"><pre><span class="line">/// &lt;summary&gt;</span><br><span class="line">/// 极光推送</span><br><span class="line">/// &lt;/summary&gt;</span><br><span class="line">public class JPushApiExample</span><br><span class="line">&#123;</span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 在极光上申请的app_key和secret我这里这两个参数设定为静态变量，是因为我在这里涉及到两个客户端</span><br><span class="line">    ///（商家端和供应商端）需要不同的参数，所以采用的是实参传入的方式</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    public static string app_key = &quot;&quot;; </span><br><span class="line">    public static string master_secret = &quot;&quot;;</span><br><span class="line">    </span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 推送消息</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    /// &lt;param name=&quot;tags&quot;&gt;标签&lt;/param&gt;</span><br><span class="line">    /// &lt;param name=&quot;alias&quot;&gt;别名&lt;/param&gt;</span><br><span class="line">    /// &lt;param name=&quot;content&quot;&gt;推送内容&lt;/param&gt;</span><br><span class="line">    /// &lt;param name=&quot;type&quot;&gt;推送方式，集成了SDK提供了所用推送方式，（默认）0-ios/android发送自定义消息，1-全平台别名发送自定义消息，2-全平台发送通知，3-ios/android标签发送自定义消息，4-ios/android别名发送自定义消息，5-全平台广播消息，6-全平台别名发送通知，7-全平台标签推送通知，8-全平台标签发送自定义消息，9-全平台发送自定义消息&lt;/param&gt;</span><br><span class="line">    public static void PushMessageSync(string[] tags, string[] alias, string content, int type = 0)</span><br><span class="line">    &#123;            </span><br><span class="line">        StringBuilder sb = new StringBuilder();</span><br><span class="line">        foreach (string str in tags)</span><br><span class="line">        &#123;</span><br><span class="line">            sb.Append(str);</span><br><span class="line">            sb.Append(&quot;|&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        foreach (string str in alias)</span><br><span class="line">        &#123;</span><br><span class="line">            sb.Append(str);</span><br><span class="line">            sb.Append(&quot;|&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        YMcms.Log.FileTxtLogs.WriteLog(&quot;*****开始同步发送******&quot; + sb.ToString(), &quot;JPushApiExample&quot;, &quot;remote&quot;, &quot;&quot;);</span><br><span class="line"></span><br><span class="line">        JPushClient client = new JPushClient(app_key, master_secret);</span><br><span class="line">        PushPayload payload = new PushPayload();</span><br><span class="line">        switch (type)</span><br><span class="line">        &#123;</span><br><span class="line">            case 0:</span><br><span class="line">                payload = PushObject_apns_production_options(alias, content);//ios/android发送自定义消息</span><br><span class="line">                break;</span><br><span class="line">            case 1:</span><br><span class="line">                payload = PushObject_all_alias_message(alias, content);//全平台别名发送自定义消息</span><br><span class="line">                break;</span><br><span class="line">            case 2:</span><br><span class="line">                payload = PushObject_All_All_Alert(content);//全平台发送通知</span><br><span class="line">                break;</span><br><span class="line">            case 3:</span><br><span class="line">                payload = PushSendNotificationAlertTags(tags, content);//ios/android标签发送通知</span><br><span class="line">                break;</span><br><span class="line">            case 4:</span><br><span class="line">                payload = PushSendNotificationAlertAlias(alias, content);//ios/android别名发送通知</span><br><span class="line">                break;</span><br><span class="line">            case 5:</span><br><span class="line">                payload = PushSendSmsMessage(content);//全平台广播消息</span><br><span class="line">                break;</span><br><span class="line">            case 6:</span><br><span class="line">                payload = PushObject_All_Alias_Alert(alias, content);//全平台别名发送通知</span><br><span class="line">                break;</span><br><span class="line">            case 7:</span><br><span class="line">                payload = PushObject_All_Tags_Alert(tags, content);//全平台标签推送通知</span><br><span class="line">                break;</span><br><span class="line">            case 8:</span><br><span class="line">                payload = PushObject_all_atags_message(tags, content);//全平台标签发送自定义消息</span><br><span class="line">                break;</span><br><span class="line">            case 9:</span><br><span class="line">                payload = PushObject_All_All_Message(content);//全平台发送自定义消息</span><br><span class="line">                break;</span><br><span class="line">            default:</span><br><span class="line">                payload = PushObject_apns_production_options(alias, content);//ios/android发送自定义消息</span><br><span class="line">                break;</span><br><span class="line">        &#125;</span><br><span class="line">        try</span><br><span class="line">        &#123;</span><br><span class="line">            var result2 = client.SendPush(payload);//发送自定义消息</span><br><span class="line">            System.Threading.Thread.Sleep(3000);</span><br><span class="line">            YMcms.Log.FileTxtLogs.WriteLog(&quot;sendno:&quot; + result2.sendno + &quot;,msg_id:&quot; + result2.msg_id.ToString() + &quot;,isResultOK:&quot; + (result2.isResultOK() ? &quot;OK&quot; : &quot;Fail&quot;) + &quot;,ResponseResult:&quot; + Convert.ToString(result2.ResponseResult), &quot;JPushApiExample&quot;, &quot;remote&quot;, &quot;&quot;);</span><br><span class="line">            YMcms.Log.FileTxtLogs.WriteLog(&quot;当前 AppKey 一个时间窗口内可调用次数:&quot; + result2.getRateLimitQuota().ToString() + &quot;,当前时间窗口剩余的可用次数:&quot; + result2.getRateLimitRemaining().ToString() + &quot;,距离时间窗口重置剩余的秒数:&quot; + result2.getRateLimitReset().ToString(), &quot;JPushApiExample&quot;, &quot;remote&quot;, &quot;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        catch (APIRequestException e)</span><br><span class="line">        &#123;</span><br><span class="line">            YMcms.Log.FileTxtLogs.WriteLog(&quot;HTTP Status: &quot; + e.Status + &quot;Error_code:&quot; + e.ErrorCode + &quot;ErrorMessage:&quot; + e.ErrorMessage + &quot;&quot;, &quot;JPushApiExample&quot;, &quot;remote&quot;, &quot;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        catch (APIConnectionException e)</span><br><span class="line">        &#123;                </span><br><span class="line">            YMcms.Log.FileTxtLogs.WriteLog(&quot;HTTP Status: &quot; + e.Message + &quot;&quot;, &quot;JPushApiExample&quot;, &quot;remote&quot;, &quot;&quot;);</span><br><span class="line">        &#125;            </span><br><span class="line">        YMcms.Log.FileTxtLogs.WriteLog(&quot;*****结束发送******&quot;, &quot;JPushApiExample&quot;, &quot;remote&quot;, &quot;&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    ///  Android/ios标签发送通知，并设定提示音(ios)</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    /// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">    public static PushPayload PushSendNotificationAlertTags(string[] tags, string content)</span><br><span class="line">    &#123;</span><br><span class="line">        PushPayload pushPayload = new PushPayload();</span><br><span class="line">        pushPayload.platform = Platform.android_ios();</span><br><span class="line">        if (tags.Length &gt; 0)</span><br><span class="line">        &#123;</span><br><span class="line">            pushPayload.audience = Audience.s_tag(tags); //标签</span><br><span class="line">        &#125;</span><br><span class="line">        var notification = new Notification().setAlert(content);</span><br><span class="line">        notification.AndroidNotification = new AndroidNotification();</span><br><span class="line">        notification.IosNotification = new IosNotification().setSound(&quot;happy&quot;);</span><br><span class="line">        //notification.IosNotification.incrBadge(1);</span><br><span class="line">        pushPayload.options.apns_production = true;//针对苹果发送消息</span><br><span class="line">        pushPayload.notification = notification.Check();</span><br><span class="line"></span><br><span class="line">        return pushPayload;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// Android/ios别名发送通知，并设定提示音(ios)</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    /// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">    public static PushPayload PushSendNotificationAlertAlias(string[] alias, string content)</span><br><span class="line">    &#123;</span><br><span class="line">        PushPayload pushPayload = new PushPayload();</span><br><span class="line">        pushPayload.platform = Platform.android_ios();</span><br><span class="line">        if (alias.Length &gt; 0)</span><br><span class="line">        &#123;</span><br><span class="line">            pushPayload.audience = Audience.s_alias(alias);//别名</span><br><span class="line">        &#125;</span><br><span class="line">        var notification = new Notification().setAlert(content);</span><br><span class="line">        notification.AndroidNotification = new AndroidNotification();</span><br><span class="line">        notification.IosNotification = new IosNotification().setSound(&quot;happy&quot;);</span><br><span class="line">        notification.IosNotification.incrBadge(1);</span><br><span class="line">        //notification.IosNotification.AddExtra(&quot;bid&quot;, id).AddExtra(&quot;m&quot;, &quot;tz&quot;);//扩展参数，可以多个</span><br><span class="line">        pushPayload.options.apns_production = true;//针对苹果发送消息</span><br><span class="line">        pushPayload.notification = notification.Check();</span><br><span class="line">        return pushPayload;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 全平台发送广播</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    /// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">    public static PushPayload PushSendSmsMessage(string content)</span><br><span class="line">    &#123;</span><br><span class="line">        var pushPayload = new PushPayload();</span><br><span class="line">        pushPayload.platform = Platform.all();</span><br><span class="line">        pushPayload.audience = Audience.all();</span><br><span class="line">        pushPayload.message = Message.content(content);</span><br><span class="line">        return pushPayload;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 全平台别名发送自定义消息</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    /// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">    public static PushPayload PushObject_all_alias_message(string[] alias, string content)</span><br><span class="line">    &#123;</span><br><span class="line">        PushPayload pushPayload_alias = new PushPayload();</span><br><span class="line">        pushPayload_alias.platform = Platform.all();</span><br><span class="line">        pushPayload_alias.audience = Audience.s_alias(alias);//别名</span><br><span class="line">        pushPayload_alias.message = Message.content(content);</span><br><span class="line">        return pushPayload_alias;</span><br><span class="line">    &#125;</span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 全平台标签发送自定义消息</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    /// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">    public static PushPayload PushObject_all_atags_message(string[] tags, string content)</span><br><span class="line">    &#123;</span><br><span class="line">        PushPayload pushPayload_tags = new PushPayload();</span><br><span class="line">        pushPayload_tags.platform = Platform.all();</span><br><span class="line">        pushPayload_tags.audience = Audience.s_tag(tags);//别名</span><br><span class="line">        pushPayload_tags.message = Message.content(content);</span><br><span class="line">        return pushPayload_tags;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 全平台通知</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    /// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">    public static PushPayload PushObject_All_All_Alert(string content)</span><br><span class="line">    &#123;</span><br><span class="line">        PushPayload pushPayload = new PushPayload();</span><br><span class="line">        pushPayload.platform = Platform.all();</span><br><span class="line">        pushPayload.audience = Audience.all();</span><br><span class="line">        pushPayload.notification = new Notification().setAlert(content);</span><br><span class="line">        return pushPayload;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 全平台自定义消息</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    /// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">    public static PushPayload PushObject_All_All_Message(string content)</span><br><span class="line">    &#123;</span><br><span class="line">        PushPayload pushPayload = new PushPayload();</span><br><span class="line">        pushPayload.platform = Platform.all();</span><br><span class="line">        pushPayload.audience = Audience.all();</span><br><span class="line">        pushPayload.message = Message.content(content);            </span><br><span class="line">        return pushPayload;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 全平台标签推送</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    /// &lt;param name=&quot;tags&quot;&gt;&lt;/param&gt;</span><br><span class="line">    /// &lt;param name=&quot;content&quot;&gt;&lt;/param&gt;</span><br><span class="line">    /// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">    public static PushPayload PushObject_All_Tags_Alert(string[] tags, string content)</span><br><span class="line">    &#123;</span><br><span class="line">        Options option = new Options();</span><br><span class="line">        Random rd = new Random();</span><br><span class="line">        option.sendno = rd.Next(100000, 999999);</span><br><span class="line">        PushPayload pushPayload = new PushPayload();</span><br><span class="line">        pushPayload.platform = Platform.all();</span><br><span class="line">        pushPayload.options = option;</span><br><span class="line">        pushPayload.audience = Audience.s_tag(tags);</span><br><span class="line">        pushPayload.notification = new Notification().setAlert(content);</span><br><span class="line">        return pushPayload;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 全平台别名通知</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    /// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">    public static PushPayload PushObject_All_Alias_Alert(string[] alias, string content)</span><br><span class="line">    &#123;</span><br><span class="line">        PushPayload pushPayload = new PushPayload();</span><br><span class="line">        pushPayload.platform = Platform.all();</span><br><span class="line">        pushPayload.audience = Audience.s_alias(alias);</span><br><span class="line">        pushPayload.notification = new Notification().setAlert(content);</span><br><span class="line">        return pushPayload;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// ios/android别名发送自定义信息</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    /// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">    public static PushPayload PushObject_apns_production_options(string[] alias, string content, int type = 0)</span><br><span class="line">    &#123;</span><br><span class="line">        var pushPayload = new PushPayload()</span><br><span class="line">        &#123;</span><br><span class="line">            platform = Platform.android_ios(),</span><br><span class="line">            audience = Audience.s_alias(alias),</span><br><span class="line">            message = Message.content(content).AddExtras(&quot;from&quot;, &quot;JPush&quot;)</span><br><span class="line">        &#125;;</span><br><span class="line">        pushPayload.options.apns_production = false;</span><br><span class="line">        return pushPayload;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个类是极光推送的基础类，代码都有注释，不过多解释，只想简单介绍一点，这个在官方的API文档里也有介绍，极光推送的接口是支持向指定设备做推送的，这点，在我提供的这个类是不包含的，各位在实际需求中如果有此类需求，可以扩展该类，这里我只封装了，ios，安卓和全平台三种推送方式，此外，只提供了别名，标签和广播的推送类型，至于别名，标签和设备id（Registration ID）是需要在客户端设置获取的，我这里只介绍服务端的相关内容。<br>此外，需要注意在调用该类是，输出极光的日志内容，以确保推送出现问题的确认,这个在官方文档里也有相关介绍</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">YMcms.Log.FileTxtLogs.WriteLog(&quot;sendno:&quot; + result2.sendno + &quot;,msg_id:&quot; + result2.msg_id.ToString() + &quot;,isResultOK:&quot; + (result2.isResultOK() ? &quot;OK&quot; : &quot;Fail&quot;) + &quot;,ResponseResult:&quot; + Convert.ToString(result2.ResponseResult), &quot;JPushApiExample&quot;, &quot;remote&quot;, &quot;&quot;);</span><br><span class="line">YMcms.Log.FileTxtLogs.WriteLog(&quot;当前 AppKey 一个时间窗口内可调用次数:&quot; + result2.getRateLimitQuota().ToString() + &quot;,当前时间窗口剩余的可用次数:&quot; + result2.getRateLimitRemaining().ToString() + &quot;,距离时间窗口重置剩余的秒数:&quot; + result2.getRateLimitReset().ToString(), &quot;JPushApiExample&quot;, &quot;remote&quot;, &quot;&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>实际调用的时候就非常简单了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">/// &lt;summary&gt;</span><br><span class="line">/// 配送员超过30分钟未送达推送提醒</span><br><span class="line">/// &lt;/summary&gt;</span><br><span class="line">/// &lt;param name=&quot;supplier_id&quot;&gt;商家ID&lt;/param&gt;</span><br><span class="line">/// &lt;param name=&quot;marki_id&quot;&gt;配送员ID&lt;/param&gt;</span><br><span class="line">public static void JPushMessageMarki(int supplier_id,int marki_id, string order_no)</span><br><span class="line">&#123;</span><br><span class="line">    try</span><br><span class="line">    &#123;</span><br><span class="line">        string[] alias = new string[] &#123; &quot;shop&quot; + supplier_id + &quot;markiId&quot; + marki_id &#125;;</span><br><span class="line">        string[] tags = new string[] &#123; &#125;;</span><br><span class="line">        string returnMsg = &quot;您有订单超过30分钟未送达，请及时配送！&quot;;</span><br><span class="line">        API.JPush.JPushApiExample.app_key = &quot;Your Key&quot;;</span><br><span class="line">        API.JPush.JPushApiExample.master_secret = &quot;Your Secret&quot;;</span><br><span class="line">        API.JPush.JPushApiExample.PushMessage(tags, alias, returnMsg, 1);</span><br><span class="line">    &#125;</span><br><span class="line">    catch (Exception ex)</span><br><span class="line">    &#123;</span><br><span class="line">        YMcms.Log.FileTxtLogs.WriteLog(DateTime.Now + ex.Message + &quot;堆栈:&quot; + ex.StackTrace + &quot;，source&quot; + ex.Source, &quot;JPushApiExample&quot;, &quot;remote&quot;, &quot;&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还需要最后说明的一点是，我用的这个版本的SDK是基于JPush2.0的版本，nuget包名为cn.jpush.api，而最新的JPush3.0的接口和2.0在功能和用法上存在差异，SDK也不相同，最新的nuget包名为Jiguang.JPush,是基于.NET Standard的重构版本，需要vs2015以上的IDE打开。大家在使用的时候需要视情况而定。<br>二、阿里云移动推送<br>阿里云的移动推送功能没有极光那么完善，文档也不如极光内容丰富<a href="https://help.aliyun.com/document_detail/48038.html?spm=a2c4g.11186623.6.595.7f6c74c88WBMKA，但也非常强大，并且，SDK的开发文档足够简洁，非常容易上手，我这里简单介绍下我的封装版本" target="_blank" rel="noopener">https://help.aliyun.com/document_detail/48038.html?spm=a2c4g.11186623.6.595.7f6c74c88WBMKA，但也非常强大，并且，SDK的开发文档足够简洁，非常容易上手，我这里简单介绍下我的封装版本</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br></pre></td><td class="code"><pre><span class="line">/// &lt;summary&gt;</span><br><span class="line">/// 移动推送公共参数</span><br><span class="line">/// &lt;/summary&gt;</span><br><span class="line">public class AliyunPushCommonParam</span><br><span class="line">&#123;</span><br><span class="line">    private static PushRequest request;</span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// AccessID</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    public static string AccessId &#123; get; set; &#125; = &quot;你的AccessID&quot;;</span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// AccessSecret</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    public static string AccessSecret &#123; get; set; &#125; = &quot;你的AccessSecret&quot;;</span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 苹果开发AppKey</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    public static long AppKeyIOS &#123; get; set; &#125; = 你的苹果开发AppKey;</span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 苹果开发密钥</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    public static string AppSecretIOS &#123; get; set; &#125; = &quot;你的苹果开发密钥&quot;;</span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 安卓开发AppKey</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    public static long AppKeyAndroid &#123; get; set; &#125; = 你的安卓开发AppKey;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 安卓开发密钥</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    public static string AppSecretAndroid &#123; get; set; &#125; = &quot;你的安卓开发密钥&quot;;</span><br><span class="line"></span><br><span class="line">    public static long MessageId &#123; get; set; &#125; = 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/// &lt;summary&gt;</span><br><span class="line">/// 移动推送制定参数</span><br><span class="line">/// &lt;/summary&gt;</span><br><span class="line">public class AliyunPushParam</span><br><span class="line">&#123;</span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 推送消息内容</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    public string body &#123; get; set; &#125; = &quot;aliyun&quot;;</span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 推送目标内容，如别名内容，标签内容</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    public string TargetValue &#123; get; set; &#125; = &quot;all&quot;;</span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 推送方式，ALL-全部，ALIAS-别名，TAG-标签</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    public string Target &#123; get; set; &#125; = &quot;ALL&quot;;</span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 消息类别，MESSAGE-自定义消息，NOTICE-通知</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    public string PushType &#123; get; set; &#125; = &quot;NOTICE&quot;;</span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 指定设备</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    public string DeviceType &#123; get; set; &#125; = &quot;ALL&quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/// &lt;summary&gt;</span><br><span class="line">/// 阿里云推送</span><br><span class="line">/// &lt;/summary&gt;</span><br><span class="line">public class AliyunPush</span><br><span class="line">&#123;</span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 日志类</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    private static Logger logger = LogManager.GetCurrentClassLogger();</span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 安卓端推送</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    public static Response PushAndroid(AliyunPushParam ali_params)</span><br><span class="line">    &#123;</span><br><span class="line">        Response resp = new Response() &#123; code = -1 &#125;;</span><br><span class="line">        IClientProfile clientProfile = DefaultProfile.GetProfile(&quot;cn-hangzhou&quot;, AliyunPushCommonParam.AccessId, AliyunPushCommonParam.AccessSecret);</span><br><span class="line">        DefaultAcsClient client = new DefaultAcsClient(clientProfile);</span><br><span class="line">        //PushRequest request = new PushRequest();</span><br><span class="line">        PushRequest request = new PushRequest();</span><br><span class="line">        // 推送目标</span><br><span class="line">        request.AppKey = AliyunPushCommonParam.AppKeyAndroid;</span><br><span class="line">        //推送目标: DEVICE:按设备推送 ALIAS : 按别名推送 ACCOUNT:按帐号推送  TAG:按标签推送; ALL: 广播推送</span><br><span class="line">        request.Target = ali_params.Target;</span><br><span class="line">        //根据Target来设定，如Target=DEVICE, 则对应的值为 设备id1,设备id2. 多个值使用逗号分隔.(帐号与设备有一次最多100个的限制)</span><br><span class="line">        request.TargetValue = ali_params.TargetValue;</span><br><span class="line">        //消息类型 MESSAGE NOTICE</span><br><span class="line">        request.PushType = ali_params.PushType;</span><br><span class="line">        //设备类型 ANDROID iOS ALL.</span><br><span class="line">        request.DeviceType = ali_params.DeviceType;</span><br><span class="line">        // 消息的标题</span><br><span class="line">        request.Title = &quot;扫码支付&quot;;</span><br><span class="line">        // 消息的内容</span><br><span class="line">        request.Body = ali_params.body;</span><br><span class="line">        // 推送配置: Android</span><br><span class="line">        // 通知的提醒方式 &quot;VIBRATE&quot; : 震动 &quot;SOUND&quot; : 声音 &quot;BOTH&quot; : 声音和震动 NONE : 静音</span><br><span class="line">        request.AndroidNotifyType = &quot;BOTH&quot;;</span><br><span class="line">        //通知栏自定义样式0-100</span><br><span class="line">        request.AndroidNotificationBarType = 3;</span><br><span class="line">        //通知栏显示优先级</span><br><span class="line">        request.AndroidNotificationBarPriority = 0;</span><br><span class="line">        //点击通知后动作 &quot;APPLICATION&quot; : 打开应用 &quot;ACTIVITY&quot; : 打开AndroidActivity &quot;URL&quot; : 打开URL &quot;NONE&quot; : 无跳转</span><br><span class="line">        request.AndroidOpenType = &quot;NONE&quot;;</span><br><span class="line">        //Android收到推送后打开对应的url,仅当AndroidOpenType=&quot;URL&quot;有效</span><br><span class="line">        request.AndroidOpenUrl = &quot;http://www.baidu.com&quot;;</span><br><span class="line">        //设定通知打开的activity，仅当AndroidOpenType=&quot;Activity&quot;有效</span><br><span class="line">        request.AndroidActivity = &quot;com.ali.demo.OpenActivity&quot;;</span><br><span class="line">        //Android通知音乐</span><br><span class="line">        request.AndroidMusic = &quot;default&quot;;</span><br><span class="line">        //设置该参数后启动辅助弹窗功能，此处指定通知点击后跳转的Activity（辅助弹窗的前提条件：1. 集成第三方辅助通道；2. storeOffline设为true)</span><br><span class="line">        request.AndroidPopupActivity = &quot;com.xiaomi.huawei.push.XiaoMiPushActivity&quot;;</span><br><span class="line">        //辅助弹窗标题</span><br><span class="line">        request.AndroidPopupTitle = &quot;PopupTitle&quot;;</span><br><span class="line">        //辅助弹窗内容</span><br><span class="line">        request.AndroidPopupBody = &quot;Popup Body&quot;;</span><br><span class="line">        // 设定android类型设备通知的扩展属性</span><br><span class="line">        request.AndroidExtParameters = &quot;&#123;\&quot;k1\&quot;:\&quot;android\&quot;,\&quot;k2\&quot;:\&quot;v2\&quot;&#125;&quot;;</span><br><span class="line">        // 推送控制</span><br><span class="line">        String pushTime = DateTime.UtcNow.AddSeconds(3).ToString(&quot;yyyy-MM-ddTHH\\:mm\\:ssZ&quot;);</span><br><span class="line">        request.PushTime = pushTime;//延迟3秒发送</span><br><span class="line">        String expireTime = DateTime.UtcNow.AddDays(1).ToString(&quot;yyyy-MM-ddTHH\\:mm\\:ssZ&quot;);</span><br><span class="line">        request.ExpireTime = expireTime;//设置过期时间（当storeoffline打开时生效）</span><br><span class="line">        request.StoreOffline = true;//离线存储</span><br><span class="line">        try</span><br><span class="line">        &#123;</span><br><span class="line">            PushResponse response = client.GetAcsResponse(request);</span><br><span class="line">            resp.code = 1;</span><br><span class="line">            resp.message = &quot;RequestId:&quot; + response.RequestId + &quot;,ResponseId: &quot; + response.MessageId;</span><br><span class="line">            logger.Trace(&quot;RequestId:&quot; + response.RequestId + &quot;,ResponseId: &quot; + response.MessageId);</span><br><span class="line">        &#125;</span><br><span class="line">        catch (ServerException e)</span><br><span class="line">        &#123;</span><br><span class="line">            resp.code = -1;</span><br><span class="line">            resp.message = &quot;ErrorCode:&quot; + e.ErrorCode + &quot;,ErrorMessage: &quot; + e.ErrorMessage;</span><br><span class="line">            logger.Trace(&quot;ErrorCode:&quot; + e.ErrorCode + &quot;,ErrorMessage: &quot; + e.ErrorMessage);</span><br><span class="line">        &#125;</span><br><span class="line">        catch (ClientException e)</span><br><span class="line">        &#123;</span><br><span class="line">            resp.code = -1;</span><br><span class="line">            resp.message = &quot;ErrorCode:&quot; + e.ErrorCode + &quot;,ErrorMessage: &quot; + e.ErrorMessage;</span><br><span class="line">            logger.Trace(&quot;ErrorCode:&quot; + e.ErrorCode + &quot;,ErrorMessage: &quot; + e.ErrorMessage);</span><br><span class="line">        &#125;</span><br><span class="line">        return resp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 苹果端推送</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    public static Response PushIOS(AliyunPushParam ali_params)</span><br><span class="line">    &#123;</span><br><span class="line">        Response resp = new Response() &#123; code = -1 &#125;;</span><br><span class="line">        IClientProfile clientProfile = DefaultProfile.GetProfile(&quot;cn-hangzhou&quot;, AliyunPushCommonParam.AccessId, AliyunPushCommonParam.AccessSecret);</span><br><span class="line">        DefaultAcsClient client = new DefaultAcsClient(clientProfile);</span><br><span class="line">        //PushRequest request = new PushRequest();</span><br><span class="line">        PushRequest request = new PushRequest();</span><br><span class="line">        // 推送目标</span><br><span class="line">        request.AppKey = AliyunPushCommonParam.AppKeyIOS;</span><br><span class="line">        //推送目标: DEVICE:按设备推送 ALIAS : 按别名推送 ACCOUNT:按帐号推送  TAG:按标签推送; ALL: 广播推送</span><br><span class="line">        request.Target = ali_params.Target;</span><br><span class="line">        //根据Target来设定，如Target=DEVICE, 则对应的值为 设备id1,设备id2. 多个值使用逗号分隔.(帐号与设备有一次最多100个的限制)</span><br><span class="line">        request.TargetValue = ali_params.TargetValue;</span><br><span class="line">        //消息类型 MESSAGE NOTICE</span><br><span class="line">        request.PushType = ali_params.PushType;</span><br><span class="line">        //设备类型 ANDROID iOS ALL.</span><br><span class="line">        request.DeviceType = ali_params.DeviceType;</span><br><span class="line">        // 消息的标题</span><br><span class="line">        request.Title = &quot;扫码支付&quot;;</span><br><span class="line">        // 消息的内容</span><br><span class="line">        request.Body = ali_params.body;</span><br><span class="line">        // 推送配置: iOS</span><br><span class="line">        // iOS应用图标右上角角标</span><br><span class="line">        request.IOSBadge = 50;</span><br><span class="line">        // iOS通知声音</span><br><span class="line">        request.IOSMusic = &quot;default&quot;;</span><br><span class="line">        //iOS10通知副标题的内容</span><br><span class="line">        request.IOSSubtitle = &quot;iOS10 subtitle&quot;;</span><br><span class="line">        //指定iOS10通知Category</span><br><span class="line">        request.IOSNotificationCategory = &quot;iOS10 Notification Category&quot;;</span><br><span class="line">        //是否允许扩展iOS通知内容</span><br><span class="line">        request.IOSMutableContent = true;</span><br><span class="line">        //iOS的通知是通过APNs中心来发送的，需要填写对应的环境信息。&quot;DEV&quot; : 表示开发环境 &quot;PRODUCT&quot; : 表示生产环境</span><br><span class="line">        request.IOSApnsEnv = &quot;DEV&quot;;</span><br><span class="line">        //消息推送时设备不在线（既与移动推送的服务端的长连接通道不通），则这条推送会做为通知，通过苹果的APNs通道送达一次。注意：离线消息转通知仅适用于生产环境</span><br><span class="line">        request.IOSRemind = true;</span><br><span class="line">        //iOS消息转通知时使用的iOS通知内容，仅当iOSApnsEnv=PRODUCT &amp;&amp; iOSRemind为true时有效</span><br><span class="line">        request.IOSRemindBody = &quot;iOSRemindBody&quot;;</span><br><span class="line">        //自定义的kv结构,开发者扩展用 针对iOS设备</span><br><span class="line">        //request.IOSExtParameters = &quot;&#123;\&quot;key1\&quot;:\&quot;value1\&quot;&#125;&quot;;</span><br><span class="line"></span><br><span class="line">        // 推送控制</span><br><span class="line">        String pushTime = DateTime.UtcNow.AddSeconds(3).ToString(&quot;yyyy-MM-ddTHH\\:mm\\:ssZ&quot;);</span><br><span class="line">        request.PushTime = pushTime;//延迟3秒发送</span><br><span class="line">        String expireTime = DateTime.UtcNow.AddDays(2).ToString(&quot;yyyy-MM-ddTHH\\:mm\\:ssZ&quot;);</span><br><span class="line">        request.ExpireTime = expireTime;//设置过期时间为2天</span><br><span class="line">        request.StoreOffline = true;</span><br><span class="line">        try</span><br><span class="line">        &#123;</span><br><span class="line">            PushResponse response = client.GetAcsResponse(request);</span><br><span class="line">            resp.code = 1;</span><br><span class="line">            resp.message = &quot;RequestId:&quot; + response.RequestId + &quot;,ResponseId: &quot; + response.MessageId;</span><br><span class="line">        &#125;</span><br><span class="line">        catch (ServerException e)</span><br><span class="line">        &#123;</span><br><span class="line">            resp.code = -1;</span><br><span class="line">            resp.message = &quot;ErrorCode:&quot; + e.ErrorCode + &quot;,ErrorMessage: &quot; + e.ErrorMessage;</span><br><span class="line">        &#125;</span><br><span class="line">        catch (ClientException e)</span><br><span class="line">        &#123;</span><br><span class="line">            resp.code = -1;</span><br><span class="line">            resp.message = &quot;ErrorCode:&quot; + e.ErrorCode + &quot;,ErrorMessage: &quot; + e.ErrorMessage;</span><br><span class="line">        &#125;</span><br><span class="line">        return resp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用也非常容易</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AliyunPushParam _params = new AliyunPushParam();</span><br><span class="line">_params.Target = &quot;ALIAS&quot;;</span><br><span class="line">_params.TargetValue = &quot;bjsh_&quot; + model.merchant_id;</span><br><span class="line">_params.body = &quot;商城到账&quot; + model.order_amount + &quot;元&quot;;</span><br><span class="line">Common.AliyunPush.PushAndroid(_params);</span><br></pre></td></tr></table></figure>
+
+<p>这里阿里云的移动推送SDK需要依赖阿里云核心SDK，且也是基于.Net Standard，需要说明的是，阿里云移动推送的商用版本收费要比极光的商用版收费便宜许多，所以如果你的app的用户量很大，需要大量推送，而且需要考虑成本的话，建议选择阿里云移动推送。<br>附上阿里云SDK频道地址：<a href="https://develop.aliyun.com/tools/sdk" target="_blank" rel="noopener">https://develop.aliyun.com/tools/sdk</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/hexo/tags/开发笔记/" rel="tag"># 开发笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/2019/04/17/听君一席话/" rel="next" title="听君一席话">
+                <i class="fa fa-chevron-left"></i> 听君一席话
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/hexo/2019/05/05/分享一次难堪的面试经历/" rel="prev" title="聊一次难堪的面试经历">
+                聊一次难堪的面试经历 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbb2338b87602f0" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTA1My8xNTU4MA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tony</p>
+              <p class="site-description motion-element" itemprop="description">学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/hexo/archives/">
+              
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/hexo/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/hexo/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/hexo/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/hexo/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

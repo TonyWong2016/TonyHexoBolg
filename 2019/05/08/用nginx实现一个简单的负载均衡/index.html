@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/hexo/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/hexo/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/hexo/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/hexo/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="开发笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="今天在看单位的一个网站项目时，发现用了阿里的Tengine做了反向代理，实现了页面访问的负载均衡效果。突来灵感，就像自己也做一个简单的负载均衡，分享一下。但我用的是Nginx，关于Nginx的流行程度，好用程度，等等我也不多说了，因为我也说不完，也说不清，还不如大家自己去查，就着重了解一下，什么是反向代理，什么是负载均衡，关于Nginx的详细介绍，以及一些关于文件同步，静态资源缓存这些问题就可以了">
+<meta name="keywords" content="开发笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用Nginx实现一个简单的负载均衡">
+<meta property="og:url" content="https://tony_df.gitee.io/2019/05/08/用nginx实现一个简单的负载均衡/index.html">
+<meta property="og:site_name" content="Tony&#39;s blog">
+<meta property="og:description" content="今天在看单位的一个网站项目时，发现用了阿里的Tengine做了反向代理，实现了页面访问的负载均衡效果。突来灵感，就像自己也做一个简单的负载均衡，分享一下。但我用的是Nginx，关于Nginx的流行程度，好用程度，等等我也不多说了，因为我也说不完，也说不清，还不如大家自己去查，就着重了解一下，什么是反向代理，什么是负载均衡，关于Nginx的详细介绍，以及一些关于文件同步，静态资源缓存这些问题就可以了">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/08/用nginx实现一个简单的负载均衡/1.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/08/用nginx实现一个简单的负载均衡/iis.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/08/用nginx实现一个简单的负载均衡/web1.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/08/用nginx实现一个简单的负载均衡/web2.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/08/用nginx实现一个简单的负载均衡/conf1.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/08/用nginx实现一个简单的负载均衡/conf2.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/08/用nginx实现一个简单的负载均衡/ret1.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/08/用nginx实现一个简单的负载均衡/ret2.png">
+<meta property="og:updated_time" content="2019-05-08T01:55:12.542Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用Nginx实现一个简单的负载均衡">
+<meta name="twitter:description" content="今天在看单位的一个网站项目时，发现用了阿里的Tengine做了反向代理，实现了页面访问的负载均衡效果。突来灵感，就像自己也做一个简单的负载均衡，分享一下。但我用的是Nginx，关于Nginx的流行程度，好用程度，等等我也不多说了，因为我也说不完，也说不清，还不如大家自己去查，就着重了解一下，什么是反向代理，什么是负载均衡，关于Nginx的详细介绍，以及一些关于文件同步，静态资源缓存这些问题就可以了">
+<meta name="twitter:image" content="https://tony_df.gitee.io/2019/05/08/用nginx实现一个简单的负载均衡/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hexo/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Tony'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tony_df.gitee.io/2019/05/08/用nginx实现一个简单的负载均衡/">
+
+
+
+
+
+  <title>用Nginx实现一个简单的负载均衡 | Tony's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hexo/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tony's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学着码代码,学着码人生;</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/hexo/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/hexo/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/hexo/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.gitee.io/hexo/2019/05/08/用nginx实现一个简单的负载均衡/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tony's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">用Nginx实现一个简单的负载均衡</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-08T08:50:16+08:00">
+                2019-05-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>今天在看单位的一个网站项目时，发现用了阿里的Tengine做了反向代理，实现了页面访问的负载均衡效果。突来灵感，就像自己也做一个简单的负载均衡，分享一下。<br>但我用的是Nginx，关于Nginx的流行程度，好用程度，等等我也不多说了，因为我也说不完，也说不清，还不如大家自己去查，就着重了解一下，什么是反向代理，什么是负载均衡，关于Nginx的详细介绍，以及一些关于文件同步，静态资源缓存这些问题就可以了，这里我就不多说了。<br>我这篇就本着简单易用的原则，跟大家分享一下怎么在Windows平台，实际演示一下用Nginx来做.net网站的负载均衡。<br>负载均衡真正实现分流效果的话，我们肯定是至少需要两台服务器，或者是三台，Nginx单独应该在一台服务器，那么我在这演示的话，肯定没那么多资源了，所以我就用我当前电脑，通过分配不同的端口号来模拟一下。<br>首先保证电脑上安装有Nginx服务，具体的安装过程我就不多说了，很简单<br><img src="1.png" alt="nginx"><br>然后，我们要准备好我们做负载均衡的站点，大家手里肯定都有网站或webapi的项目都可以用，或者你直接在虚拟目录里做个txt或者随便写个网页都行，只要是能正常发布访问的站点就行，我这里就用我之前做过的一个网站后台做演示，先看一下我的站点。<br><img src="iis.png" alt="iis"><br>然后看站点打开后的效果<br><img src="web1.png" alt="wen1"><br><img src="web2.png" alt="web2"><br>这里我把同一个项目，分别发布到iis的81和82端口，网站元素用1,2做了区分标识，而且大家现在也能看到现在这两台服务器从客户端浏览器返回的服务器信息都是iis，在这之前所有的工作，大家都是很清楚地，接下来，我们开始配置我们的Nginx，首先大家进入Nginx安装目录下，打开conf文件夹下的nginx.conf文件进行编辑，nginx的配置文件内容还是非常简洁的，比我们熟知的Apache的配置文件内容少很多，这应该也是nginx顶替Apache成为最受欢迎的web服务器的原因之一吧。<br>好，我们打开配置文件，我们需要注意的首先是监听端口，nginx默认监听的时80端口，而我本地的80端口已被使用，所以我改成了90。<br>我简单介绍几点吧，<br><img src="conf1.png" alt="conf1"><br><img src="conf2.png" alt="conf2"><br>配置完成后，保存并重启nginx服务器，然后我们在浏览器打开，再次从nginx端口去访问我们部署的网站，看到的效果就成了这样<br><img src="ret1.png" alt="ret1"><br><img src="ret2.png" alt="ret2"><br>我们看到返回的服务器信息，全部变成了nginx，也就是说，如果我把1,2的标识去掉，对用户来说，这种变化是无感的，但访问效率确实成倍增加的，nginx会根据我们在配置文件里分配的权重，帮我们决定去打开那个端口下的站点，实际就对应着哪台服务器，权重越大，实际指向那台服务器的可能性就越大，如此，我们便实现了对iis站点的简单的分布式部署和负载均衡。<br>本着简洁的原则，我这篇就介绍道这里，没错，再往深我也介绍不了多少了，哈哈，回到我文章开头提醒大家注意的几个问题，想深入了解的同学，就去多了解一下了，当然了，大神请自觉飘过。。。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/hexo/tags/开发笔记/" rel="tag"># 开发笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/2019/05/05/分享一次难堪的面试经历/" rel="next" title="聊一次难堪的面试经历">
+                <i class="fa fa-chevron-left"></i> 聊一次难堪的面试经历
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/hexo/2019/05/13/聊一下关于代码重构的一些事儿/" rel="prev" title="聊一下关于代码重构的一些事儿">
+                聊一下关于代码重构的一些事儿 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbb2338b87602f0" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTA1My8xNTU4MA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tony</p>
+              <p class="site-description motion-element" itemprop="description">学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/hexo/archives/">
+              
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/hexo/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/hexo/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/hexo/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/hexo/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

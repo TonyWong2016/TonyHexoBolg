@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/hexo/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/hexo/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/hexo/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/hexo/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="经验分享,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="咳咳，第一篇经验分享， 薛微有点紧张，措辞可能不太严谨，请谅解~近期公司的一个项目要求集成支付宝，微信登录和支付的功能，相信相当一部分朋友在第一次集成第三方登录或支付功能的时候，都踩了不少坑（别问我怎么知道的），我也一样，接下来我把我总结的经验跟各位分享一下。在开始之前，我想先简单啰嗦一个概念——OAtuth2.0(开放授权)，相信之前有做过OAtuth2.0相关模块的同学们在做支付宝，微信这种第">
+<meta name="keywords" content="经验分享">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webapi集成第三方登陆，支付">
+<meta property="og:url" content="https://tony_df.gitee.io/2018/08/20/webapi集成第三方登陆/index.html">
+<meta property="og:site_name" content="Tony&#39;s blog">
+<meta property="og:description" content="咳咳，第一篇经验分享， 薛微有点紧张，措辞可能不太严谨，请谅解~近期公司的一个项目要求集成支付宝，微信登录和支付的功能，相信相当一部分朋友在第一次集成第三方登录或支付功能的时候，都踩了不少坑（别问我怎么知道的），我也一样，接下来我把我总结的经验跟各位分享一下。在开始之前，我想先简单啰嗦一个概念——OAtuth2.0(开放授权)，相信之前有做过OAtuth2.0相关模块的同学们在做支付宝，微信这种第">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tony_df.gitee.io/2018/08/20/webapi集成第三方登陆/APPID.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2018/08/20/webapi集成第三方登陆/%E5%8A%9F%E8%83%BD%E5%88%97%E8%A1%A8.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2018/08/20/webapi集成第三方登陆/%E5%95%86%E6%88%B7id.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2018/08/20/webapi集成第三方登陆/%E7%AD%BE%E5%90%8D%E9%AA%8C%E7%AD%BE%E5%B7%A5%E5%85%B7.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2018/08/20/webapi集成第三方登陆/%E5%8A%9F%E8%83%BD%E5%88%97%E8%A1%A8.png">
+<meta property="og:updated_time" content="2019-05-30T06:02:46.828Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="webapi集成第三方登陆，支付">
+<meta name="twitter:description" content="咳咳，第一篇经验分享， 薛微有点紧张，措辞可能不太严谨，请谅解~近期公司的一个项目要求集成支付宝，微信登录和支付的功能，相信相当一部分朋友在第一次集成第三方登录或支付功能的时候，都踩了不少坑（别问我怎么知道的），我也一样，接下来我把我总结的经验跟各位分享一下。在开始之前，我想先简单啰嗦一个概念——OAtuth2.0(开放授权)，相信之前有做过OAtuth2.0相关模块的同学们在做支付宝，微信这种第">
+<meta name="twitter:image" content="https://tony_df.gitee.io/2018/08/20/webapi集成第三方登陆/APPID.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hexo/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Tony'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tony_df.gitee.io/2018/08/20/webapi集成第三方登陆/">
+
+
+
+
+
+  <title>webapi集成第三方登陆，支付 | Tony's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hexo/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tony's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学着码代码,学着码人生;</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/hexo/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/hexo/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/hexo/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.gitee.io/hexo/2018/08/20/webapi集成第三方登陆/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tony's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">webapi集成第三方登陆，支付</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-20T15:58:40+08:00">
+                2018-08-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>咳咳，第一篇经验分享， 薛微有点紧张，措辞可能不太严谨，请谅解~<br>近期公司的一个项目要求集成支付宝，微信登录和支付的功能，相信相当一部分朋友在第一次集成第三方登录或支付功能的时候，都踩了不少坑（别问我怎么知道的），我也一样，接下来我把我总结的经验跟各位分享一下。<br>在开始之前，我想先简单啰嗦一个概念——OAtuth2.0(开放授权)，相信之前有做过OAtuth2.0相关模块的同学们在做支付宝，微信这种第三方授权的操作都不会有什么障碍，支付宝和微信的第三方api调用框架就是流行的OAtuth2.0技术，好了不巴拉了，想深入了解的同学，自行百度吧，我就不多说了，当然，我知道的其实也不多~<br>一、支付宝<br>其实这块网上相关的介绍也不少，我的建议是，各位在做app接入的相关配置工作，就参照一个标准，即支付宝的官方文档来就好，(文档参照<a href="https://docs.open.alipay.com/204/105297)，" target="_blank" rel="noopener">https://docs.open.alipay.com/204/105297)，</a><br>如果你是首次做这项功能，看这个文档可能会有点懵逼，支付宝提供的api相当多，文档也就难免混乱，但当你做完这个功能再回过头去看，发现文档还是蛮清晰的，所以还是要先静下心来看看支付宝关于接入的相关介绍，还有就是，决定做支付宝集成的项目，一定要先准备好资料，先做好相关的配置，避免浪费时间，关于app接入的配置工作我在这里只做简单总结，<br>在集成支付宝接口的工作开始之前需要做以下几个工作<br>1.到支付宝开放平台申请相关应用，（以app为例，pc网站的相对比较简单），填写一个应用名称<br>2.创建应用之后，会得到一个appid<br><img src="APPID.png" alt="appid"><br>3.在创建的应用上添加相应功能，登录的话需要继承支付宝app登录，支付的话添加App支付宝支付（注意只有商户号才可以申请支付宝app支付）<br><img src="%E5%8A%9F%E8%83%BD%E5%88%97%E8%A1%A8.png" alt="功能列表"><br><img src="%E5%95%86%E6%88%B7id.png" alt="商户id"><br>4.在应用信息处上传应用公钥，（使用支付宝提供的秘钥生成工具，保存私钥，将公钥上传，上传后支付宝会自动生成一个支付宝公钥，注意生成密钥的时候，注意选择rsa2（sha-256）的格式）<br><img src="%E7%AD%BE%E5%90%8D%E9%AA%8C%E7%AD%BE%E5%B7%A5%E5%85%B7.png" alt="签名工具"><br>5.设置回调地址（这个要是一个可访问的地址，如果没有，开发阶段可先使用同步验证，确定验签方式没问题之后，等项目上线后在改回来就好）<br><img src="%E5%8A%9F%E8%83%BD%E5%88%97%E8%A1%A8.png" alt="应用信息"><br>6.设置客户端应用信息，包括Android应用包名和签名以及苹果的bundle id<br>好了，至此，开发前的配置阶段就完成了，对了，添加支付相关的功能时是需要签约审核的，支付宝的审核非常快，一般不到半天就下来了，总之就是要做第三方api的集成，一定要提前准备好资料，不要等到开发阶段再去准备，太浪费时间。</p>
+<p>做好配置之后，接下来就是集成到自己的系统中了，这里集成方式我建议使用支付宝提供SDK来做，非常的方便，节省时间，当然如果你有兴趣，自己根据api请求方式封装自己的类库也完全没问题丫~</p>
+<p>好了终于可以上代码了，咳咳，代码简陋（做了一点调整）请勿饭后观看~</p>
+<p>项目先引用阿里sdk就不用多说了，sdk包名叫AopSdk</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//服务端生成请求支付宝的签名参数（参照&lt;https://docs.open.alipay.com/218/105327/&gt;）</span><br><span class="line">public static string GetAlipaySignStr()</span><br><span class="line">&#123;</span><br><span class="line">    string content = string.Format(&quot;apiname=com.alipay.account.auth&amp;app_id=&#123;0&#125;&amp;app_name=mc&amp;auth_type=AUTHACCOUNT&amp;biz_type=openservice&amp;method=alipay.open.auth.sdk.code.get&amp;pid=&#123;1&#125;&amp;product_id=APP_FAST_LOGIN&amp;scope=kuaijie&amp;sign_type=RSA&quot;, System.Configuration.ConfigurationManager.AppSettings[&quot;alipay_appId&quot;].ToString(), System.Configuration.ConfigurationManager.AppSettings[&quot;alipay_pid&quot;].ToString());//这一大串是个固定值，可变的参数是appid和pid</span><br><span class="line">    string data = content + &quot;&amp;target_id=&quot; + DateTime.Now.ToString(&quot;yyyyMMddHHmmddfff&quot;);</span><br><span class="line">    string privateKey = System.Configuration.ConfigurationManager.AppSettings[&quot;APP_PRIVATE_KEY&quot;].ToString();//商户私钥，用来生成签名</span><br><span class="line">    string sign = Aop.Api.Util.AlipaySignature.RSASign(content, privateKey, &quot;utf-8&quot;, &quot;rsa&quot;,false);//调用阿里云sdk生成签名</span><br><span class="line">    string _params = data + &quot;&amp;sign&quot; + sign;//组合参数字符串和签名</span><br><span class="line">    return _params;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>生成了请求参数后，需要app客户端通过该参数去访问阿里网关，这块具体的请求代码要看是用Android还是别的什么方式了，非常简单，就是构造一次普通的http请求，不多赘述<br>客户端访问阿里网关后会得到阿里的返回值，返回值文档（参照<a href="https://docs.open.alipay.com/218/105327/）" target="_blank" rel="noopener">https://docs.open.alipay.com/218/105327/）</a><br>对于服务端来说，当完成上述步骤后，就可以去做支付宝的第三方登录了，我们需要通过上次请求返回的auth_code去换取access_token，从而获得用户公开信息（如昵称，头像），并将这些信息记录到本地系统，完成一次体验良好的第三方登录<br>核心代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">[HttpPost]</span><br><span class="line">public Response AlipayLogin([FromBody] Models.Models.AlipayLoginModel obj)</span><br><span class="line">&#123;</span><br><span class="line">   Response _resp = new Response();</span><br><span class="line">   try</span><br><span class="line">   &#123;</span><br><span class="line">       string resultInfo = obj.resultInfo;</span><br><span class="line">       if (resultInfo.Contains(&quot;result_code=200&quot;))</span><br><span class="line">       &#123;</span><br><span class="line">           System.Collections.Specialized.NameValueCollection col = YMcms.WebAPI.Lib.AlipayHelper.GetQueryString(resultInfo);</span><br><span class="line">           string auth_code = col[&quot;auth_code&quot;];</span><br><span class="line">           //string alipay_user_id = col[&quot;user_id&quot;];</span><br><span class="line">           string alipay_open_id = col[&quot;alipay_open_id&quot;];</span><br><span class="line">           var user = Lib.AlipayHelper.AddAlipayUserApp(alipay_open_id, auth_code);</span><br><span class="line">           if (user != null)</span><br><span class="line">           &#123;</span><br><span class="line">               _resp.code = 1;</span><br><span class="line">               _resp.message = &quot;支付宝登陆成功&quot;;</span><br><span class="line">               _resp.data = new &#123; user.id, user.status, user.mobile, user.nick_name, user.avatar, openid = alipay_open_id, oauthType = &quot;alipay&quot; &#125;;</span><br><span class="line">           &#125;</span><br><span class="line">           else</span><br><span class="line">           &#123;</span><br><span class="line">               _resp.code = -1;</span><br><span class="line">               _resp.message = &quot;支付宝登录失败&quot;;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       else</span><br><span class="line">       &#123;</span><br><span class="line">           _resp.code = -1;</span><br><span class="line">           _resp.message = &quot;支付宝授权登陆失败&quot;;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   catch (Exception ex)</span><br><span class="line">   &#123;</span><br><span class="line">       _resp.code = -2;</span><br><span class="line">       _resp.message = &quot;error:&quot; + ex.Message;</span><br><span class="line">   &#125;</span><br><span class="line">   return _resp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/// &lt;summary&gt;</span><br><span class="line">/// 支付宝登陆创建账号(适用于APP登陆)</span><br><span class="line">/// &lt;/summary&gt;</span><br><span class="line">/// &lt;param name=&quot;auth_code&quot;&gt;&lt;/param&gt;</span><br><span class="line">/// &lt;param name=&quot;alipay_open_id&quot;&gt;&lt;/param&gt;</span><br><span class="line">/// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">public static Model.users AddAlipayUserApp(string alipay_open_id,string auth_code)</span><br><span class="line">&#123;</span><br><span class="line">    Aop.Api.IAopClient client = AlipayHelper.GetAlipayClient();</span><br><span class="line">    //获取token</span><br><span class="line">    Aop.Api.Response.AlipaySystemOauthTokenResponse response = GetToken(auth_code, client);</span><br><span class="line">    string token = response.AccessToken;</span><br><span class="line">    //获取用户支付宝公开信息</span><br><span class="line">    Aop.Api.Response.AlipayUserInfoShareResponse userinfo = GetUserInfo(token, client);</span><br><span class="line">    System.Collections.Hashtable ht = new System.Collections.Hashtable();</span><br><span class="line">    ht.Add(&quot;openid&quot;,alipay_open_id);</span><br><span class="line">    ht.Add(&quot;typename&quot;,&quot;alipay&quot;);</span><br><span class="line">    ht.Add(&quot;nickname&quot;,userinfo.NickName);</span><br><span class="line">    ht.Add(&quot;avatar&quot;,userinfo.Avatar);</span><br><span class="line">    ht.Add(&quot;area&quot;, userinfo.Area);</span><br><span class="line">    ht.Add(&quot;address&quot;, userinfo.Address);</span><br><span class="line">    ht.Add(&quot;token&quot;,token);</span><br><span class="line">    var user = UserHelper.AddUserThirdParty(ht);            </span><br><span class="line">    return user;</span><br><span class="line">&#125;</span><br><span class="line">//根据阿里sdk构造统一访问对象，多次访问只需构造一次即可</span><br><span class="line">public static IAopClient GetAlipayClient()</span><br><span class="line">&#123;</span><br><span class="line">    //支付宝网关地址</span><br><span class="line">    // 沙箱地址，多了个dev</span><br><span class="line">    //string serverUrl = &quot;http://openapi.alipaydev.com/gateway.do&quot;;</span><br><span class="line">    // 线上地址</span><br><span class="line">    string serverUrl = &quot;https://openapi.alipay.com/gateway.do&quot;;</span><br><span class="line">    //沙盒应用ID</span><br><span class="line">    //string appId = &quot;2016091800543340&quot;;</span><br><span class="line">    //正式</span><br><span class="line">    string appId = System.Configuration.ConfigurationManager.AppSettings[&quot;APP_ID&quot;];</span><br><span class="line">    //沙盒商户私钥(这里我用的rsa2的方式，也是支付宝建议的方式，需要说明的是，如果用rsa不带2的方式，对应构造的请求参数里也要改成rsa)</span><br><span class="line">    //string APP_PRIVATE_KEY = &quot;沙盒私钥&quot;;</span><br><span class="line">    //正式公钥</span><br><span class="line">    string APP_PRIVATE_KEY = System.Configuration.ConfigurationManager.AppSettings[&quot;APP_PRIVATE_KEY&quot;];</span><br><span class="line">    //沙盒支付宝公钥</span><br><span class="line">    //string ALIPAY_PUBLIC_KEY = &quot;沙盒公钥&quot;;</span><br><span class="line">    //正式支付宝公钥</span><br><span class="line">    string ALIPAY_PUBLIC_KEY = System.Configuration.ConfigurationManager.AppSettings[&quot;ALIPAY_PUBLIC_KEY&quot;];</span><br><span class="line">    string CHARSET = &quot;utf-8&quot;;</span><br><span class="line">    IAopClient client = new DefaultAopClient(serverUrl, appId, APP_PRIVATE_KEY, &quot;json&quot;, &quot;1.0&quot;, &quot;RSA2&quot;, ALIPAY_PUBLIC_KEY, CHARSET, false);</span><br><span class="line">    return client;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至此，支付宝的第三方登录功能就完成了<br>如果上面的流程搞明白之后，在做支付就是小菜一碟了（文档参照<a href="https://docs.open.alipay.com/204/105465/）" target="_blank" rel="noopener">https://docs.open.alipay.com/204/105465/）</a><br>官方文档里讲的3步走策略如果调用sdk的话，就非常简单了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">/// &lt;summary&gt;</span><br><span class="line">/// 获取支付包支付参数签名</span><br><span class="line">/// &lt;/summary&gt;</span><br><span class="line">/// &lt;param name=&quot;deal_code&quot;&gt;交易单号&lt;/param&gt;</span><br><span class="line">/// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">[HttpGet]</span><br><span class="line">public Response GetAlipayOrderSign(string deal_code)</span><br><span class="line">&#123;</span><br><span class="line">    Response response = new Response() &#123; code = 1 &#125;;</span><br><span class="line">    BLL.deal_info bllDeal = new BLL.deal_info();</span><br><span class="line">    var deal = bllDeal.GetModel(deal_code);</span><br><span class="line">    if (deal.payment_status &lt; 2)</span><br><span class="line">    &#123;</span><br><span class="line">        Aop.Api.IAopClient client = YMcms.WebAPI.Lib.AlipayHelper.GetAlipayClient();</span><br><span class="line">        //调用sdk请求</span><br><span class="line">        Aop.Api.Request.AlipayTradeAppPayRequest request = new Aop.Api.Request.AlipayTradeAppPayRequest();</span><br><span class="line">        //构造请求参数主体</span><br><span class="line">        Aop.Api.Domain.AlipayTradeAppPayModel model = new Aop.Api.Domain.AlipayTradeAppPayModel()</span><br><span class="line">        &#123;</span><br><span class="line">            Body = &quot;主体&quot;,</span><br><span class="line">            Subject = &quot;主题&quot;,</span><br><span class="line">            TotalAmount = deal.total_fee.ToString(),</span><br><span class="line">            OutTradeNo = deal_code,</span><br><span class="line">            ProductCode = &quot;QUICK_MSECURITY_PAY&quot;,</span><br><span class="line">            DisablePayChannels = &quot;credit_group&quot;</span><br><span class="line">        &#125;;</span><br><span class="line">        //设定异步回调的链接</span><br><span class="line">        request.SetNotifyUrl(System.Configuration.ConfigurationManager.AppSettings[&quot;alipay_notifyUrl&quot;]);</span><br><span class="line">        request.SetBizModel(model);</span><br><span class="line">        Aop.Api.Response.AlipayTradeAppPayResponse ali_response = null;</span><br><span class="line">        try</span><br><span class="line">        &#123;</span><br><span class="line">            ali_response = client.SdkExecute(request);</span><br><span class="line">            response.data = ali_response.Body;</span><br><span class="line">        &#125;</span><br><span class="line">        catch (Exception ex)</span><br><span class="line">        &#123;</span><br><span class="line">            throw ex;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        response.code = -1;</span><br><span class="line">        response.message = &quot;只有未支付的订单可以支付订单&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    return response;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至此服务端的任务完成，客户端只需根据请求步骤生产的参数向支付宝发起请求即可，手机app端会自动拉起支付宝支付的界面，直接付款即可该步骤完成后，支付宝会向我们设定的异步回调的接口发送结果信息，而我们需要做的就是验签和解析返回参数再根据自己系统的业务逻辑处理相关业务即可（参照相关文档<a href="https://docs.open.alipay.com/204/105301/）" target="_blank" rel="noopener">https://docs.open.alipay.com/204/105301/）</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">//回调函数的部分代码</span><br><span class="line">SortedDictionary&lt;string, string&gt; sPara = GetRequestPost();</span><br><span class="line">Log.FileTxtLogs.WriteOperationLog(&quot;进入异步回调B&quot;, &quot;支付宝支付&quot;);</span><br><span class="line">Log.FileTxtLogs.WriteOperationLog(&quot;进入异步回调C,获取参数成功&quot;, &quot;支付宝支付&quot;);</span><br><span class="line">string trade_no = DTRequest.GetString(&quot;trade_no&quot;); //支付宝交易号</span><br><span class="line">string deal_code = DTRequest.GetString(&quot;out_trade_no&quot;).ToUpper(); //获取订单号(交易单号D开头或者R开头)</span><br><span class="line">string total_fee = DTRequest.GetString(&quot;total_amount&quot;); //获取总金额</span><br><span class="line">string trade_status = DTRequest.GetString(&quot;trade_status&quot;); //交易状态</span><br><span class="line">Log.FileTxtLogs.WriteOperationLog(&quot;进入异步回调D，&quot; + trade_no + &quot;+--&quot; + deal_code + &quot;+$&quot; + total_fee + &quot;&quot;, &quot;支付宝支付&quot;);</span><br><span class="line">string ALIPAY_PUBLIC_KEY = System.Configuration.ConfigurationManager.AppSettings[&quot;ALIPAY_PUBLIC_KEY&quot;];</span><br><span class="line">bool verifyResult = AlipaySignature.RSACheckV1(sPara, ALIPAY_PUBLIC_KEY, &quot;utf-8&quot;, &quot;RSA2&quot;, false);//验签，验签方式要和签名方式保持一致</span><br><span class="line">Log.FileTxtLogs.WriteOperationLog(&quot;进入异步回调,验签结果：&quot;+verifyResult+&quot;&quot;, &quot;支付宝支付&quot;);</span><br><span class="line">if (verifyResult)//验证成功</span><br><span class="line">&#123;</span><br><span class="line">   //你的系统逻辑</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>好了，到这基本就差不多了<br>这里我只介绍了支付宝的，微信的整体逻辑差不太多，不过微信的会更简单一点，<br>那么我还要啰嗦的一点是，在做这种第三方应用集成的时候，一定要看懂人家的文档，而且，如果你对自己的技术不是那么特别自信，强烈建议使用官方或者非官方的（官方不可能提供所有语言的sdk，比如非常受欢迎的ruby）sdk来做，会非常节省项目时间，不要重复造轮子~</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/hexo/tags/经验分享/" rel="tag"># 经验分享</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/2018/08/18/小试牛刀/" rel="next" title="新人报道">
+                <i class="fa fa-chevron-left"></i> 新人报道
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/hexo/2018/08/23/记录系统日志的利器-NLog/" rel="prev" title="记录系统日志的利器-NLog">
+                记录系统日志的利器-NLog <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbb2338b87602f0" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTA1My8xNTU4MA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tony</p>
+              <p class="site-description motion-element" itemprop="description">学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/hexo/archives/">
+              
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/hexo/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/hexo/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/hexo/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/hexo/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

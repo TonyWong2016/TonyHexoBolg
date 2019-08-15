@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/hexo/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/hexo/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/hexo/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/hexo/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="开发笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="转眼来到了5月底，怀着激动的心情，终于可以分享一下关于ElasticStack的一些相关内容了，灰常灰常鸡冻~在开始之前，我想先声明一下，这是笔记性质的分享，也就是我对ElasticStack的认识，也处在学习阶段，属于边学习，边总结，会把学习过程中需要注意的点，容易踩坑的点总结出来，并配合相关实例，来记录我对ElasticStack的学习过程。所以，如果你本身对ElasticSearch已经很熟">
+<meta name="keywords" content="开发笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ElasticStack学习笔记（一）">
+<meta property="og:url" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/index.html">
+<meta property="og:site_name" content="Tony&#39;s blog">
+<meta property="og:description" content="转眼来到了5月底，怀着激动的心情，终于可以分享一下关于ElasticStack的一些相关内容了，灰常灰常鸡冻~在开始之前，我想先声明一下，这是笔记性质的分享，也就是我对ElasticStack的认识，也处在学习阶段，属于边学习，边总结，会把学习过程中需要注意的点，容易踩坑的点总结出来，并配合相关实例，来记录我对ElasticStack的学习过程。所以，如果你本身对ElasticSearch已经很熟">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/introducing.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/IronMan.jpg">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/ES1.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/ES2.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/ES3.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/ES4.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/ES5.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/ES6.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/ES7.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/ES_Conf.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/ES_demo1.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/ES_demo2.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/ES_demo3.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/ES_demo4.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/ES_demo5.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/ES_demo6.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/K1.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/K2.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/K3.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/K_demo1.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/K_demo2.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/K_demo3.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/L1.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/L4.png">
+<meta property="og:updated_time" content="2019-05-31T02:11:53.356Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ElasticStack学习笔记（一）">
+<meta name="twitter:description" content="转眼来到了5月底，怀着激动的心情，终于可以分享一下关于ElasticStack的一些相关内容了，灰常灰常鸡冻~在开始之前，我想先声明一下，这是笔记性质的分享，也就是我对ElasticStack的认识，也处在学习阶段，属于边学习，边总结，会把学习过程中需要注意的点，容易踩坑的点总结出来，并配合相关实例，来记录我对ElasticStack的学习过程。所以，如果你本身对ElasticSearch已经很熟">
+<meta name="twitter:image" content="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/introducing.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hexo/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Tony'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tony_df.gitee.io/2019/05/30/ElasticStack学习笔记（一）/">
+
+
+
+
+
+  <title>ElasticStack学习笔记（一） | Tony's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hexo/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tony's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学着码代码,学着码人生;</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/hexo/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/hexo/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/hexo/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.gitee.io/hexo/2019/05/30/ElasticStack学习笔记（一）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tony's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ElasticStack学习笔记（一）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-30T18:10:32+08:00">
+                2019-05-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>转眼来到了5月底，怀着激动的心情，终于可以分享一下关于ElasticStack的一些相关内容了，灰常灰常鸡冻~<br>在开始之前，我想先声明一下，这是笔记性质的分享，也就是我对ElasticStack的认识，也处在学习阶段，属于边学习，边总结，会把学习过程中需要注意的点，容易踩坑的点总结出来，并配合相关实例，来记录我对ElasticStack的学习过程。所以，如果你本身对ElasticSearch已经很熟悉了，那么这个系列的分享并不适合你，当然，欢迎你来指出博客中的错误，而如果你是刚刚接触ElasticStack，那么，非常欢迎交流沟通，希望可以共同进步！<br>还有，笔记类型的分享，我会尽可能写的详细，甚至有点啰嗦，因为我自己本身也很笨，回头忘了什么也能回来翻翻。<br>好了，今天是第一篇，开胃菜，先简单介绍下什么是ElasticStack吧。<br>首先，从字面上分析，Elastic是有弹性的意思，Stack是栈，合在一起就是“弹性栈”？？稍微延伸一下，可以理解成弹性技术栈。<br>那么提到技术栈，就不只是单一的技术，而是多种技术的综合掌握，就像高考时我们的考试科目叫理综，包含了物理化学生物，那么ElasticStack也包含了多种技术，具体的内容，可以到他们的官网<a href="https://www.elastic.co" target="_blank" rel="noopener">https://www.elastic.co</a> 去看，<br><img src="introducing.png" alt="introducing"></p>
+<p>可以看到，ElasticStack其实整合了很多技术内容，但我们一般情况下，或者说用的最多的是其中的四种，分别是，ElasticSearch,Kibana,Logstash,Beats。所以这里先约定一下，在本系列笔记中的ElasticStack，就只包含以上四种技术方案。<br>其实在早些时候，ElasticSearch刚刚流行的时候，我们常说ELK而不说ElasticStack，那时候一般只用到我刚提到的四种方案中的前三种，而那时候这三种技术的版本号也比较混乱，比如ElasticSearch出到，2.x版本的时候，Kibana已经出道4.x的版本了，所以后来，也是借着官方重新整合他们的技术方案，到这几年，将以上几种技术方案的版本号统一从5.x开始使用，也是在这是，Beats成为了ELK技术框架之外的又一名成员，所以现在也就不叫ELK了，就统一叫ElasticStack。<br>提到版本号，这里要重点说明一下，在学习ElasticStack的时候，尤其是初学者，一定要注意，你所使用的ElasticStack软件的版本号是一致的，官方在5.x以后的下载列表里也都是严格对应的，比如，有7.0.0的ElasticSearch，就有7.0.0的Kibana，同理有对应版本的Logstash和Beats，其中Beats是一个统一的叫法，Beats包含FileBeat,PacketBeat等，也都是有统一对应的版本号的，所以在下载安装的时候，一定要注意版本号统一！<br>对了，说了半天好像还没说为什么要学习ElasticStack呢，额…这点要说起来的话，内容就多了去了，那咱这博客就别说别的了，也就失去了分享知识的意义，所以，建议大家自己去查一下，那么我的一句话总结就是，如果你的系统用上了ElasticStack，就好比给TonyStack穿上了钢铁侠的外衣，不止是变酷，威力也会变大数倍。<br><img src="IronMan.jpg" alt="IronMan"></p>
+<p>接下来，我会分别介绍，ElasticSearch,Kibana,Logstash,和Beats中的FileBeat以及PacketBeat的安装配置，关键说明，以及简单的demo展示，来介绍一下ElasticStack的魅力，同时会穿插一些相关的概念介绍<br>在此之前，我还要再做一点说明，关于版本的选择，大家都知道，越是新的版本，功能越丰富，活力越大，但是，ElasticStack毕竟是老外的产品，相信多数开发人员和我一样，没有无障碍阅读并理解英文技术文档的英语能力，而中文社区也做不到很快的就同步最新的文档，即便是很快同步，相关的教程，资料也不会出来那么快，所以，如果你是一个对技术标准要求很苛刻的人，那么你可以选择最新的版本，但我还是建议大家，为了方便学习，方便查阅资料，尽量选择一个相对稳定，中文资料内容丰富，同时短期内不会落伍的版本。我这里选择的是5.6.15，也就是5.x系列里最新的版本。还有，在开始之前，建议大家先建立一个统一的文件夹，起名Elastic或者方便你识别的一个名字，将ElasticStack相关的文件都下载安装到该文件夹下。<br>ElasticSearch:ElasticSearch是整个ElasticStack的核心部分，对于它的介绍，会相对详细些<br>1.安装配置<br>1).首先，ElasticSearch是用java编写的，所以安装ElasticSearch的前提是要先安装java，这个我只说一点，就是选择JDK版本的时候，请选择Java8，因为我们用的5.x的版本，对应的java版本就是java8，选的版本过高的话，在运行的时候会报警，甚至会报错。<br>2).接下来，下载ElasticSearch，（本来打算要介绍一下ElasticSearch的，后来觉得，官网的介绍已经非常好了，而且图文并茂，我就不多费唇舌了，<a href="https://www.elastic.co/cn/products/elasticsearch" target="_blank" rel="noopener">https://www.elastic.co/cn/products/elasticsearch</a>）<br><img src="ES1.png" alt="ES1"><br><img src="ES2.png" alt="ES2"><br>这里是ES的下载界面，我们看到目前最新的版本是7.1.1，并不是我们的目标版本，在下载页面往下拉一点有一个“past releases”，我们可以找到以往的发行版本，点击之后，选择我们需要的ES版本<br><img src="ES3.png" alt="ES3"><br>然后下载，注意我的使用环境目前是在Windows环境，大家请根据各自的系统环境，下载对应的版本即可。下载形式也有多种，一般分为，zip,tar,deb,rpm和msi，这里，我建议不管哪种系统环境，统一选择压缩包（zip或tar）的格式下载，这样配置起来更加灵活，我选择这里选择zip包。<br><img src="ES4.png" alt="ES4"><br>3).将下载的包解压，目录结构如下<br><img src="ES5.png" alt="ES5"><br>解压完后，不需要任何配置，直接打开命令行，进入到bin目录，执行elasticsearch就可以将运行起来<br><img src="ES6.png" alt="ES6"><br>默认ES是运行在9200端口上的，我们可以通过浏览器来验证一下<br><img src="ES7.png" alt="ES7"><br>出现这个界面，就说明我们已经运行起一个elasticsearch集群了。<br>2.关键说明<br>我们回到上面解压完成后的那一步，在解压后的目录里，有一个config文件夹，里面有三个文件，elasticsearch.yml,jvm.options,log4j2.properties，当前阶段，我们只关注第一个配置文件，编辑打开<br><img src="ES_Conf.png" alt="ES_Conf"><br>在里面我们可以看到，默认的配置文件里都是注释掉的内容，因为es帮我们做好了默认配置，所以不修改任何内容也可以启动一个es集群。<br>我们来简单介绍一下配置文件里的内容<br>Cluster(集群)：这里我们可以配置集群的名字，注意，在一个es集群里，集群名字是唯一的；<br>Node(节点)：一个集群可以有多个节点，我们稍后在demo中会测试启动一个包含两个节点的es集群,节点名字(node.name)是不相同的，注意区分，node.master: true指定该节点是否有资格被选举成为node，默认是true，es是默认集群中的第一台机器为master，如果这台机挂了就会重新选举master，node.data: true指定该节点是否存储索引数据，默认为true；<br>Paths(路径)：这里有三个配置，一个是path.data，存储es数据，一个是path.log，存储es日志，path.plugins: /path/to/plugins，设置插件的存放路径，默认是es根目录下的plugins文件夹，一般不用调整；<br>Memory(内存)：这里可以配置es可占用的最大内存空间，这个视情况而定，一般不超过可用内存的一半就好，否则当检索逻辑很复杂时，可能会占用很高的内存，严重影响效率；<br>Network(工作网络)：这里有两个配置，network.host和network.port，一般内网环境下，network.host就设定为127.0.0.1，而es的默认端口为9200，如果我们需要通过外网访问es，可以将network.host设定为服务器的IP地址。<br>Discovery(可被发现)：这个配置是设置是集群节点可以被其他节点发现访问，否则当我们启动多个节点的时候，他们都是游离在集群之外的。<br>Gateway(网关)：主要职责是用来对数据进行长持久化，另外，整个集群重启之后可以通过gateway重新恢复数据。<br>关于配置文件更加详细的介绍，可以看看这里<a href="https://www.cnblogs.com/huane/p/6093818.html" target="_blank" rel="noopener">https://www.cnblogs.com/huane/p/6093818.html</a><br>3.Demo测试</p>
+<p>接下来，我们通过简单的配置，启动包含两个节点的ES集群，一个主节点master，一个子节点slave1，<br><img src="ES_demo1.png" alt="ES_demo1"><br>首先，为了方便，我们先将之前下载的ES压缩包重新解压一份，然后我先修改第一个节点下的配置文件，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cluster.name: orange      <span class="comment">#集群名字</span></span><br><span class="line">node.name: master         <span class="comment">#节点名字</span></span><br><span class="line">node.master: <span class="literal">true</span>         <span class="comment">#主节点标识</span></span><br><span class="line">network.host: 127.0.0.1   <span class="comment">#ip</span></span><br><span class="line">http.port: 9200           <span class="comment">#端口号  </span></span><br><span class="line">transport.tcp.port: 9300  <span class="comment">#节点数据交换tcp端口（默认为9300）</span></span><br><span class="line">discovery.zen.ping.unicast.hosts: [<span class="string">"127.0.0.1:9300"</span>] <span class="comment">#集群中master节点的初始列表，可以通过这些节点来自动发现新加入集群的节点。</span></span><br></pre></td></tr></table></figure>
+
+<p>保存后，开始配置slave1的配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cluster.name: orange</span><br><span class="line">node.name: slave1</span><br><span class="line">network.host: 127.0.0.1</span><br><span class="line">http.port: 8200</span><br><span class="line">transport.tcp.port: 8300</span><br><span class="line">discovery.zen.ping.unicast.hosts: [<span class="string">"127.0.0.1:9300"</span>]</span><br></pre></td></tr></table></figure>
+
+<p>然后我们分别启动两个节点<br><img src="ES_demo2.png" alt="ES_demo2"><br><img src="ES_demo3.png" alt="ES_demo3"><br>然后我们打开浏览器，验证一下<br><img src="ES_demo4.png" alt="ES_demo4"><br><img src="ES_demo5.png" alt="ES_demo5"><br>这样我们就启动了一个包含两个节点的es集群。<br>这里推荐大家用chrome浏览器，安装一个叫做ElasticSearch Head的插件，可以看的更直观一些<br><img src="ES_demo6.png" alt="ES_demo6"><br>关于ElasticSearch查询语法的一些内容，在后面的笔记在单独介绍，这篇就先讲安装。</p>
+<p>Kibnan：能够对 Elasticsearch 中的数据进行可视化并在 ElasticStack 进行操作<br>1.安装配置<br>首先，打开<a href="https://www.elastic.co/cn/downloads/past-releases" target="_blank" rel="noopener">https://www.elastic.co/cn/downloads/past-releases</a>,选择5.6.15版本的Kibana<br><img src="K1.png" alt="K1"><br>同样我们下载zip包的格式，然后解压缩，<br>依然是不需要任何配置，就可以直接运行Kibana<br><img src="K2.png" alt="K2"><br>启动后，我们在浏览器输入localhost:5601<br><img src="K3.png" alt="K3"><br>至此，我们就启动了Kibana服务的安装<br>2.关键配置<br>kibana的配置文件同样是在conf目录下，只有一个文件kibana.yml，<br>这个配置文件的内容还是比较容易读的，虽说是英文，但通俗易懂，我就不多说了<br>3.demo<br>在kibana里，我们可以做一些对于ES的交互操作，我这里只演示一下，下篇在细说<br><img src="K_demo1.png" alt="K_demo1"><br>选择DevTools,我这里的ES里已经有一些数据了，比如我执行一个检索操作<br><img src="K_demo2.png" alt="K_demo2"><br>右边的框是检索结果，结果展示是json格式的，多说一句，es是基于Lucene的搜索服务器，而Lucene繁琐复杂，es通过对其封装，对外开放了简单的restful风格的接口，使得我们不用再去理解繁琐的Lucene语法，也能享受优质的检索服务。<br>这里我还要提一下，大家注意看到右面的检索结果里有个“max_score”的参数，这个是匹配度的意思，详细内容，我们在后面的笔记在细说，这里我先提一句，这个参数很重要，当我们检索某个关键词时，他会把相关的内容都检索除了，然后每个记录后都跟着一个“_score”来表明结果与查询内容的匹配度，同时给出最大匹配度的结果，这时我们就可以根据我们的业务逻辑来实现一些相关操作了，同时，一定程度上，省去了分词和语义分析（只是一定程度上，如果你的检索系统对自然语言标准有要求，那es提供的相关的结果是不够的），提高工作效率。<br><img src="K_demo3.png" alt="K_demo3"><br>logstash:官方对logstash的介绍是，Logstash 是开源的服务器端数据处理管道，能够同时从多个来源采集数据，转换数据，然后将数据发送到您最喜欢的 “存储库” 中，这篇关于logstash我先简单介绍，因为我当前对这块知识掌握的也不是很多，下一篇在详细说；<br>1.安装配置<br>同样，打开<a href="https://www.elastic.co/cn/downloads/past-releases" target="_blank" rel="noopener">https://www.elastic.co/cn/downloads/past-releases</a>，选择5.6.15版本的logstash<br><img src="L1.png" alt="L1"><br>安装完后，解压<br>然后我们启动<br><img src="L4.png" alt="L4"><br>这里后面跟着的参数，我这篇先不讲，等后面的笔记在详细介绍。<br>好了，今天先写到这，还有beats的相关内容没说，后面继续。<br>不写不知道，一写吓一跳，ElasticStack相关的内容是真挺多的，需要注意的点也很多，写着写着也感觉身体被掏空，怕写错还是会去查一些资料，然后自己实际操作一遍来验证，这篇就当是个开胃菜，大家简单认识一下ElasthcStack，后面我会针对性的对每块内容详细分享，然后在结合程序代码，实际演示一下怎么将ElastiStack和我们的系统结合起来，发挥作用。嗯，这么一梳理，感觉关于这块还要至少写5，6篇才能完，但既然开了这个头，我就会尽全力写好这个系列，分享的同时，自己也会得到知识的提升和巩固，而且我一直认为，我们这些不再一线城市，或者不再大企业的技术人员，也要努力拓展更新自己的技术路线，才能保证不被时代淘汰，才能写出更好的代码，做出更完美的产品。加油加油！！</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/hexo/tags/开发笔记/" rel="tag"># 开发笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/2019/05/21/致老婆大人/" rel="next" title="致老婆大人">
+                <i class="fa fa-chevron-left"></i> 致老婆大人
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/hexo/2019/07/01/停更一段时间/" rel="prev" title="停更一段时间">
+                停更一段时间 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbb2338b87602f0" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTA1My8xNTU4MA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tony</p>
+              <p class="site-description motion-element" itemprop="description">学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/hexo/archives/">
+              
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/hexo/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/hexo/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/hexo/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/hexo/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

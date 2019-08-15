@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/hexo/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/hexo/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/hexo/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/hexo/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="开发笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="今天想和大家聊聊关于代码重构的事儿，在互联网还不怎么普及的时候，人们一般开发应用级别的软件，都是会包含一个可视化的界面，上面会有很多按钮，就像工厂的工人造作机器时的面板一样，不同的是，机器上的操作面板会随着时间的推移，变得接触不良，甚至失效，而软件面版不会，只要底层环境不变，它可以一直运行下去，到了互联网时代，其实本质上的软件产品并没有发生太大的改变，只不过我们更多的把曾经的需要在客户端安装的软件">
+<meta name="keywords" content="开发笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="聊一下关于代码重构的一些事儿">
+<meta property="og:url" content="https://tony_df.gitee.io/2019/05/13/聊一下关于代码重构的一些事儿/index.html">
+<meta property="og:site_name" content="Tony&#39;s blog">
+<meta property="og:description" content="今天想和大家聊聊关于代码重构的事儿，在互联网还不怎么普及的时候，人们一般开发应用级别的软件，都是会包含一个可视化的界面，上面会有很多按钮，就像工厂的工人造作机器时的面板一样，不同的是，机器上的操作面板会随着时间的推移，变得接触不良，甚至失效，而软件面版不会，只要底层环境不变，它可以一直运行下去，到了互联网时代，其实本质上的软件产品并没有发生太大的改变，只不过我们更多的把曾经的需要在客户端安装的软件">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-05-16T08:25:05.598Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="聊一下关于代码重构的一些事儿">
+<meta name="twitter:description" content="今天想和大家聊聊关于代码重构的事儿，在互联网还不怎么普及的时候，人们一般开发应用级别的软件，都是会包含一个可视化的界面，上面会有很多按钮，就像工厂的工人造作机器时的面板一样，不同的是，机器上的操作面板会随着时间的推移，变得接触不良，甚至失效，而软件面版不会，只要底层环境不变，它可以一直运行下去，到了互联网时代，其实本质上的软件产品并没有发生太大的改变，只不过我们更多的把曾经的需要在客户端安装的软件">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hexo/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Tony'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tony_df.gitee.io/2019/05/13/聊一下关于代码重构的一些事儿/">
+
+
+
+
+
+  <title>聊一下关于代码重构的一些事儿 | Tony's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hexo/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tony's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学着码代码,学着码人生;</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/hexo/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/hexo/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/hexo/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.gitee.io/hexo/2019/05/13/聊一下关于代码重构的一些事儿/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tony's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">聊一下关于代码重构的一些事儿</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-13T10:20:14+08:00">
+                2019-05-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>今天想和大家聊聊关于代码重构的事儿，在互联网还不怎么普及的时候，人们一般开发应用级别的软件，都是会包含一个可视化的界面，上面会有很多按钮，就像工厂的工人造作机器时的面板一样，不同的是，机器上的操作面板会随着时间的推移，变得接触不良，甚至失效，而软件面版不会，只要底层环境不变，它可以一直运行下去，到了互联网时代，其实本质上的软件产品并没有发生太大的改变，只不过我们更多的把曾经的需要在客户端安装的软件移植到互联网，我们可以通过浏览器，或者各类小程序就可以实现我们的需求，颠覆了在用户体验上和便利性上的特性。<br>那么既然如此，为什么我们做出来的软件产品还需要不断的重构呢？注意，重构代码和你的产品迭代是不完全一样的，也不同于bug修复后推送的产品升级，应该说重构是包含了这些工作的。重构也分大小，也跟公司的开发制度和规范有很大关联。有的公司产品是由固定的重构计划的，这种重构更类似于将产品整个推到重来一遍，虽说完成后的结果会是脱胎换骨般的变化，但付出的代价无疑也是巨大的，估计很少有公司采用这种重构计划了。<br>但是，需要说明的是，在一些没有重构规划的公司里，尤其是当主管领导也没有重构思想的公司，他们脑子里想的重构，基本都类似这种，所以你会看到他们所负责的产品会用到很多非常古老的技术，程序架构也乱的不行，然后你一提重构建议，他就头大，之前听说好多国企或非研发形的大公司里的软件部门都是这种情况，不过现在情况应该会好一些，咱也没在国企里带呆过，咱也不敢乱说（但咱还是在大企业里呆过的，情况确实是这么个情况，甚至更糟糕。）<br>相信大家和我的观点应该差不多，我认为，重构应该是无时不刻在发生着的，只要这个产品还活着，重构的工作就不该停下来，积少成多，可能我们今天重构的这部分代码，从功能上并不会改变什么，但提高了效率，或者提高了代码的可读性，甚至我们可能会将一些常用的业务封装成类库移植到其他的项目里继续使用，这从长远来看，不论对产品，还是对用户体验，对公司发展，都是大大有益的。<br>在实际工作中，我们可能会遇到一些非常优秀的项目，我们从中更多是是学习他的框架结构和业务的实现方式，并适应项目去做进一步的开发，然后随着理解的深入，再根据实际业务去做一些重构工作，这是非常理想的状态。但更多的时候，我们遇到的项目并不是那么优秀，甚至可以说是有一点low，当然造成项目变low的原因是多方面的，我们不再去深入讨论，我们更应该关心的是，怎么把这个很low的项目变得fashion起来。<br>我给大家看几个具体的例子<br>第一个是一个页面上涉及到了图片文件上传，原来的代码是这么写的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">protected void lbtnSave1_Click(object sender, EventArgs e)</span><br><span class="line">&#123;</span><br><span class="line">    int AID=btnUploadAttach(Photo1, 1);</span><br><span class="line">    //删除旧附件</span><br><span class="line">    if (hidPhoto1ID.Value != &quot;0&quot; &amp;&amp; hidPhoto1ID.Value != &quot;&quot;)</span><br><span class="line">        DelOldFile(hidPhoto1ID.Value);</span><br><span class="line">    //绑定图片</span><br><span class="line">    DataRow dr= ScientificCreateActivity_Attach.Get(AID);</span><br><span class="line">    img1.Attributes[&quot;src&quot;] = dr[&quot;AttachUrl&quot;].ToString();</span><br><span class="line">    hidPhoto1ID.Value = AID.ToString();</span><br><span class="line">&#125;</span><br><span class="line">protected void lbtnSave2_Click(object sender, EventArgs e)</span><br><span class="line">&#123;</span><br><span class="line">    int AID = btnUploadAttach(Photo2, 1);</span><br><span class="line">    //删除旧附件</span><br><span class="line">    if (hidPhoto2ID.Value != &quot;0&quot; &amp;&amp; hidPhoto2ID.Value != &quot;&quot;)</span><br><span class="line">        DelOldFile(hidPhoto2ID.Value);</span><br><span class="line">    //绑定图片</span><br><span class="line">    DataRow dr = ScientificCreateActivity_Attach.Get(AID);</span><br><span class="line">    img2.Attributes[&quot;src&quot;] = dr[&quot;AttachUrl&quot;].ToString();</span><br><span class="line">    hidPhoto2ID.Value = AID.ToString();</span><br><span class="line">&#125;</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">.</span><br></pre></td></tr></table></figure>
+
+<p>说白了就是有几处上传，他就做了几处“上传”，几乎完全一样的代码，那么稍微有点经验的开发人员看到这样的东西肯定都是无力吐槽的，在程序开发领域，我们要尽可能的遵循一个叫“DRY”的开发准则，就是Don’t Repeat Yourself!不要重复你自己！所以正确的所发应该是我们将可以通用的代码提取出来，供需要的业务调用。<br>再举一个例子，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">string strMemberID = MemberProvince.AddMemberProvince(</span><br><span class="line">					 txtMemberName.Text,</span><br><span class="line">					 rblSex.SelectedValue,</span><br><span class="line">					 ddlNation.SelectedValue,</span><br><span class="line">					 ddlGrade.SelectedValue,</span><br><span class="line">					 txtBirthday.Text, txtTelephone.Text,</span><br><span class="line">					 txtAddress.Text,</span><br><span class="line">					 txtPostCode.Text,</span><br><span class="line">					 &quot;&quot;,</span><br><span class="line">					 &quot;&quot;,</span><br><span class="line">					 ddlOrderNum.SelectedValue,</span><br><span class="line">					 ViewState[&quot;RobotID&quot;].ToString(),</span><br><span class="line">					 txtTeamTask.Text,</span><br><span class="line">					 txtIdentityNo.Text,</span><br><span class="line">					 txtEmail.Text,</span><br><span class="line">					 txtMobile.Text,</span><br><span class="line">					 txtQQ.Text,</span><br><span class="line">					 txtWechat.Text,</span><br><span class="line">					 txtWeibo.Text,</span><br><span class="line">					 txtmsn.Text,</span><br><span class="line">					 ddlCity.SelectedValue,</span><br><span class="line">					 ConfigurationManager.AppSettings[&quot;strProvinceID&quot;].ToString(),</span><br><span class="line">					 txtUnitName.Text,</span><br><span class="line">					 txtStudentNo.Text,</span><br><span class="line">					 txtClassName.Text);</span><br><span class="line"></span><br><span class="line">string strTempName = strMemberID;</span><br><span class="line">MemberProvince.Update_MemberProvince_Field(strMemberID,MemberProvince.f_UnitID, hidSchoolID.Value);</span><br><span class="line">MemberProvince.UpdateR_MemberProvince_Field(strMemberID, MemberProvince.f_PictureUrl, strImgUrl);</span><br><span class="line">btnlnkSave.Enabled = false;</span><br><span class="line">Tools.obJs.AlertThenRedirect(this, &quot;添加成员成功！&quot;, &quot;step4.aspx&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>这段代码（其实是伪代码，我去掉了一些敏感信息，但不影响理解），我们可以看到，它是调用一个静态方法去执行了一个插入的操作，后续还有一些相应的更新操作。那么这段代码的问题主要有以下三点，<br>第一，方法需要传入的参数太多，这种方法实现的话，在调用的时候还要注意参数顺序不能错，非常不好；<br>第二，显然，那个调用方法里接受的都是字符串参数，做实际插入的时候还需要进一步做类型转换，还可能有注入风险，费力不讨好；<br>第三，看代码我们可以知道，当执行完插入操作后，他需要根据返回的id做一些更新操作，而没有考虑到当插入出现问题时，后续的更新操作可能会出现的问题；<br>那么对应的，我们的重构思路是<br>第一，修改那个调用的静态插入的方法，使其以模型的形式接受实参，这样，既可以解决参数过多不方便的问题，又可以解决上述提到的第二个问题，一举两得，需要说明的是，模型定义的时候应该加好数据验证，就可以避免注入风险；<br>第二，我们应该将对应的更新操作修改到底层去完成，通过事务的方式，而不是在实际业务层根据上一步的结果去做，这样的更新是不可逆的，存在风险。<br>这样，我们的重构思路就很清晰，拿上面的例子来说，我们可以预见，重构后的代码会更加精炼，不光效率提升了很多，可读性上也有很大改善。<br>我们写代码不能把自己写死，举个例子，我们定义一个日期类型的字段并设置了只展示年月日的格式，突然有一天我们需要，也展示时间怎么办，最好的方法是我们把这个时间存成时间戳的形式，要展示什么格式都不怕。<br>当然，有些代码的重构不是因为代码不够好，或者不够清晰，而是因为有了更好的，更适合的技术来取代当前的实现方式，为了跟上时代的脚步，我们也会适当的对一些很好的代码做出重构的决定。<br>那么实际我们可能所处的工作环境不太一样，有的人，每天的工作紧张而充实，他也知道项目代码有问题，但就是为了赶项目，求速度，所以不得不将错就错，甚至采用错上加错的方式去完成工作，其实这也可以理解，但我想说的是，大家都是圈里混的，谁不知道谁，你敢说你全年的工作时间都是这么紧张刺激吗，肯定有不忙的时候，而且肯定有一段或几段较长的时间的轻松时期，即便是忙，也不会忙到把代码乱撸一气的地步吧，所以，不要总找接口，其实就是自己懒~~（咳咳），不多说了，大家都懂。<br>其实，重构代码的过程，也是一个复习和自我提升的过程，老话说，温故而知新，在日常的代码重构工作中，我们会更加的理解业务，熟悉业务，在技术层面也会有新的认识，从而提高我们自己的开发水平，重构代码的过程，就是重构自己知识架构的过程，自己和项目，是共同向前发展的。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/hexo/tags/开发笔记/" rel="tag"># 开发笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/2019/05/08/用nginx实现一个简单的负载均衡/" rel="next" title="用Nginx实现一个简单的负载均衡">
+                <i class="fa fa-chevron-left"></i> 用Nginx实现一个简单的负载均衡
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/hexo/2019/05/16/聊聊sql注入要注意的一些问题/" rel="prev" title="聊聊sql注入要注意的一些问题">
+                聊聊sql注入要注意的一些问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbb2338b87602f0" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTA1My8xNTU4MA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tony</p>
+              <p class="site-description motion-element" itemprop="description">学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/hexo/archives/">
+              
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/hexo/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/hexo/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/hexo/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/hexo/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
