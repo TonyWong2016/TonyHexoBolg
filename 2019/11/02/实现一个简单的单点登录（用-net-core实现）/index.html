@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/hexo/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/hexo/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/hexo/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/hexo/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="开发笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="按照之前说的，今天来分享一个简单的单点登录的实现方案，想做这个分享，是因为之前接的一个个人的项目里，有涉及相关的内容，对这块的知识点其实也很模糊，但是要做的话也能做出来，就是对原理性的东西理解的不透彻。这次借着这个机会，我也学习了一下相关的知识，在这里简单的介绍下。还是老规矩，原理性的内容，我穿插的说，不从头到尾说了，而且我也不一定说的明白，网上关于单点登录的知识点挺多的，推荐一篇https://">
+<meta name="keywords" content="开发笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实现一个简单的单点登录（用asp.net core 3.0实现）">
+<meta property="og:url" content="https://tony_df.gitee.io/2019/11/02/实现一个简单的单点登录（用-net-core实现）/index.html">
+<meta property="og:site_name" content="Tony&#39;s blog">
+<meta property="og:description" content="按照之前说的，今天来分享一个简单的单点登录的实现方案，想做这个分享，是因为之前接的一个个人的项目里，有涉及相关的内容，对这块的知识点其实也很模糊，但是要做的话也能做出来，就是对原理性的东西理解的不透彻。这次借着这个机会，我也学习了一下相关的知识，在这里简单的介绍下。还是老规矩，原理性的内容，我穿插的说，不从头到尾说了，而且我也不一定说的明白，网上关于单点登录的知识点挺多的，推荐一篇https://">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/11/02/实现一个简单的单点登录（用-net-core实现）/1.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/11/02/实现一个简单的单点登录（用-net-core实现）/2.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/11/02/实现一个简单的单点登录（用-net-core实现）/3.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/11/02/实现一个简单的单点登录（用-net-core实现）/server.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/11/02/实现一个简单的单点登录（用-net-core实现）/client1.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/11/02/实现一个简单的单点登录（用-net-core实现）/client2.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/11/02/实现一个简单的单点登录（用-net-core实现）/4.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/11/02/实现一个简单的单点登录（用-net-core实现）/5.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/11/02/实现一个简单的单点登录（用-net-core实现）/6.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/11/02/实现一个简单的单点登录（用-net-core实现）/7.png">
+<meta property="og:updated_time" content="2019-11-02T09:30:44.039Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="实现一个简单的单点登录（用asp.net core 3.0实现）">
+<meta name="twitter:description" content="按照之前说的，今天来分享一个简单的单点登录的实现方案，想做这个分享，是因为之前接的一个个人的项目里，有涉及相关的内容，对这块的知识点其实也很模糊，但是要做的话也能做出来，就是对原理性的东西理解的不透彻。这次借着这个机会，我也学习了一下相关的知识，在这里简单的介绍下。还是老规矩，原理性的内容，我穿插的说，不从头到尾说了，而且我也不一定说的明白，网上关于单点登录的知识点挺多的，推荐一篇https://">
+<meta name="twitter:image" content="https://tony_df.gitee.io/2019/11/02/实现一个简单的单点登录（用-net-core实现）/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hexo/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Tony'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tony_df.gitee.io/2019/11/02/实现一个简单的单点登录（用-net-core实现）/">
+
+
+
+
+
+  <title>实现一个简单的单点登录（用asp.net core 3.0实现） | Tony's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hexo/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tony's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学着码代码,学着码人生;</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/hexo/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/hexo/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/hexo/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.gitee.io/hexo/2019/11/02/实现一个简单的单点登录（用-net-core实现）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tony's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">实现一个简单的单点登录（用asp.net core 3.0实现）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-02T09:15:22+08:00">
+                2019-11-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>按照之前说的，今天来分享一个简单的单点登录的实现方案，想做这个分享，是因为之前接的一个个人的项目里，有涉及相关的内容，对这块的知识点其实也很模糊，但是要做的话也能做出来，就是对原理性的东西理解的不透彻。<br>这次借着这个机会，我也学习了一下相关的知识，在这里简单的介绍下。<br>还是老规矩，原理性的内容，我穿插的说，不从头到尾说了，而且我也不一定说的明白，网上关于单点登录的知识点挺多的，推荐一篇<a href="https://yq.aliyun.com/articles/636281" target="_blank" rel="noopener">https://yq.aliyun.com/articles/636281</a>，好了，开始吧。<br>单点登录（SSO），虽然这个叫法里有个单字，但我认为，要实现它方法并不单，这个单不只是一种方法，也指的是一个步骤，我今天介绍的只是一种方法里的一个步骤。<br>了解过SSO相关知识的小伙伴肯定知道，单点登录实现的最终目标是，多个系统，在一处进行一次登录，在一处进行一次退出。今天我的分享其实只实现了第一步，也就是多个系统，一处登录，至于后边的内容，后边有机会再继续聊。<br>好了，看下系统结构<br><img src="1.png" alt="结构"><br>Server是用来做登录验证的地方，另外两个是子系统，这两个子系统是没有登陆模块的，进入子系统后会自动跳转到SSO，这里我们在涉及SSO架构的时候，Server的部分最好是业务分明一点，也就是在SSO里只有登录模块，不做别的，理想的状态是，当我们登录了整个系统中的某一个子系统，其他子系统在访问的时候也就随之登录。（这一步，我会在后边的博客里分享，这一篇只到跳转到SSO）。<br>Server里需要完成的逻辑有，验证登录用户有效性，生成令牌（token），验证令牌，看下代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">[HttpGet]</span><br><span class="line">public IActionResult Index(string returnUrl)</span><br><span class="line">&#123;</span><br><span class="line">    string token = null;</span><br><span class="line">    if (HttpContext.User.Claims.Any())</span><br><span class="line">    &#123;</span><br><span class="line">        //从上下文里取出已存储过的令牌</span><br><span class="line">        token = HttpContext.User.Claims.FirstOrDefault(c =&gt; c.Type == ClaimTypes.Authentication).Value;</span><br><span class="line">        try</span><br><span class="line">        &#123;</span><br><span class="line">            //验证放在Cookie的Token有无过期</span><br><span class="line">            var info = Lib.TokenLib.VerificationToken(token);</span><br><span class="line">        &#125;</span><br><span class="line">        catch (Exception)</span><br><span class="line">        &#123;</span><br><span class="line">            //如果过期了就跳转到登录页</span><br><span class="line">            return View();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (returnUrl != null)</span><br><span class="line">        &#123;</span><br><span class="line">            return Redirect($&quot;&#123;returnUrl&#125;?Token=&#123;token&#125;&quot;);//将令牌返回</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return View();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/// &lt;summary&gt;</span><br><span class="line">/// 登录请求验证用户信息有效性</span><br><span class="line">/// &lt;/summary&gt;</span><br><span class="line">/// &lt;param name=&quot;model&quot;&gt;&lt;/param&gt;</span><br><span class="line">/// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">[HttpPost]</span><br><span class="line">public async Task&lt;IActionResult&gt; Index(Models.LoginModel model)</span><br><span class="line">&#123;</span><br><span class="line">    string token = null;</span><br><span class="line">    if (string.IsNullOrEmpty(model.UserName) || string.IsNullOrEmpty(model.Password))</span><br><span class="line">    &#123;</span><br><span class="line">        //返回错误信息</span><br><span class="line">        ModelState.AddModelError(model.Password, &quot;错误的请求&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    if (model.UserName == &quot;tony&quot; &amp;&amp; model.Password == &quot;123456&quot;)//这一步应该在库里去检索</span><br><span class="line">    &#123;</span><br><span class="line">        //生成Token</span><br><span class="line">        token = Lib.TokenLib.GetToken(model.UserName);</span><br><span class="line">        var claims = new List&lt;Claim&gt;()&#123;</span><br><span class="line">                        new Claim(ClaimTypes.Authentication,token)</span><br><span class="line">                    &#125;;</span><br><span class="line">        var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, &quot;Customer&quot;));</span><br><span class="line">        var pories = new AuthenticationProperties()</span><br><span class="line">        &#123;</span><br><span class="line">            IsPersistent = true,</span><br><span class="line">            ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1)</span><br><span class="line">        &#125;;</span><br><span class="line">        //将登录信息注册到http上下文中</span><br><span class="line">        await HttpContext.SignInAsync(&quot;sso&quot;, userPrincipal, pories);</span><br><span class="line">    &#125;</span><br><span class="line">    if (model.returnUrl != null)</span><br><span class="line">    &#123;</span><br><span class="line">        return Redirect($&quot;&#123;model.returnUrl&#125;?Token=&#123;token&#125;&quot;);//将令牌返回</span><br><span class="line">    &#125;</span><br><span class="line">    return View();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上两个控制器是完成用户信息有效性的验证，注意在验证完成后，我们将访问系统的令牌返回给了子系统。子系统的每次访问，都会去验证这个令牌，如果令牌过期或者错误，则子系统将无法访问。<br>再来看下Server端验证token的过程（另附上Lib里的签名，验证方法，比较简单，其实我不太喜欢往博客里灌太多代码，读内容的时候会影响思路）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">/// &lt;summary&gt;</span><br><span class="line">/// 检查客户端发的Token是否有效</span><br><span class="line">/// &lt;/summary&gt;</span><br><span class="line">/// &lt;param name=&quot;jObject&quot;&gt;Token&lt;/param&gt;</span><br><span class="line">/// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">[HttpPost]</span><br><span class="line">public IActionResult checkToken([FromBody] Models.CheckTokenModel model)</span><br><span class="line">&#123;</span><br><span class="line">    if (model==null)</span><br><span class="line">    &#123;</span><br><span class="line">        return Json(new &#123; code = &quot;400&quot;, Message = &quot;参数为空&quot; &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    string Token = model.token;</span><br><span class="line">    if (string.IsNullOrEmpty(Token))</span><br><span class="line">    &#123;</span><br><span class="line">        return Json(new &#123; code = &quot;400&quot;, Message = &quot;参数为空&quot; &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    Models.TokenModel principal = null;</span><br><span class="line">    try</span><br><span class="line">    &#123;</span><br><span class="line">        //验证Token</span><br><span class="line">        principal = Lib.TokenLib.VerificationToken(Token);</span><br><span class="line">    &#125;</span><br><span class="line">    catch (Lib.SSOException ex)</span><br><span class="line">    &#123;</span><br><span class="line">        return Json(new &#123; code = &quot;401&quot;, info = &quot;&quot;, Message = ex.Message &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return Json(new &#123; code = &quot;200&quot;, info = principal, Message = &quot;Token有效&quot; &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line">public class TokenLib</span><br><span class="line">&#123;</span><br><span class="line">    private static string SecretKey = ConfigurationHelper.GetSectionValue(&quot;SecretKey&quot;);</span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 生成token</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    /// &lt;param name=&quot;uid&quot;&gt;&lt;/param&gt;</span><br><span class="line">    /// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">    public static string GetToken(string uid)</span><br><span class="line">    &#123;</span><br><span class="line">        //将用户信息化为Token的前部</span><br><span class="line">        var userinfo = GetBase64UserInfo(uid);</span><br><span class="line">        //制作Token签名</span><br><span class="line">        var signature = GetMD5Signature(userinfo);</span><br><span class="line">        return $&quot;&#123;userinfo&#125;.&#123;signature&#125;&quot;;//小小的致敬一下jwt的生成格式，精简为荷载+签名</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static Models.TokenModel VerificationToken(string Token)</span><br><span class="line">    &#123;</span><br><span class="line">        if (Token == null)</span><br><span class="line">        &#123;</span><br><span class="line">            throw new ArgumentNullException(&quot;Token为null&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        string[] verificationInfo = Token.Split(&quot;.&quot;);</span><br><span class="line">        if (verificationInfo.Length &lt; 2)</span><br><span class="line">        &#123;</span><br><span class="line">            throw new SSOException(&quot;令牌不合法&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        var TokenSignature = GetMD5Signature(verificationInfo[0]);</span><br><span class="line">        //Token用户信息被人修改了</span><br><span class="line">        if (TokenSignature != verificationInfo[1])</span><br><span class="line">        &#123;</span><br><span class="line">            throw new SSOException(&quot;Token签名错误&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        byte[] base64byte = Convert.FromBase64String(verificationInfo[0]);</span><br><span class="line">        string userinfo = Encoding.UTF8.GetString(base64byte);</span><br><span class="line">        var usermodel = JsonConvert.DeserializeObject&lt;Models.TokenModel&gt;(userinfo);</span><br><span class="line">        //判断Token是否过期</span><br><span class="line">        if (CheckTokenExpired(usermodel.Expire))</span><br><span class="line">        &#123;</span><br><span class="line">            throw new SSOException(&quot;令牌过期&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        return usermodel;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 查看Token是否在规定时间（Token里面的指定时间+5分钟）</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    /// &lt;param name=&quot;Ticket&quot;&gt;Token的过期Ticket&lt;/param&gt;</span><br><span class="line">    /// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">    protected static bool CheckTokenExpired(long Ticket)</span><br><span class="line">    &#123;</span><br><span class="line">        long Now = DateTime.Now.Ticks;</span><br><span class="line">        if (Ticket - Now &lt;= 0)</span><br><span class="line">        &#123;</span><br><span class="line">            var expiredTicket = Now - Ticket;</span><br><span class="line">            //查看Token过期的多久</span><br><span class="line">            TimeSpan delay = new TimeSpan(expiredTicket);</span><br><span class="line">            double expiredMinutes = Math.Ceiling(delay.TotalMinutes);</span><br><span class="line">            //如果过期了5分钟，就抛出异常</span><br><span class="line">            if (expiredMinutes &gt;= 5)</span><br><span class="line">            &#123;</span><br><span class="line">                throw new SSOException(&quot;Token已过期&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected static string GetBase64UserInfo(string uid)</span><br><span class="line">    &#123;</span><br><span class="line">        var expirt = DateTime.Now.AddHours(3).Ticks;</span><br><span class="line">        var userinfo = JsonConvert.SerializeObject(new Models.TokenModel &#123; UserName = uid, Expire = expirt &#125;);</span><br><span class="line">        var user = ToByte(userinfo);</span><br><span class="line">        return Convert.ToBase64String(user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected static Byte[] ToByte(string value)</span><br><span class="line">    &#123;</span><br><span class="line">        return Encoding.UTF8.GetBytes(value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected static string GetMD5Signature(string base64info)</span><br><span class="line">    &#123;</span><br><span class="line">        StringBuilder builder = new StringBuilder();</span><br><span class="line">        builder.Append(base64info);</span><br><span class="line">        builder.Append(SecretKey);</span><br><span class="line">        using (MD5 md5 = MD5.Create())</span><br><span class="line">        &#123;</span><br><span class="line">            byte[] info = md5.ComputeHash(ToByte(builder.ToString()));</span><br><span class="line">            builder.Clear();</span><br><span class="line">            for (int i = 0; i &lt; info.Length; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                //将加密后的byte转换成32字符的16进制</span><br><span class="line">                builder.Append(info[i].ToString(&quot;x2&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            return builder.ToString();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至此，SSO的简单的登录验证工作告一段落，当然，如果要做一次登录的话，需要在此基础上改造升级一下，这里就不多说了，后边有机会再聊。</p>
+<p>来看客户端逻辑<br>首先我们进到客户端子系统的时候，要先验证令牌的有效性，也就是cookie里的token，在服务端的session里是否存在且有效，看下代码(注意，代码里的域名地址，是我提前在host里做好了设置，不做设置的话，可以以localhost来代替，但要注意端口号做好区分)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">public async Task&lt;IActionResult&gt; Index(string Token)</span><br><span class="line">&#123;</span><br><span class="line">    string name = null;</span><br><span class="line"></span><br><span class="line">    if (Token != null)</span><br><span class="line">    &#123;</span><br><span class="line">        var userinfo = await VerificationToken(Token);</span><br><span class="line">        if (userinfo == null)</span><br><span class="line">        &#123;</span><br><span class="line">            return Redirect(&quot;http://www.c.cn:5001/Login/Index?returnUrl=http://www.b.net:5003/Home/Index&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        var Properties = new AuthenticationProperties()</span><br><span class="line">        &#123;</span><br><span class="line">            IsPersistent = true,</span><br><span class="line">            ExpiresUtc = DateTimeOffset.UtcNow.AddHours(5)</span><br><span class="line">        &#125;;</span><br><span class="line">        var claims = new List&lt;Claim&gt;()&#123;</span><br><span class="line">                        new Claim(ClaimTypes.Name,userinfo.UserName)</span><br><span class="line">                    &#125;;</span><br><span class="line">        var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, &quot;Customer&quot;));</span><br><span class="line">        await HttpContext.SignInAsync(&quot;sso_client&quot;, userPrincipal, Properties);</span><br><span class="line">        name = userinfo.UserName;</span><br><span class="line">        HttpContext.Session.SetString(name, Token);</span><br><span class="line">        ViewData[&quot;name&quot;] = name;</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        name = HttpContext.User.Identity.Name;</span><br><span class="line">    &#125;</span><br><span class="line">    if (string.IsNullOrEmpty(name))</span><br><span class="line">    &#123;</span><br><span class="line">        return Redirect(&quot;http://www.c.cn:5001/Login/Index?returnUrl=http://www.b.net:5003/Home/Index&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    var token = HttpContext.Session.GetString(name);</span><br><span class="line">    return View();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/// &lt;summary&gt;</span><br><span class="line">///发送给SSO，判断Token是否有效</span><br><span class="line">/// &lt;/summary&gt;</span><br><span class="line">/// &lt;param name=&quot;token&quot;&gt;&lt;/param&gt;</span><br><span class="line">/// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">private async Task&lt;UserInfo&gt; VerificationToken(string token)</span><br><span class="line">&#123;</span><br><span class="line">    using (HttpClient hc = new HttpClient())</span><br><span class="line">    &#123;</span><br><span class="line">        //设置请求的Body</span><br><span class="line">        var jsonToken = JsonConvert.SerializeObject(new &#123; Token = token &#125;);</span><br><span class="line">        StringContent content = new StringContent(jsonToken, Encoding.UTF8, &quot;application/json&quot;);</span><br><span class="line">        //发送请求</span><br><span class="line">        HttpResponseMessage response = await hc.PostAsync(&quot;http://www.c.cn:5001/Login/checkToken&quot;, content);</span><br><span class="line">        //获取响应的内容</span><br><span class="line">        string contentString = await response.Content.ReadAsStringAsync();</span><br><span class="line">        VerificationTokenBean verificationbean = JsonConvert.DeserializeObject&lt;VerificationTokenBean&gt;(contentString);</span><br><span class="line">        //根据响应结果来决定Token是否有效</span><br><span class="line">        if (verificationbean.code == &quot;401&quot; || verificationbean.code == &quot;400&quot;)</span><br><span class="line">        &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        return verificationbean.info;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="2.png" alt="host配置"><br>注意代码里涉及到了一些url参数，更严谨的方式是，把returnUrl的值做一下转码。<br>客户端的逻辑比较简单，就是在进入子系统时，要去验证令牌的有效性，不多说，至此，大的流程上，我们便完成了多个系统，一处登录的效果，看下效果图吧<br>我们把系统的启动服务器改为Kestrel（稍后我在简单提一下.net core mvc的配置），配置好我们做好的host域名和端口，然后依次启动<br><img src="3.png" alt="Kestrel启动"><br><img src="server.png" alt="server"><br><img src="client1.png" alt="client1"><br><img src="client2.png" alt="client2"><br>我们看到两个子系统都跳转到了sso的登录界面<br>再看下登陆后的效果<br><img src="4.png" alt="login"><br><img src="5.png" alt="login2"><br>至此，我们就完成了简单的sso实现方案，多个系统，一处登录。（篇幅关系后边再说一次登录）<br>在额外说点关于.net core的东西，这篇博客之所以会晚了几天，还有一个原因就是最近在转向.net core，在.net core 2.0以后，越来越多的c#开发者，甚至其他语言的开发者大规模转向.net core，各种云服务也都积极开发对.net core的接口开放能力，具体内容可参见infoq和张善友队长的相关文章，尤其是在前些天.net core 3.0的正式版本放出后，其生态圈也是更加完善，跨平台也只是.net core的一小部分优点。因此，我也是接着这个机会，决定把sso的这篇博客用最新的.net core 3.0的方式来实现，从图一的框架结构看，.net core mvc的框架结构已经和.net mvc不太一样了，依赖注入的设计思想贯穿整个.net core的框架结构（这个我也不太懂，就不多说了），以这个系统为例，我们要在startup.cs文件里注册我们需要的诸如session，cookie等相关服务<br><img src="6.png" alt="6"><br><img src="7.png" alt="7"><br>好了，关于.net core的内容，这篇也不多说了，微软官方给出的教程还是挺全的(传送门:<a href="https://docs.microsoft.com/zh-cn/aspnet/core/tutorials/razor-pages/?view=aspnetcore-3.0" target="_blank" rel="noopener">https://docs.microsoft.com/zh-cn/aspnet/core/tutorials/razor-pages/?view=aspnetcore-3.0</a>)，而且.net core除了性能上的优势（实测用.net core生成的mvc脚手架和.net framework生成的对比，页面渲染速度为40ms左右对比1200ms左右，近30倍的提升，ef core 和ef对比，迁移速度，查询速度等也有很大的提升，且多种方法增加了异步操作，性能飞跃），也增加了许多新特性，从nuget上搜索相关的开发包，常用的包（如stackredis,elasticsearch.net,jwt等）已经基本全部支持.net core，总而言之吧，.net core刚出来的时候，是听别人说它有多好，这次自己亲自体会了一下，真的是看得见的惊喜，虽然还有很多需要学习和了解的地方，但后边的项目，会积极转向.net core。<br>好了这篇就到这吧，下篇可能会聊聊SignalR，单点登录没说完的，后边有机会在继续说吧。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/hexo/tags/开发笔记/" rel="tag"># 开发笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/2019/10/26/分页这件小事儿/" rel="next" title="分页这件小事儿">
+                <i class="fa fa-chevron-left"></i> 分页这件小事儿
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbb2338b87602f0" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTA1My8xNTU4MA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tony</p>
+              <p class="site-description motion-element" itemprop="description">学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/hexo/archives/">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/hexo/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/hexo/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/hexo/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/hexo/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
