@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/hexo/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/hexo/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/hexo/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/hexo/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="开发笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="哈哈，我又来更博了~最近公司的项目不多（额，其实是我手上的项目不多），相对清闲，所以更新的频率会高一些，近期在转型.net core，虽然不一定能马上用在公司现有的项目中，但这个知识的储备还是要抓紧进行的，毕竟.net core是今后c#语言的主要发展方向，也是微软在重回市值巅峰后，主推的一个技术栈，微软甚至成立了.net 基金会，令人惊奇的是目前基金会的管理成员均出自非微软的公司（包含谷歌，亚马">
+<meta name="keywords" content="开发笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="winform桌面程序利用SignalR实现自动化集中升级">
+<meta property="og:url" content="https://tony_df.gitee.io/2019/11/07/winform桌面程序利用SignalR实现自动化集中升级/index.html">
+<meta property="og:site_name" content="Tony&#39;s blog">
+<meta property="og:description" content="哈哈，我又来更博了~最近公司的项目不多（额，其实是我手上的项目不多），相对清闲，所以更新的频率会高一些，近期在转型.net core，虽然不一定能马上用在公司现有的项目中，但这个知识的储备还是要抓紧进行的，毕竟.net core是今后c#语言的主要发展方向，也是微软在重回市值巅峰后，主推的一个技术栈，微软甚至成立了.net 基金会，令人惊奇的是目前基金会的管理成员均出自非微软的公司（包含谷歌，亚马">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/11/07/winform桌面程序利用SignalR实现自动化集中升级/1.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/11/07/winform桌面程序利用SignalR实现自动化集中升级/project.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/11/07/winform桌面程序利用SignalR实现自动化集中升级/2.png">
+<meta property="og:image" content="https://tony_df.gitee.io/2019/11/07/winform桌面程序利用SignalR实现自动化集中升级/websocket.png">
+<meta property="og:updated_time" content="2019-11-07T09:14:17.412Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="winform桌面程序利用SignalR实现自动化集中升级">
+<meta name="twitter:description" content="哈哈，我又来更博了~最近公司的项目不多（额，其实是我手上的项目不多），相对清闲，所以更新的频率会高一些，近期在转型.net core，虽然不一定能马上用在公司现有的项目中，但这个知识的储备还是要抓紧进行的，毕竟.net core是今后c#语言的主要发展方向，也是微软在重回市值巅峰后，主推的一个技术栈，微软甚至成立了.net 基金会，令人惊奇的是目前基金会的管理成员均出自非微软的公司（包含谷歌，亚马">
+<meta name="twitter:image" content="https://tony_df.gitee.io/2019/11/07/winform桌面程序利用SignalR实现自动化集中升级/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hexo/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Tony'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tony_df.gitee.io/2019/11/07/winform桌面程序利用SignalR实现自动化集中升级/">
+
+
+
+
+
+  <title>winform桌面程序利用SignalR实现自动化集中升级 | Tony's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hexo/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tony's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学着码代码,学着码人生;</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/hexo/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/hexo/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/hexo/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.gitee.io/hexo/2019/11/07/winform桌面程序利用SignalR实现自动化集中升级/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tony's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">winform桌面程序利用SignalR实现自动化集中升级</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-07T14:38:17+08:00">
+                2019-11-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>哈哈，我又来更博了~<br>最近公司的项目不多（额，其实是我手上的项目不多），相对清闲，所以更新的频率会高一些，近期在转型.net core，虽然不一定能马上用在公司现有的项目中，但这个知识的储备还是要抓紧进行的，毕竟.net core是今后c#语言的主要发展方向，也是微软在重回市值巅峰后，主推的一个技术栈，微软甚至成立了.net 基金会，令人惊奇的是目前基金会的管理成员均出自非微软的公司（包含谷歌，亚马逊，RedHat等），大力倡导.net开源计划，一些有名的技术大咖在个人博客和社交平台上更是不遗余力的推广，在国内比较著名的事件就是鹅厂的财付通平台（我们几乎每天都用到的微信支付），目前已经是采用.net core来支撑了，总而言之吧，.net core的生态圈在逐步甚至飞速的完善，虽然还达不到java那么繁荣，但其有后发优势，未来几年繁荣程度能和java比肩也并非不可能，将来，作为.net 程序员，想找到一份比较理想的工作，转型.net core是早晚要走的路。<br>好了扯远了，回到今天的主题，今天，来实现一个通过指令来完成winform桌面程序自动更新的功能。<br>先说下背景吧，8月份的时候，我去重庆出了个差，遇到了一个小问题，就是我们公司开发的人脸识别客户端，再激活sdk的时候出现了问题，紧急修复后，需要更新所有的终端程序，因为当时这个系统是用作入场检录的，整个场馆内有8个终端需要更新，场馆比较大，更新的话得拿着U盘，拿着键盘鼠标，跑遍整个场馆（我记得那个场馆差不多有1个半足球场那么大），因为这个终端程序已经在多个活动上使用且验证过了，所以基本上都不会出问题，也就没考虑过更新的问题，恰巧那次就出问题了，恰巧那次我就是那个拿着U盘跑遍场馆的人。。。我一直觉得，作为程序员，能用代码解决的问题，就别身体力行了！所以，今天就来分享一个集中更新所有客户端的解决方案。<br>先简单说下思路，因为检录终端本身是和场馆内的服务器相连的，也就是同在一个局域网下，那么客户端和服务端本来就可以进行双向通信，就可以利用类似广播的机制，由服务端发出指令，所有终端都能接收到该指令，然后完成指定的操作。<br><img src="1.png" alt="思路"><br>其实我前面的博客有写过一个Socket小工具（传送门:<a href="https://tony_df.gitee.io/hexo/2018/10/08/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84socket%E5%B0%8F%E5%B7%A5%E5%85%B7/#more">https://tony_df.gitee.io/hexo/2018/10/08/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84socket%E5%B0%8F%E5%B7%A5%E5%85%B7/#more</a>），也可以实现相关功能，但论简易和方便程度，SignalR是更优的解决方案，那么SignalR是什么，我就说一点，它是对多种抽象的通信协议的一个高级别的封装，让我们在完成客户端和服务端通信的时候，不用再考虑底层的实现，更多的去关注业务逻辑，由SignalR来帮我们选择合适的通信方式（长轮询，sse，websocekt）。这里也分享一篇介绍性的文章<a href="https://www.cnblogs.com/cgzl/p/9515516.html" target="_blank" rel="noopener">https://www.cnblogs.com/cgzl/p/9515516.html</a><br>来看下代码(结尾会分享该项目的完整代码地址)<br>项目结构为<br><img src="project.png" alt="结构"><br>先来创建Server端的项目，创建一个简单的web项目，然后引入客户端库<br><img src="2.png" alt="客户端库"><br>然后我们创建SignalR集线器服务使其集成Hub</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class MyHub : Hub</span><br><span class="line">&#123;</span><br><span class="line">    public async Task Send(string name, string message)</span><br><span class="line">    &#123;</span><br><span class="line">        //注意，方法名称要和客户端保持一致，这里叫“broadcastMessage”！</span><br><span class="line">        await Clients.All.SendAsync(&quot;broadcastMessage&quot;, name, message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public async Task Upgrade(string version)</span><br><span class="line">    &#123;</span><br><span class="line">        //同上</span><br><span class="line">        await Clients.All.SendAsync(&quot;upgradeCheck&quot;, version);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在StartUp中注册相关服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public void ConfigureServices(IServiceCollection services)</span><br><span class="line">&#123;</span><br><span class="line">    services.AddSignalR();</span><br><span class="line">&#125;</span><br><span class="line">public void Configure(IApplicationBuilder app, IWebHostEnvironment env)</span><br><span class="line">&#123;</span><br><span class="line">    if (env.IsDevelopment())</span><br><span class="line">    &#123;</span><br><span class="line">        app.UseDeveloperExceptionPage();</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        app.UseExceptionHandler(&quot;/Error&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    app.UseStaticFiles();</span><br><span class="line"></span><br><span class="line">    app.UseRouting();</span><br><span class="line"></span><br><span class="line">    app.UseAuthorization();</span><br><span class="line"></span><br><span class="line">    app.UseEndpoints(endpoints =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        endpoints.MapHub&lt;MyHub&gt;(&quot;/server&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着在wwwroot目录下或者Pages文件夹下创建html文件或者视图文件，都可以，我这里创建的html，关键部分为</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">'DOMContentLoaded'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> messageInput = <span class="built_in">document</span>.getElementById(<span class="string">'message'</span>);</span><br><span class="line">    <span class="comment">// Get the user name and store it to prepend to messages.</span></span><br><span class="line">    <span class="keyword">var</span> name = prompt(<span class="string">'Enter your name:'</span>, <span class="string">''</span>);</span><br><span class="line">    <span class="comment">// Set initial focus to message input box.</span></span><br><span class="line">    messageInput.focus();</span><br><span class="line">    <span class="comment">// Start the connection.</span></span><br><span class="line">    <span class="keyword">var</span> connection = <span class="keyword">new</span> signalR.HubConnectionBuilder()</span><br><span class="line">        .withUrl(<span class="string">'/server'</span>)</span><br><span class="line">        .build();</span><br><span class="line">    <span class="comment">// Create a function that the hub can call to broadcast messages.</span></span><br><span class="line">    connection.on(<span class="string">'broadcastMessage'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">name, message</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> encodedName = name;</span><br><span class="line">        <span class="keyword">var</span> encodedMsg = message;</span><br><span class="line">        <span class="comment">// Add the message to the page.</span></span><br><span class="line">        <span class="keyword">var</span> liElement = <span class="built_in">document</span>.createElement(<span class="string">'li'</span>);</span><br><span class="line">        liElement.innerHTML = <span class="string">'&lt;strong&gt;'</span> + encodedName + <span class="string">'&lt;/strong&gt;:&amp;nbsp;&amp;nbsp;'</span> + encodedMsg;</span><br><span class="line">        <span class="built_in">document</span>.getElementById(<span class="string">'discussion'</span>).appendChild(liElement);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    connection.on(<span class="string">'upgradeCheck'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">version</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> liElement = <span class="built_in">document</span>.createElement(<span class="string">'li'</span>);</span><br><span class="line">        liElement.innerHTML = <span class="string">'&lt;strong&gt;UpgradeSignal:&lt;/strong&gt;&amp;nbsp;&amp;nbsp;'</span> + version;</span><br><span class="line">        <span class="built_in">document</span>.getElementById(<span class="string">'discussion'</span>).appendChild(liElement);</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Transport fallback functionality is now built into start.</span></span><br><span class="line">    connection.start()</span><br><span class="line">        .then(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'connection started'</span>);</span><br><span class="line">            <span class="built_in">document</span>.getElementById(<span class="string">'sendmessage'</span>).addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">                <span class="comment">// Call the Send method on the hub.</span></span><br><span class="line">                connection.invoke(<span class="string">'send'</span>, name, messageInput.value);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Clear text box and reset focus for next comment.</span></span><br><span class="line">                messageInput.value = <span class="string">''</span>;</span><br><span class="line">                messageInput.focus();</span><br><span class="line">                event.preventDefault();</span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="built_in">document</span>.getElementById(<span class="string">'upgrade'</span>).addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">                connection.invoke(<span class="string">"upgrade"</span>, messageInput.value);</span><br><span class="line">                messageInput.value = <span class="string">''</span>;</span><br><span class="line">                messageInput.focus();</span><br><span class="line">                event.preventDefault();</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">        .catch(<span class="function"><span class="params">error</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.error(error.message);</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这段代码和微软教程里的代码基本一致，我稍微做了点小小的改动，至此，服务端的工作就基本完成了，我们可以调试一下看下效果<br><img src="websocket.png" alt="server"><br>我们看到，这里SignalR帮我们在浏览器和服务端之间选择了websocket协议。<br>接下来，我们创建两个客户端，Client1和Client2<br>然后，点击</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/hexo/tags/开发笔记/" rel="tag"># 开发笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/2019/11/02/实现一个简单的单点登录（用-net-core实现）/" rel="next" title="实现一个简单的单点登录（用asp.net core 3.0实现）">
+                <i class="fa fa-chevron-left"></i> 实现一个简单的单点登录（用asp.net core 3.0实现）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbb2338b87602f0" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTA1My8xNTU4MA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tony</p>
+              <p class="site-description motion-element" itemprop="description">学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/hexo/archives/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/hexo/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/hexo/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/hexo/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/hexo/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
