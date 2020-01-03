@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/hexo/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/hexo/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/hexo/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/hexo/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="开发笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="转眼2020年了，感觉好久没有写东西了，上篇博客虽然时间不长，但只是小小的总结了一下2019以及小小的展望了一下2020，今天算是新年具体实施的第一天吧。过去的1个多礼拜，一直在纠结，2019年最后一篇要写点什么，但突如其来的项目打乱了计划，最后还是以一篇总结性文章草草收尾，2019年，就这样过去了。到了2020年，又在纠结开年第一篇该写点什么，本来我从刚刚做的项目里，学到或者说是温故而知新了一些">
+<meta name="keywords" content="开发笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Let us prmoise something">
+<meta property="og:url" content="https://tony_df.coding.net/2020/01/03/Let's promise something/index.html">
+<meta property="og:site_name" content="Tony&#39;s blog">
+<meta property="og:description" content="转眼2020年了，感觉好久没有写东西了，上篇博客虽然时间不长，但只是小小的总结了一下2019以及小小的展望了一下2020，今天算是新年具体实施的第一天吧。过去的1个多礼拜，一直在纠结，2019年最后一篇要写点什么，但突如其来的项目打乱了计划，最后还是以一篇总结性文章草草收尾，2019年，就这样过去了。到了2020年，又在纠结开年第一篇该写点什么，本来我从刚刚做的项目里，学到或者说是温故而知新了一些">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-01-03T03:47:50.276Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Let us prmoise something">
+<meta name="twitter:description" content="转眼2020年了，感觉好久没有写东西了，上篇博客虽然时间不长，但只是小小的总结了一下2019以及小小的展望了一下2020，今天算是新年具体实施的第一天吧。过去的1个多礼拜，一直在纠结，2019年最后一篇要写点什么，但突如其来的项目打乱了计划，最后还是以一篇总结性文章草草收尾，2019年，就这样过去了。到了2020年，又在纠结开年第一篇该写点什么，本来我从刚刚做的项目里，学到或者说是温故而知新了一些">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hexo/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Tony'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tony_df.coding.net/2020/01/03/Let's promise something/">
+
+
+
+
+
+  <title>Let us prmoise something | Tony's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hexo/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tony's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学着码代码,学着码人生;</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/hexo/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/hexo/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/hexo/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.coding.net/hexo/2020/01/03/Let's promise something/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tony's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Let us prmoise something</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-01-03T10:20:08+08:00">
+                2020-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>转眼2020年了，感觉好久没有写东西了，上篇博客虽然时间不长，但只是小小的总结了一下2019以及小小的展望了一下2020，今天算是新年具体实施的第一天吧。<br>过去的1个多礼拜，一直在纠结，2019年最后一篇要写点什么，但突如其来的项目打乱了计划，最后还是以一篇总结性文章草草收尾，2019年，就这样过去了。<br>到了2020年，又在纠结开年第一篇该写点什么，本来我从刚刚做的项目里，学到或者说是温故而知新了一些知识，关于视频文件以及可扩展到所有类型文件操作的东西，想记录一下，但发现还存在一些问题，还需要继续总结整理。<br>因为我已经2年不做网站类的项目了，一直是专注做后端，有机会再次做全栈项目，发现好多前端的知识已或是生疏，或是落伍了，也是趁着这次机会，把以前遗忘的知识拾了拾，然后，小小的升级了一下知识库，并成功落地在项目中，倍感喜悦，遂记录分享。<br>所以今天分享的内容，就是ES6中引入的新概念——Promise，的一次应用实践（重点在后半段，哈哈）<br>先讲一下背景吧，因为我做的网站中，有很多交互操作是需要根据得到的后台数据结果，来动态的增加一些交互操作，在引入promise之前，我的做法是在ajax的回调函数里，写后续的操作，因为js的执行时异步的，所以我无法在函数外面写顺序的代码，那么这样做的问题就是页面的代码逻辑看着很乱，而且当我的交互依赖比较多的时候，我还要用到延时（setTimeout）来完成某些动作，这就增加了页面的不稳定性。<br>基于此，便想彻底解决该问题，而我之前所掌握的前端知识着实有限，便求助公司前端同事，得知可使用Promise操作来解决该问题，又因其事务繁杂，无法及时助我升级js库代码，便只好自己动手了<br>所谓Promise，字面上的解释就是承诺，在开发环境下，便可理解为承诺做某些动作，承诺做的事情，一定是发生在某些事情发生之后，由此，最佳的实践场景，便是把回调函数里做的事儿，可提取到Promise中了，解决其可能会出现的回调陷阱，（概念上的解释，我还是不多说了，不了解的可以去看一下廖雪峰的博客<a href="https://www.liaoxuefeng.com/wiki/1022910821149312/1023024413276544" target="_blank" rel="noopener">https://www.liaoxuefeng.com/wiki/1022910821149312/1023024413276544</a>）.<br>好了，看一下实际的代码吧</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = &#123;</span><br><span class="line">            <span class="string">'url'</span>: <span class="string">'/Handlers/SecondClass.ashx'</span>,</span><br><span class="line">            <span class="string">'type'</span>: <span class="string">'get'</span>,</span><br><span class="line">            <span class="string">'data'</span>: &#123; <span class="string">'course_id'</span>: course_id &#125;,</span><br><span class="line">            <span class="string">'view'</span>: <span class="string">"sectionView"</span>,</span><br><span class="line">            <span class="string">'tpl'</span>: <span class="string">"sectionTpl"</span>,</span><br><span class="line">            <span class="string">'rows'</span>: <span class="string">"json.data"</span></span><br><span class="line">        &#125;</span><br><span class="line">sendAjax(params);</span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> current_lession = model.LessonID;<span class="comment">//学习到的课程id</span></span><br><span class="line">    $(<span class="string">"#"</span> + current_lession).addClass(<span class="string">"cur"</span>).parents(<span class="string">'.course-item'</span>).toggleClass(<span class="string">'open'</span>);</span><br><span class="line"></span><br><span class="line">&#125;, <span class="number">1000</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这里大家可以把这段代码当成伪代码来理解，意思是，我需要在得到一些动态的数据后，根据得到的数据，给某个类型的元素增加页面样式。<br>sendAjax是我封装发送ajax请求，而setTimeout里的动作，是在请求结束后要执行的操作，那么在引入Promise之前，<br>这段代码在很大程度上执行是没有问题的，但体验不好，而且非常不稳定，改进的办法就是不在调用封装的函数，或者把之后要执行的动作以参数的形式也传入到封装的函数里，先看第一种解决办法吧</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$.getJSON(<span class="string">'/Handlers/SecondClass.ashx'</span>,&#123; <span class="string">'course_id'</span>: course_id &#125;, <span class="function"><span class="keyword">function</span>(<span class="params">json</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//这里省略了请求得到数据后的代码</span></span><br><span class="line">     <span class="keyword">var</span> current_lession = model.LessonID;<span class="comment">//学习到的课程id</span></span><br><span class="line">    $(<span class="string">"#"</span> + current_lession).addClass(<span class="string">"cur"</span>).parents(<span class="string">'.course-item'</span>).toggleClass(<span class="string">'open'</span>);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>这样是可以解决我遇到的这个问题的，<br>但同样它带来了其他的问题，最大的问题就是逻辑代码的叠加，造成了页面可维护性下降，代码重复利用率降低。<br>那么如果借助Promise改造一下sendAjax,或者重写一个新的函数，使其可以接收函数动作为参数，并可以使多个动作串行执行，这样便是一个比较好的解决方案了。<br>看下代码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//采用es6中的promise封装ajax，实现异步串行操作（不支持ie）</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ajax</span>(<span class="params">method, url, data</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> request = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">        request.onreadystatechange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (request.readyState === <span class="number">4</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (request.status === <span class="number">200</span>) &#123;</span><br><span class="line">                    resolve(request.responseText);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    reject(request.status);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        request.open(method, url);</span><br><span class="line">        request.send(data);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后，我们就可以这样操作</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> p = ajax(<span class="string">'GET'</span>,<span class="string">'/Handlers/SecondClass.ashx'</span>, &#123; <span class="string">'course_id'</span>: course_id &#125;);</span><br><span class="line">p.then(</span><br><span class="line">    <span class="comment">//操作1</span></span><br><span class="line">);</span><br><span class="line">p.then(</span><br><span class="line">    <span class="comment">//操作2</span></span><br><span class="line">)</span><br><span class="line">p.catch(<span class="function"><span class="keyword">function</span>(<span class="params">err</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(err);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>可以发现引入promise后，在异步执行的js代码里，我们可以根据我们的需求，串行执行一系列动作，这样即解决了代码逻辑混乱的问题，又能解决代码利用率低下的问题，大大减少页面维护的难度。<br>但同时注意，并不是所有浏览器都支持promise的，比如ie全系列，以及老版本的Chrome和Firefox，具体的支持度，可以到caniuse<a href="https://caniuse.com/" target="_blank" rel="noopener">https://caniuse.com/</a>上查询一下。<br>那么如果想要ie也兼容promise，需要引入其他的插件来支撑。<br>这里我推荐一个比较有名的轮子-axois，官方地址为：<a href="https://github.com/axios/axios" target="_blank" rel="noopener">https://github.com/axios/axios</a>，这个库也是vue2.x版本以后官方推荐的ajax库，所以在我们了解了promise的机制后，在项目中引用axois是一个非常不错的选择。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/hexo/tags/开发笔记/" rel="tag"># 开发笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/2019/12/30/2019就要过去了，简单总结下吧/" rel="next" title="2019就要过去了，简单总结下吧">
+                <i class="fa fa-chevron-left"></i> 2019就要过去了，简单总结下吧
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbb2338b87602f0" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTA1My8xNTU4MA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tony</p>
+              <p class="site-description motion-element" itemprop="description">学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/hexo/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/hexo/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/hexo/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/hexo/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/hexo/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
