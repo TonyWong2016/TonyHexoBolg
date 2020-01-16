@@ -94,7 +94,7 @@
 <meta property="og:image" content="https://tony_df.coding.net/2020/01/16/安利一个niubility的轮子-aspose/%E6%95%88%E6%9E%9C2.png">
 <meta property="og:image" content="https://tony_df.coding.net/2020/01/16/安利一个niubility的轮子-aspose/word2pdf.png">
 <meta property="og:image" content="https://tony_df.coding.net/2020/01/16/安利一个niubility的轮子-aspose/excel2pdf.png">
-<meta property="og:updated_time" content="2020-01-16T07:00:46.201Z">
+<meta property="og:updated_time" content="2020-01-16T07:06:06.693Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="安利一个niubility的轮子--aspose">
 <meta name="twitter:description" content="最近做的几个私人的项目，都涉及到了很多关于文档的操作，比如word转pdf，excel转pdf，excel导入导出这些操作，不知道大家在做这些功能的时候是什么感觉，给我的感觉就是，这些功能都不困难，现成的代码也很多，可以拿来就用，但效率，通用性，便利性等不是很好。比如excel相关的操作，我以前是常用NPOI这个库，这个库可以说是在excel和word文档操作方面的神器，免费，开源，而且你不需要在">
@@ -342,7 +342,7 @@
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//读取excel文件</span></span><br><span class="line">Workbook workbook = <span class="keyword">new</span> Workbook(filepath);</span><br><span class="line">Cells cells = workbook.Worksheets[<span class="number">0</span>].Cells;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = startRowIndex + <span class="number">1</span>; i &lt; cells.MaxDataRow + <span class="number">1</span>; i++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//这里就是我们的业务代码了，比如我读取某个单元格的值</span></span><br><span class="line">    <span class="keyword">int</span> j=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">var</span> cell = cells[i, j].Value;<span class="comment">//或者是cells[i, j].StringValue</span></span><br><span class="line">    j++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>来看下执行效果，我导入一个测试excel表，有1991条数据，10M左右</p>
-<iframe height="600" width="600" src="http://js.xiaoxiaotong.net/public/demo/1ffba3753a64359800afbb1d18f379de.mp4"></iframe>
+<iframe height="600" width="600" src="https://aiscmp.bd.bcebos.com/member%2F1ffba3753a64359800afbb1d18f379de.mp4"></iframe>
 
 <p>可以看到，视频中进度条反复了几次，其中只有第一次就是才是读取的进度，非常快，后边的就都是业务处理的进度了与aspose插件无关。<br>好了，今天就到这。</p>
 
