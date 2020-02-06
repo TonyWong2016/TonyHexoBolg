@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="开发笔记,">
+  <meta name="keywords" content="随笔,">
 
 
 
@@ -79,27 +79,18 @@
 
 
 
-<meta name="description" content="今天在看单位的一个网站项目时，发现用了阿里的Tengine做了反向代理，实现了页面访问的负载均衡效果。突来灵感，就像自己也做一个简单的负载均衡，分享一下。但我用的是Nginx，关于Nginx的流行程度，好用程度，等等我也不多说了，因为我也说不完，也说不清，还不如大家自己去查，就着重了解一下，什么是反向代理，什么是负载均衡，关于Nginx的详细介绍，以及一些关于文件同步，静态资源缓存这些问题就可以了">
-<meta name="keywords" content="开发笔记">
+<meta name="description" content="2020年刚开头，一场瘟疫，几乎浇灭了所有人在去年年末立下的豪情壮志……关于这场灾难，相信不用多说，大家都能感同身受，昨天，我在36氪上看到了这样一篇文章《10 万中国创业公司越寒冬 | 深氪·战疫①》传送门：https://mp.weixin.qq.com/s/tAwfmduGXGY3wcMrg0npEQ，深有所感，而且，也深深的感到揪心和困惑，创业公司的困难，不仅仅是给创业者带来危机，旗下的基">
+<meta name="keywords" content="随笔">
 <meta property="og:type" content="article">
-<meta property="og:title" content="用Nginx实现一个简单的负载均衡">
-<meta property="og:url" content="https://tony_df.coding.net/2019/05/08/用nginx实现一个简单的负载均衡/index.html">
+<meta property="og:title" content="2020年，开启地狱模式">
+<meta property="og:url" content="https://tony_df.coding.net/2020/02/06/2020年，开启地狱模式/index.html">
 <meta property="og:site_name" content="Tony&#39;s blog">
-<meta property="og:description" content="今天在看单位的一个网站项目时，发现用了阿里的Tengine做了反向代理，实现了页面访问的负载均衡效果。突来灵感，就像自己也做一个简单的负载均衡，分享一下。但我用的是Nginx，关于Nginx的流行程度，好用程度，等等我也不多说了，因为我也说不完，也说不清，还不如大家自己去查，就着重了解一下，什么是反向代理，什么是负载均衡，关于Nginx的详细介绍，以及一些关于文件同步，静态资源缓存这些问题就可以了">
+<meta property="og:description" content="2020年刚开头，一场瘟疫，几乎浇灭了所有人在去年年末立下的豪情壮志……关于这场灾难，相信不用多说，大家都能感同身受，昨天，我在36氪上看到了这样一篇文章《10 万中国创业公司越寒冬 | 深氪·战疫①》传送门：https://mp.weixin.qq.com/s/tAwfmduGXGY3wcMrg0npEQ，深有所感，而且，也深深的感到揪心和困惑，创业公司的困难，不仅仅是给创业者带来危机，旗下的基">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://tony_df.coding.net/2019/05/08/用nginx实现一个简单的负载均衡/1.png">
-<meta property="og:image" content="https://tony_df.coding.net/2019/05/08/用nginx实现一个简单的负载均衡/iis.png">
-<meta property="og:image" content="https://tony_df.coding.net/2019/05/08/用nginx实现一个简单的负载均衡/web1.png">
-<meta property="og:image" content="https://tony_df.coding.net/2019/05/08/用nginx实现一个简单的负载均衡/web2.png">
-<meta property="og:image" content="https://tony_df.coding.net/2019/05/08/用nginx实现一个简单的负载均衡/conf1.png">
-<meta property="og:image" content="https://tony_df.coding.net/2019/05/08/用nginx实现一个简单的负载均衡/conf2.png">
-<meta property="og:image" content="https://tony_df.coding.net/2019/05/08/用nginx实现一个简单的负载均衡/ret1.png">
-<meta property="og:image" content="https://tony_df.coding.net/2019/05/08/用nginx实现一个简单的负载均衡/ret2.png">
-<meta property="og:updated_time" content="2019-05-08T01:55:12.542Z">
+<meta property="og:updated_time" content="2020-02-06T09:09:44.043Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="用Nginx实现一个简单的负载均衡">
-<meta name="twitter:description" content="今天在看单位的一个网站项目时，发现用了阿里的Tengine做了反向代理，实现了页面访问的负载均衡效果。突来灵感，就像自己也做一个简单的负载均衡，分享一下。但我用的是Nginx，关于Nginx的流行程度，好用程度，等等我也不多说了，因为我也说不完，也说不清，还不如大家自己去查，就着重了解一下，什么是反向代理，什么是负载均衡，关于Nginx的详细介绍，以及一些关于文件同步，静态资源缓存这些问题就可以了">
-<meta name="twitter:image" content="https://tony_df.coding.net/2019/05/08/用nginx实现一个简单的负载均衡/1.png">
+<meta name="twitter:title" content="2020年，开启地狱模式">
+<meta name="twitter:description" content="2020年刚开头，一场瘟疫，几乎浇灭了所有人在去年年末立下的豪情壮志……关于这场灾难，相信不用多说，大家都能感同身受，昨天，我在36氪上看到了这样一篇文章《10 万中国创业公司越寒冬 | 深氪·战疫①》传送门：https://mp.weixin.qq.com/s/tAwfmduGXGY3wcMrg0npEQ，深有所感，而且，也深深的感到揪心和困惑，创业公司的困难，不仅仅是给创业者带来危机，旗下的基">
 
 
 
@@ -129,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://tony_df.coding.net/2019/05/08/用nginx实现一个简单的负载均衡/">
+  <link rel="canonical" href="https://tony_df.coding.net/2020/02/06/2020年，开启地狱模式/">
 
 
 
 
 
-  <title>用Nginx实现一个简单的负载均衡 | Tony's blog</title>
+  <title>2020年，开启地狱模式 | Tony's blog</title>
   
 
 
@@ -252,7 +243,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://tony_df.coding.net/hexo/2019/05/08/用nginx实现一个简单的负载均衡/">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.coding.net/hexo/2020/02/06/2020年，开启地狱模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Tony">
@@ -269,7 +260,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">用Nginx实现一个简单的负载均衡</h1>
+          <h1 class="post-title" itemprop="name headline">2020年，开启地狱模式</h1>
         
 
         <div class="post-meta">
@@ -281,8 +272,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-08T08:50:16+08:00">
-                2019-05-08
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-02-06T17:38:21+08:00">
+                2020-02-06
               </time>
             
 
@@ -319,7 +310,7 @@
       
 
       
-        <p>今天在看单位的一个网站项目时，发现用了阿里的Tengine做了反向代理，实现了页面访问的负载均衡效果。突来灵感，就像自己也做一个简单的负载均衡，分享一下。<br>但我用的是Nginx，关于Nginx的流行程度，好用程度，等等我也不多说了，因为我也说不完，也说不清，还不如大家自己去查，就着重了解一下，什么是反向代理，什么是负载均衡，关于Nginx的详细介绍，以及一些关于文件同步，静态资源缓存这些问题就可以了，这里我就不多说了。<br>我这篇就本着简单易用的原则，跟大家分享一下怎么在Windows平台，实际演示一下用Nginx来做.net网站的负载均衡。<br>负载均衡真正实现分流效果的话，我们肯定是至少需要两台服务器，或者是三台，Nginx单独应该在一台服务器，那么我在这演示的话，肯定没那么多资源了，所以我就用我当前电脑，通过分配不同的端口号来模拟一下。<br>首先保证电脑上安装有Nginx服务，具体的安装过程我就不多说了，很简单<br><img src="1.png" alt="nginx"><br>然后，我们要准备好我们做负载均衡的站点，大家手里肯定都有网站或webapi的项目都可以用，或者你直接在虚拟目录里做个txt或者随便写个网页都行，只要是能正常发布访问的站点就行，我这里就用我之前做过的一个网站后台做演示，先看一下我的站点。<br><img src="iis.png" alt="iis"><br>然后看站点打开后的效果<br><img src="web1.png" alt="wen1"><br><img src="web2.png" alt="web2"><br>这里我把同一个项目，分别发布到iis的81和82端口，网站元素用1,2做了区分标识，而且大家现在也能看到现在这两台服务器从客户端浏览器返回的服务器信息都是iis，在这之前所有的工作，大家都是很清楚地，接下来，我们开始配置我们的Nginx，首先大家进入Nginx安装目录下，打开conf文件夹下的nginx.conf文件进行编辑，nginx的配置文件内容还是非常简洁的，比我们熟知的Apache的配置文件内容少很多，这应该也是nginx顶替Apache成为最受欢迎的web服务器的原因之一吧。<br>好，我们打开配置文件，我们需要注意的首先是监听端口，nginx默认监听的时80端口，而我本地的80端口已被使用，所以我改成了90。<br>我简单介绍几点吧，<br><img src="conf1.png" alt="conf1"><br><img src="conf2.png" alt="conf2"><br>配置完成后，保存并重启nginx服务器，然后我们在浏览器打开，再次从nginx端口去访问我们部署的网站，看到的效果就成了这样<br><img src="ret1.png" alt="ret1"><br><img src="ret2.png" alt="ret2"><br>我们看到返回的服务器信息，全部变成了nginx，也就是说，如果我把1,2的标识去掉，对用户来说，这种变化是无感的，但访问效率确实成倍增加的，nginx会根据我们在配置文件里分配的权重，帮我们决定去打开那个端口下的站点，实际就对应着哪台服务器，权重越大，实际指向那台服务器的可能性就越大，如此，我们便实现了对iis站点的简单的分布式部署和负载均衡。<br>本着简洁的原则，我这篇就介绍道这里，没错，再往深我也介绍不了多少了，哈哈，回到我文章开头提醒大家注意的几个问题，想深入了解的同学，就去多了解一下了，当然了，大神请自觉飘过。。。</p>
+        <p>2020年刚开头，一场瘟疫，几乎浇灭了所有人在去年年末立下的豪情壮志……<br>关于这场灾难，相信不用多说，大家都能感同身受，昨天，我在36氪上看到了这样一篇文章《10 万中国创业公司越寒冬 | 深氪·战疫①》传送门：<a href="https://mp.weixin.qq.com/s/tAwfmduGXGY3wcMrg0npEQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/tAwfmduGXGY3wcMrg0npEQ</a>，深有所感，而且，也深深的感到揪心和困惑，创业公司的困难，不仅仅是给创业者带来危机，旗下的基层员工，也会面临被裁的风险，最操蛋的一点是，不是因为你能力不行，而是病毒的爆发，带走了原有的订单，带走了原有的客户，也带走了原有的收益，人力占到创业成本的很大比例，没有收益，没有现金，怎么开工资。<br>分析预测，2020年，中国数十万计的创业公司会倒闭，数百万甚至千万人会面临失业和被裁员的风险，这个基数太大了，能侥幸活下来的，如果没有过硬的业务能力，必然也是风中残烛，难以为继。<br>所以，2020年，作为基层员工，即便当下没有感受到经济环境带来的压力，也要自觉开启地狱模式，唯有自身能力过硬，才能对这种极端情况免疫。<br>说回现实，3天前，我们成立了一个小组，讨论特殊情况下的产生的一个音视频需求。到昨天晚上9点左右，我们完成了从讨论到实现demo的流程，当一切有序而紧张的进行时，今天早上，却收到了停工的邮件……<br>首先，我们小组对技术方案做了一定程度的预先研究，并且，利用不到1天的时间，完成了鉴权接口，界面设计，以及基于腾讯云接口开发完成了基础的视频连线功能demo，并完成了ssl证书申请，对腾讯云要求的前期的铺垫工作几乎全部完成，而且在昨天晚上上线了我们的测试版本…就要这样戛然而止吗？<br>其实今天一天我几乎都在自我调节，自我疗伤，好不容易积攒的心气，瞬间就消散了，我始终想不明白为什么要否定我们的方案，为什么不看看我们的demo，为什么不可以同时开发，让我们和领导指定的小组同时开发，内部竞争，我觉得这并不是坏事，从结果的角度来看，这还可以促进项目高效率的完成，因为谁都愿意更好的完成工作。<br>郁闷了一天，可能我有时候就是比较执拗，对已经付出的努力，看不到回报，我始终是不甘心…<br>遂决定，在独立搞一套，已经付出的努力不能白费，而且摆脱了特定需求的束缚，我可以更专注在技术框架上，<br>谁还不是个宝宝了，放弃？不存在的！要努力，而骄傲的活着！干就完了！艹！（不好意思，不说脏话难以表达激动之情）<br>这也是我2020年的新目标，做一套跨平台，跨终端的实时音视频系统，完成后，会开源到社区，期待各路大神的批评指教。<br>2019年，我觉得自己还是有点收敛，只是表现得有些狰狞，但是内心还不够强大；<br>2020年，我觉得我可以更放开一点，当然也要更理智；<br>我也要给自己开启地狱模式，团队的项目，我不会再像这次一样退让，而是在团队方案成熟的基础上，强势争取，不会再退让分毫，掷地有声，让能力和结果来证明一切；<br>个人的项目，我也会积极的接项目，在满足客户需要的同时，获取更合理的收入。<br>总而言之吧，之前也给自己定了2020年的目标了，开年既然这么不顺，那就期待后边的日子吧<br>用一个字形容2020，就是“狠”。<br>2020，挡我者死！</p>
 
       
     </div>
@@ -337,7 +328,7 @@
       
         <div class="post-tags">
           
-            <a href="/hexo/tags/开发笔记/" rel="tag"># 开发笔记</a>
+            <a href="/hexo/tags/随笔/" rel="tag"># 随笔</a>
           
         </div>
       
@@ -350,8 +341,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/hexo/2019/05/05/分享一次难堪的面试经历/" rel="next" title="聊一次难堪的面试经历">
-                <i class="fa fa-chevron-left"></i> 聊一次难堪的面试经历
+              <a href="/hexo/2020/01/16/安利一个niubility的轮子-aspose/" rel="next" title="安利一个niubility的轮子--aspose">
+                <i class="fa fa-chevron-left"></i> 安利一个niubility的轮子--aspose
               </a>
             
           </div>
@@ -359,10 +350,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/hexo/2019/05/13/聊一下关于代码重构的一些事儿/" rel="prev" title="聊一下关于代码重构的一些事儿">
-                聊一下关于代码重构的一些事儿 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
