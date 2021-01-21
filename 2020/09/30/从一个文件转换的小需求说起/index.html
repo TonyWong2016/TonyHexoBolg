@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/hexo/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/hexo/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/hexo/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/hexo/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="开发笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="之前做过的项目里，遇到过关于文档转换的需求，大多都是转成pdf，比如word转pdf，excel转pdf之前我也写过一篇关于文档转换的文档，但是依赖了一个组件，aspose。但由于这个组件是收费组件，所以后续也陆续做了一些使用开源组件NPOI的功能模块。近期参与的一个项目里，有涉及到生成PDF的操作，我们这边采用的方式就是直接输出的方式，也就是通过代码直接绘制pdf文件，然后输出。回到具体需求，如">
+<meta name="keywords" content="开发笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从一个文件转换的小需求说起">
+<meta property="og:url" content="https://tony_df.coding.net/2020/09/30/从一个文件转换的小需求说起/index.html">
+<meta property="og:site_name" content="Tony&#39;s blog">
+<meta property="og:description" content="之前做过的项目里，遇到过关于文档转换的需求，大多都是转成pdf，比如word转pdf，excel转pdf之前我也写过一篇关于文档转换的文档，但是依赖了一个组件，aspose。但由于这个组件是收费组件，所以后续也陆续做了一些使用开源组件NPOI的功能模块。近期参与的一个项目里，有涉及到生成PDF的操作，我们这边采用的方式就是直接输出的方式，也就是通过代码直接绘制pdf文件，然后输出。回到具体需求，如">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-09-30T08:50:22.863Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从一个文件转换的小需求说起">
+<meta name="twitter:description" content="之前做过的项目里，遇到过关于文档转换的需求，大多都是转成pdf，比如word转pdf，excel转pdf之前我也写过一篇关于文档转换的文档，但是依赖了一个组件，aspose。但由于这个组件是收费组件，所以后续也陆续做了一些使用开源组件NPOI的功能模块。近期参与的一个项目里，有涉及到生成PDF的操作，我们这边采用的方式就是直接输出的方式，也就是通过代码直接绘制pdf文件，然后输出。回到具体需求，如">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hexo/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Tony'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tony_df.coding.net/2020/09/30/从一个文件转换的小需求说起/">
+
+
+
+
+
+  <title>从一个文件转换的小需求说起 | Tony's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hexo/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tony's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学着码代码,学着码人生;</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/hexo/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/hexo/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/hexo/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.coding.net/hexo/2020/09/30/从一个文件转换的小需求说起/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tony's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">从一个文件转换的小需求说起</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-09-30T15:55:00+08:00">
+                2020-09-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前做过的项目里，遇到过关于文档转换的需求，大多都是转成pdf，比如word转pdf，excel转pdf<br>之前我也写过一篇关于文档转换的文档，但是依赖了一个组件，aspose。但由于这个组件是收费组件，所以后续也陆续做了一些使用开源组件NPOI的功能模块。<br>近期参与的一个项目里，有涉及到生成PDF的操作，我们这边采用的方式就是直接输出的方式，也就是通过代码直接绘制pdf文件，然后输出。<br>回到具体需求，如果是我来做这部分模块的话，我认为直接输出PDF的形式并不是首选的方案。1是需要写大量的绘制代码，2是遇到一些有特殊需求的PDF内容，可能直接输出并不能很容易的完成。所以通过文档转换的形式应该是更好的方案，比如一些新闻资讯，或者政府发文，红头文件等等，都可以通过直接转换的形式来完成。<br>这样代码量会大幅减少，业务逻辑也会更加清晰。<br>现在关于各种类型文件转换成PDF的案例太多了，我自己用过NPOI，Aspose和Free spires，当然也用过微软自带的office组件，但我是非常不推荐使用自带组件的，因为依赖太多，部署到服务器的话，服务器也需要安装对应的office服务组件才能跑通。所以选择依赖少的插件来完成转换操作是很有必要的。我个人还是更推荐NPOI或者最近比较火的MagiCodes.IE，因为他们都是开源免费的，社区活跃度也不错，而另外两个一个收费，一个虽然是免费版，但限制太多，难以做到通用。<br>这里就不展示代码案例了。<br>然后我还想再聊一个需求，就是Word转Html，这个平时肯定是不经常用，但我今天突然想到了一个应用场景。<br>就是我们平时做的后台系统，通常会集成发布前台文章的模块，而该模块我们通常也是集成一个富文本编辑器到页面上，非常的方便。市面上的富文本编辑器种类也很多，什么tinyMCE，wangEditor,Ueditor,CkEditor等等，再选择的时候，我的意见还是，选择文档丰富，开源，社区活跃的，之前我是一直在用百度的Ueditor，也很好用，但不知道为啥从16年开始这个组件就不更新了，当然它所提供的功能还是很丰富即便是在今天也是非常够用的。我个人现在比较推荐tinyMCE。<br>说回刚才那个场景，我是这样想的，虽然富文本编辑器很方便，提供的功能也很丰富，但始终还是有一个编辑输入的过程，当然，有些时候我们也是直接从别的地方直接复制粘贴。<br>但有时候会遇到一些，比如政府发文，或者申报通知之类的文章，可能这类文章是直接由专员把文件发给你，那么这类文件发布的时候，我认为就可以考虑直接转换了。<br>当然这也只是一个思路，还是要考虑现实情况，比如调整字体之类的，但一般是不会的，因为这类文件的内容都比较严谨。<br>起始这种直接转换的方式，可以富文本相互补充，来使我们的内容发布功能更加的丰富。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/hexo/tags/开发笔记/" rel="tag"># 开发笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/2020/09/08/分享一个不错的轮子——ImageProcessor/" rel="next" title="分享一个不错的轮子——ImageProcessor">
+                <i class="fa fa-chevron-left"></i> 分享一个不错的轮子——ImageProcessor
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/hexo/2020/10/30/千人千面1.0（一）/" rel="prev" title="千人千面1.0（一）">
+                千人千面1.0（一） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbb2338b87602f0" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTA1My8xNTU4MA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tony</p>
+              <p class="site-description motion-element" itemprop="description">学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/hexo/archives/">
+              
+                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/hexo/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/hexo/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/hexo/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/hexo/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/hexo/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/hexo/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/hexo/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/hexo/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="开发笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="之前的博客里聊过，以后会注重一些偏底层，偏基础的内容分享，现在还是在整理吧，因为越底层的内容，越需要有透彻的了解，后边在慢慢积累吧。今天还是先介绍点别的，我们在之前的项目里，遇到了一个非常烦人的需求——处理图片。一张图，要在不同的页面展示，每个页面的尺寸也不一样，想了很多办法，始终是满足不了主管老师的心意，所以开始的时候，我们就在管理后台加了好多个上传图片的入口，由设计的同学分别根据展示位置设计不">
+<meta name="keywords" content="开发笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分享一个不错的轮子——ImageProcessor">
+<meta property="og:url" content="https://tony_df.coding.net/2020/09/08/分享一个不错的轮子——ImageProcessor/index.html">
+<meta property="og:site_name" content="Tony&#39;s blog">
+<meta property="og:description" content="之前的博客里聊过，以后会注重一些偏底层，偏基础的内容分享，现在还是在整理吧，因为越底层的内容，越需要有透彻的了解，后边在慢慢积累吧。今天还是先介绍点别的，我们在之前的项目里，遇到了一个非常烦人的需求——处理图片。一张图，要在不同的页面展示，每个页面的尺寸也不一样，想了很多办法，始终是满足不了主管老师的心意，所以开始的时候，我们就在管理后台加了好多个上传图片的入口，由设计的同学分别根据展示位置设计不">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tony_df.coding.net/2020/09/08/分享一个不错的轮子——ImageProcessor/config.png">
+<meta property="og:image" content="https://tony_df.coding.net/2020/09/08/分享一个不错的轮子——ImageProcessor/ori.jpg">
+<meta property="og:image" content="https://tony_df.coding.net/2020/09/08/分享一个不错的轮子——ImageProcessor/resize.jpg">
+<meta property="og:image" content="https://tony_df.coding.net/2020/09/08/分享一个不错的轮子——ImageProcessor/crop.jpg">
+<meta property="og:image" content="https://tony_df.coding.net/2020/09/08/分享一个不错的轮子——ImageProcessor/quality.jpg">
+<meta property="og:image" content="https://tony_df.coding.net/2020/09/08/分享一个不错的轮子——ImageProcessor/watermark.jpg">
+<meta property="og:updated_time" content="2020-09-09T01:07:44.139Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="分享一个不错的轮子——ImageProcessor">
+<meta name="twitter:description" content="之前的博客里聊过，以后会注重一些偏底层，偏基础的内容分享，现在还是在整理吧，因为越底层的内容，越需要有透彻的了解，后边在慢慢积累吧。今天还是先介绍点别的，我们在之前的项目里，遇到了一个非常烦人的需求——处理图片。一张图，要在不同的页面展示，每个页面的尺寸也不一样，想了很多办法，始终是满足不了主管老师的心意，所以开始的时候，我们就在管理后台加了好多个上传图片的入口，由设计的同学分别根据展示位置设计不">
+<meta name="twitter:image" content="https://tony_df.coding.net/2020/09/08/分享一个不错的轮子——ImageProcessor/config.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hexo/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Tony'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tony_df.coding.net/2020/09/08/分享一个不错的轮子——ImageProcessor/">
+
+
+
+
+
+  <title>分享一个不错的轮子——ImageProcessor | Tony's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hexo/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tony's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学着码代码,学着码人生;</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/hexo/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/hexo/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/hexo/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.coding.net/hexo/2020/09/08/分享一个不错的轮子——ImageProcessor/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tony's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">分享一个不错的轮子——ImageProcessor</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-09-08T15:43:27+08:00">
+                2020-09-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前的博客里聊过，以后会注重一些偏底层，偏基础的内容分享，现在还是在整理吧，因为越底层的内容，越需要有透彻的了解，后边在慢慢积累吧。<br>今天还是先介绍点别的，我们在之前的项目里，遇到了一个非常烦人的需求——处理图片。<br>一张图，要在不同的页面展示，每个页面的尺寸也不一样，想了很多办法，始终是满足不了主管老师的心意，所以开始的时候，我们就在管理后台加了好多个上传图片的入口，由设计的同学分别根据展示位置设计不同尺寸的图片，注意这里的不同尺寸不单单是简单的缩放，还要根据图片展示位置的大小，进行一些裁剪然后缩放。<br>开始，我们的业务不多，设计的同学时间也充裕，所以问题不太大，但越到后期，发现越来越手忙脚乱，一是图片展示位太多，设计和开发都非常容易搞混，导致上传图片的时候也容易传错，二是占用大量设计的时间。所以这个方案完全不可取。<br>最终，我们还是回到了开始的方案，通过程序来完成自动的适配和裁剪，设计的同学每次只需要设计一张图，但是需要提供图片的一些参数和裁剪规则，如果不涉及裁剪，则完全可以根据页面展示位来自己处理，但涉及到裁剪后，就不能自己看着来了，要提前沟通好。<br>最开始的方案，裁剪程序是我们自己写的，思路也很简单，就是根据指定的规则，对图片进行重画，然后生成新的图片。<br>这个也并没有太大的问题，唯一存在的就是一些效率问题和通用性问题。<br>而由于我之前使用过阿里的oss以及百度的bos，他们都提供了一种关于处理图片非常便捷高效的方式，就是在图片URL链接后面，输入指定的参数，就可以对图片进行裁剪，缩放等操作。便查了一下实现原理，然后搜索了一下在dotnet平台下有没有类似的解决方案。<br>果然，还真有！啰嗦了半天，上主角吧<br>先看官方文档：<a href="https://imageprocessor.org/" target="_blank" rel="noopener">https://imageprocessor.org/</a><br>ImageProcessor是dotnet平台下处理图片的一个免费，开源的动态链接库，支持.net framework4.5+和.net core框架。<br>恩，介绍性的内容不多说了，看官方文档吧，需要注意的是，这个库虽然非常非常优秀，但是文档是纯英文的，在网上能搜到的可用的案例也不多，所以最好是仔细研究下官方的文档，看看它提供的接口使用方法，尽管是英文，但需要有一点死磕的精神，当真正上手之后，这就是个非常好用的通用模块，你web站点上的所有关于图片的处理模块都可以由ImageProcessor提供的能力来处理。<br>它的文档里有对图片处理的很多方法，除了缩放，裁剪，还能调整对比度，透明效果，水印，图片合成，边缘检测，以及一些ps上才有的高级效果，比如GaussianBlur（高斯滤波），GaussianSharpen（高斯锐化），等等，十分强大。<br>这里我就简单介绍两点<br>1、全局的图片处理，包含缩放，裁剪，透明度，背景等<br>2、增加图片水印<br>先来看第一点<br>全局的图片处理，几乎不用写代码，文档里的介绍，ImageProcessor会拦截http请求，根据指定的参数来异步的去处理图片，非常高效<br>首先，通过Nuget包的形式引入ImageProcessor.web，或者直接引入ImageProcessor.Web.Config<br>这两个包都会依赖ImageProcessor，在引入的同时帮我们引入ImageProcessor。<br>如果引入的是ImageProcessor.Web那么相关的配置内容需要我们自己来进行，官方的文档也有介绍，但我建议直接引入官方整理好的配置文件来进行快速开发，即直接引入ImageProcessor.Web.Config。<br><img src="config.png" alt="config"><br>安装完成后，项目里会增加一个imageprocessor的文件夹，里面包含三个配置文件catch.config,processing.config,security.config<br>第一个是配置ImageProcessor处理之后的图片缓存，可以不修改也可以根据自己项目的存储规则进行修改<br>第二个是配置ImageProcessor的接口能力，使得我们可以很方便的通过url参数进行图片的处理，该文件默认是完整的能力配置，可根据情况删减，也可以不调整<br>第三个是配置访问安全的一些设置，需要配置host参数，根据自己的域名进行相应的调整<br>配置完成后还需要对配置文件进行调整，需要说明的是，我这里是一个.netframework框架的项目，所以我这里调整的是webconfig文件。<br>在webconfig里增加ImageProcessor节点<br>在configuration节点下增加</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configSections</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">sectionGroup</span> <span class="attr">name</span>=<span class="string">"imageProcessor"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">section</span> <span class="attr">name</span>=<span class="string">"security"</span> <span class="attr">requirePermission</span>=<span class="string">"false"</span> <span class="attr">type</span>=<span class="string">"ImageProcessor.Web.Configuration.ImageSecuritySection, ImageProcessor.Web"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">section</span> <span class="attr">name</span>=<span class="string">"processing"</span> <span class="attr">requirePermission</span>=<span class="string">"false"</span> <span class="attr">type</span>=<span class="string">"ImageProcessor.Web.Configuration.ImageProcessingSection, ImageProcessor.Web"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">section</span> <span class="attr">name</span>=<span class="string">"caching"</span> <span class="attr">requirePermission</span>=<span class="string">"false"</span> <span class="attr">type</span>=<span class="string">"ImageProcessor.Web.Configuration.ImageCacheSection, ImageProcessor.Web"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">sectionGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configSections</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">imageProcessor</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">security</span> <span class="attr">configSource</span>=<span class="string">"config\imageprocessor\security.config"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">caching</span> <span class="attr">configSource</span>=<span class="string">"config\imageprocessor\cache.config"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">processing</span> <span class="attr">configSource</span>=<span class="string">"config\imageprocessor\processing.config"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">imageProcessor</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在system.web节点下增加</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">httpModules</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">add</span> <span class="attr">name</span>=<span class="string">"ImageProcessorModule"</span> <span class="attr">type</span>=<span class="string">"ImageProcessor.Web.HttpModules.ImageProcessingModule, ImageProcessor.Web"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">httpModules</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在system.webServer节点下增加</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">modules</span>&gt;</span>    </span><br><span class="line">    <span class="tag">&lt;<span class="name">add</span> <span class="attr">name</span>=<span class="string">"ImageProcessorModule"</span> <span class="attr">type</span>=<span class="string">"ImageProcessor.Web.HttpModules.ImageProcessingModule, ImageProcessor.Web"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">modules</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后，运行我们的系统，试一下访问一个图片链接，然后分别增加alpha，width，crop等参数图片进行处理<br>这里列举几个例子吧<br>原图：http://域名路径/7542bd3a-30c9-4b25-8ae6-6aab86efdb5a.jpg<br><img src="ori.jpg" alt="ori"><br>缩略图：http://域名路径/7542bd3a-30c9-4b25-8ae6-6aab86efdb5a.jpg?width=300<br><img src="resize.jpg" alt="resize"><br>裁剪图：http://域名路径/7542bd3a-30c9-4b25-8ae6-6aab86efdb5a.jpg?crop=132,0,935,560<br><img src="crop.jpg" alt="crop"><br>降低质量：http://域名路径/7542bd3a-30c9-4b25-8ae6-6aab86efdb5a.jpg?quality=20<br><img src="quality.jpg" alt="quality"><br>最终，我们没有任何业务代码，就整合了一个近乎完美的通用图片处理模块，不仅仅是方便，效率也是杠杠的，非常适合高并发的系统使用。</p>
+<p>再来看第二点<br>在实际的业务中，除了对图片的简单处理，我们通常还有一种情况，就是图片的合成。<br>比如我们遇到的业务场景就是合成证书，证书有一个背景模板，需要把获奖同学的信息，合成到图片模板上，生成一个电子证书，发放到用户的账号里。<br>因为之前的证书合成不是我做的，我简单看了下之前的代码，也没有问题，但是业务耦合度有点高，移植到新的项目时，还需要做一些针对性的修改和调整。<br>而且自己开发在标准，效率，通用性等方面都会有所欠缺，或者要达到一定的高度需要支出更高的时间成本<br>所以我觉得如果不是非要在图片处理方向上提升自己的水平，还是借鉴一些成熟的第三方插件更加合适<br>我这里简单介绍下利用ImageProcessor提供的接口方法，把文字合成到图片上</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">string</span> <span class="title">imageProcessor</span>(<span class="params"><span class="keyword">byte</span>[] photoBytes,<span class="keyword">string</span> path, <span class="keyword">int</span> watermark = <span class="number">0</span>, <span class="keyword">string</span> markcontent = <span class="string">""</span>, <span class="keyword">int</span> overlay = <span class="number">0</span>, <span class="keyword">string</span> overlayimage = <span class="string">""</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> (MemoryStream inStream = <span class="keyword">new</span> MemoryStream(photoBytes))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">using</span> (MemoryStream outStream = <span class="keyword">new</span> MemoryStream())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">using</span> (ImageFactory imageFactory = <span class="keyword">new</span> ImageFactory(preserveExifData: <span class="literal">true</span>))</span><br><span class="line">            &#123;</span><br><span class="line">                imageFactory.Load(inStream);</span><br><span class="line">                <span class="comment">//打水印</span></span><br><span class="line">                <span class="keyword">if</span> (watermark == <span class="number">1</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    ISupportedImageFormat format = <span class="keyword">new</span> JpegFormat &#123; Quality = <span class="number">70</span> &#125;;</span><br><span class="line">                    Size size = <span class="keyword">new</span> Size(<span class="number">150</span>, <span class="number">0</span>);</span><br><span class="line">                    TextLayer textLayer = <span class="keyword">new</span> TextLayer()</span><br><span class="line">                    &#123;</span><br><span class="line">                        Text = markcontent,</span><br><span class="line">                        FontColor = Color.Orange,</span><br><span class="line">                    &#125;;</span><br><span class="line">                    imageFactory.Watermark(textLayer);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//叠加图片</span></span><br><span class="line">                <span class="keyword">if</span> (overlay == <span class="number">1</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    ImageLayer imageLayer = <span class="keyword">new</span> ImageLayer()</span><br><span class="line">                    &#123;</span><br><span class="line">                        Image = Image.FromFile(overlayimage),</span><br><span class="line">                        Opacity = <span class="number">70</span></span><br><span class="line">                    &#125;;</span><br><span class="line">                    imageFactory.Overlay(imageLayer);</span><br><span class="line">                &#125;</span><br><span class="line">                imageFactory.Save(outStream);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">byte</span>[] data = <span class="keyword">new</span> <span class="keyword">byte</span>[outStream.Length];</span><br><span class="line">            outStream.Seek(<span class="number">0</span>, System.IO.SeekOrigin.Begin);</span><br><span class="line">            outStream.Read(data, <span class="number">0</span>, Convert.ToInt32(outStream.Length));                    </span><br><span class="line">            CopyFile(data, path);</span><br><span class="line">            <span class="keyword">string</span> url = AppSettingExtension.GetValue(<span class="string">"resourcehost"</span>) + <span class="string">"/"</span> + DateTime.Now.ToString(<span class="string">"yyyyMM"</span>) + <span class="string">"/qrcode/"</span> + path;</span><br><span class="line">            <span class="keyword">return</span> url;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;            </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里我集成了两个ImageProcessor的两个方法，一个是水印，一个是图片合成<br>写好方法之后，我们可以在接口里根据实际业务来调用方法<br>看一下效果吧<br><img src="watermark.jpg" alt="watermark"><br>好了关于ImageProcessor的介绍就这些吧，最后在推荐一个提供类似功能的类库，叫SixLabors.ImageSharp，这个我自己没有尝试过，但是看文档介绍，该库提供的接口功能更具有前沿性，对.net core的支持度很高，但对.net framework的支持度不是很高，最低要求是4.7.2，有兴趣的可以研究一下，GitHub地址：<a href="https://github.com/SixLabors/ImageSharp" target="_blank" rel="noopener">https://github.com/SixLabors/ImageSharp</a><br>当集成了一些基础功能后，后续在拓展其提供的接口能力也就非常容易了，而且模块也是独立的，和具体的业务并没有什么交叉，移植的时候就非常便捷。<br>总之就是，香啊~</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/hexo/tags/开发笔记/" rel="tag"># 开发笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/" rel="next" title="设计并实战了一个中高并发的系统，我想简单总结点东西">
+                <i class="fa fa-chevron-left"></i> 设计并实战了一个中高并发的系统，我想简单总结点东西
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/hexo/2020/09/30/从一个文件转换的小需求说起/" rel="prev" title="从一个文件转换的小需求说起">
+                从一个文件转换的小需求说起 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbb2338b87602f0" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTA1My8xNTU4MA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tony</p>
+              <p class="site-description motion-element" itemprop="description">学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/hexo/archives/">
+              
+                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/hexo/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/hexo/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/hexo/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/hexo/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

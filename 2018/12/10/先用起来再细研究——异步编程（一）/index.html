@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/hexo/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/hexo/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/hexo/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/hexo/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="开发笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近对项目的部分功能模块进行了代码重构，涉及到了异步编程的相关知识，也借这个机会，总结一下心得体会。说到异步，我觉得就离不开多线程的知识，这俩货给我的感觉，就像是哥俩，老一块出现，学的时候也得关联着学，方能融会贯通，而且，就我所了解的知识层面，我以为，但凡是能把异步和多线程编程玩的溜的，基本都是高手，不管是何种开发语言（咳咳，何种开发语言主要是服务端语言，包括：c#,vb,java,php,rub">
+<meta name="keywords" content="开发笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="先用起来再系研究——异步编程（一）">
+<meta property="og:url" content="https://tony_df.coding.net/2018/12/10/先用起来再细研究——异步编程（一）/index.html">
+<meta property="og:site_name" content="Tony&#39;s blog">
+<meta property="og:description" content="最近对项目的部分功能模块进行了代码重构，涉及到了异步编程的相关知识，也借这个机会，总结一下心得体会。说到异步，我觉得就离不开多线程的知识，这俩货给我的感觉，就像是哥俩，老一块出现，学的时候也得关联着学，方能融会贯通，而且，就我所了解的知识层面，我以为，但凡是能把异步和多线程编程玩的溜的，基本都是高手，不管是何种开发语言（咳咳，何种开发语言主要是服务端语言，包括：c#,vb,java,php,rub">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tony_df.coding.net/2018/12/10/先用起来再细研究——异步编程（一）/process.png">
+<meta property="og:image" content="https://tony_df.coding.net/2018/12/10/先用起来再细研究——异步编程（一）/sync.png">
+<meta property="og:image" content="https://tony_df.coding.net/2018/12/10/先用起来再细研究——异步编程（一）/async.png">
+<meta property="og:image" content="https://tony_df.coding.net/2018/12/10/先用起来再细研究——异步编程（一）/keyword.png">
+<meta property="og:updated_time" content="2019-10-26T00:54:56.656Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="先用起来再系研究——异步编程（一）">
+<meta name="twitter:description" content="最近对项目的部分功能模块进行了代码重构，涉及到了异步编程的相关知识，也借这个机会，总结一下心得体会。说到异步，我觉得就离不开多线程的知识，这俩货给我的感觉，就像是哥俩，老一块出现，学的时候也得关联着学，方能融会贯通，而且，就我所了解的知识层面，我以为，但凡是能把异步和多线程编程玩的溜的，基本都是高手，不管是何种开发语言（咳咳，何种开发语言主要是服务端语言，包括：c#,vb,java,php,rub">
+<meta name="twitter:image" content="https://tony_df.coding.net/2018/12/10/先用起来再细研究——异步编程（一）/process.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hexo/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Tony'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tony_df.coding.net/2018/12/10/先用起来再细研究——异步编程（一）/">
+
+
+
+
+
+  <title>先用起来再系研究——异步编程（一） | Tony's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hexo/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tony's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学着码代码,学着码人生;</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/hexo/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/hexo/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/hexo/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.coding.net/hexo/2018/12/10/先用起来再细研究——异步编程（一）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tony's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">先用起来再系研究——异步编程（一）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-10T13:25:38+08:00">
+                2018-12-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近对项目的部分功能模块进行了代码重构，涉及到了异步编程的相关知识，也借这个机会，总结一下心得体会。<br>说到异步，我觉得就离不开多线程的知识，这俩货给我的感觉，就像是哥俩，老一块出现，学的时候也得关联着学，方能融会贯通<del>，而且，就我所了解的知识层面，我以为，但凡是能把异步和多线程编程<br>玩的溜的，基本都是高手，不管是何种开发语言（咳咳，何种开发语言主要是服务端语言</del>，包括：c#,vb,java,php,ruby,python…目前就了解这么多，你懂得<del>）对了，有个特例，就是最近比较非常火的,也是我最近正在学习的nodejs，这货天赋异禀，底层是c++写的，上层开放的是JavaScript接口，依赖google的v8引擎（渲染JavaScript贼快贼溜），基本上所有原生的方法全特么是异步的，因为node是单线程的，所以这点可以说是非常贴心了，效率和稳定性也是杠杠的，当然大部分的函数，node也封装了同步的方法，供开发者选择，而且，据了解，之前挺火的一些虚拟货币网络，也都提供了nodejs的接口，所以，看着这么前沿，牛叉的东西出现，小弟也利用了一些业余时间去了解和学习，现处于只了解以上扯皮内容的阶段…😄<br>好了扯远了，回到高手的话题来</del><br>前面说到，我觉得只要能把异步编程和多线程玩的溜的哥们或姐们，都是高手，为啥这么说？原因有三<br>其一、这块内容，涉及的知识点众多，能真正了都解透彻的人，并不太多，大多数处于一知半解的状态（我算一个<del>）；<br>其二、虽然利用异步和多线程可以很大程度提高效率，但由于程序写法上可能会复杂许多，导致代码看起来不那么清晰（大神请忽略</del>）业务逻辑变得更加混乱，会一定程度导致开发效率降低；<br>其三、并不是所有的业务都适合异步和多线程的，尤其是在使用一些多线程的方法时，很容易因为写法不当，导致一些更加严重的问题（比如资源复用，变量重写等）<br>所以，只有基础知识够扎实，实践经验够丰富的高手，才能把这些知识使起来显得那么游刃有余。<br>嚯嚯，说的好像有点夸张了，其实异步编程没那么可怕，接下来我们就来一起降服这头妖兽，让它为我所用<del>（说大话不犯法</del>）<br>对了，这只是篇笔记性质的博文，内只是自己的一些总结，不保证正确，如有错误，盼谅解，盼雅正~<br>1.什么是异步？<br>我理解，异步顾名思义，不一样的步伐；<br>在程序里，系统会在启动程序时，在内存中创建一个进程，而在进程里，又有多个线程组成，所谓异步，就是在实现某个任务时，主线程派生出去其他的线程去完成，他们是相互独立的。<br>一个进程可以包含多个不同状态的线程，来执行不同的任务。<br><img src="process.png" alt="进程线程"><br>在实际当中，我们遇到的，编写的大部分程序都是单线程的，然而有时候我们的项目会对效率有更高的要求，此时当我们在重构系统的时候就要考虑一下采用异步的结构来实现之前的功能了，而在微软的技术体系下，当.net的框架发展到.net4.5的版本时，用c#来实现异步编程似乎有了官方公式一样，变得简单了起来，用async和await关键字和Task.Run来实现异步编程，看起来不错。<br>来看一下代码(这并不是我的项目中用到的代码，是另一位博主的教学代码，感觉很不错，稍加修改，后面会贴上自己项目的项目代码)</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建计时器</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Stopwatch Watch = <span class="keyword">new</span> Stopwatch();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//启动计时器</span></span><br><span class="line">    Watch.Start();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">string</span> url1 = <span class="string">"https://tony_df.gitee.io/hexo/"</span>;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">string</span> url2 = <span class="string">"https://tony_df.gitee.io/hexo/2018/11/23/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%AE%9E%E7%8E%B0%E7%BE%A4%E5%8F%91%E7%BA%A2%E5%8C%85%E5%8A%9F%E8%83%BD%E7%9A%84%E5%BC%80%E5%8F%91%E5%AE%9E%E7%8E%B0/#more"</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//两次调用 CountCharacters 方法（下载某网站内容，并统计字符的个数）</span></span><br><span class="line">    <span class="keyword">var</span> result1 = CountCharacters(<span class="number">1</span>, url1);</span><br><span class="line">    <span class="keyword">var</span> result2 = CountCharacters(<span class="number">2</span>, url2);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//三次调用 ExtraOperation 方法（主要是通过拼接字符串达到耗时操作）</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        ExtraOperation(i + <span class="number">1</span>);</span><br><span class="line">    &#125;            </span><br><span class="line">    <span class="comment">//控制台输出</span></span><br><span class="line">    Console.WriteLine(<span class="keyword">string</span>.Format(<span class="string">"&#123;0&#125; 的字符个数：&#123;1&#125;"</span>,url1,result1));</span><br><span class="line">    Console.WriteLine(<span class="keyword">string</span>.Format(<span class="string">"&#123;0&#125; 的字符个数：&#123;1&#125;"</span>,url2,result2));</span><br><span class="line">    Console.Read();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 统计字符个数</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="id"&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="address"&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">CountCharacters</span>(<span class="params"><span class="keyword">int</span> id, <span class="keyword">string</span> address</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> wc = <span class="keyword">new</span> WebClient();            </span><br><span class="line">    Console.WriteLine(<span class="keyword">string</span>.Format(<span class="string">"开始调用 id = &#123;0&#125;：&#123;1&#125; ms"</span>,id,Watch.ElapsedMilliseconds));</span><br><span class="line">    <span class="keyword">var</span> result = wc.DownloadString(address);            </span><br><span class="line">    Console.WriteLine(<span class="keyword">string</span>.Format(<span class="string">"开始调用 id = &#123;0&#125;：&#123;1&#125; ms"</span>,id,Watch.ElapsedMilliseconds));</span><br><span class="line">    <span class="keyword">return</span> result.Length;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 额外操作</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="id"&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ExtraOperation</span>(<span class="params"><span class="keyword">int</span> id</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//这里是通过拼接字符串进行一些相对耗时的操作,实际项目中请使用StringBuilder</span></span><br><span class="line">    <span class="keyword">var</span> s = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">6000</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        s += i;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Console.WriteLine(<span class="keyword">string</span>.Format(<span class="string">"id = &#123;0&#125; 的 ExtraOperation 方法完成：&#123;1&#125; ms"</span>,id,Watch.ElapsedMilliseconds));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>来看一下执行结果<br><img src="sync.png" alt="sync"><br>发现耗费时间最长的是在头两次请求url上，而整个程序我们是同时在做了两件没什么关联的事儿，那么能不能让他们各干各的，在执行A的时候，同时去执行B，干完为止。<br>看一下修改后的程序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">//创建计时器</span><br><span class="line">private static readonly Stopwatch Watch = new Stopwatch();</span><br><span class="line"></span><br><span class="line">private static void Main(string[] args)</span><br><span class="line">&#123;</span><br><span class="line">    //启动计时器</span><br><span class="line">    Watch.Start();</span><br><span class="line"></span><br><span class="line">    const string url1 = &quot;https://tony_df.gitee.io/hexo/&quot;;</span><br><span class="line">    const string url2 = &quot;https://tony_df.gitee.io/hexo/2018/11/23/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%AE%9E%E7%8E%B0%E7%BE%A4%E5%8F%91%E7%BA%A2%E5%8C%85%E5%8A%9F%E8%83%BD%E7%9A%84%E5%BC%80%E5%8F%91%E5%AE%9E%E7%8E%B0/#more&quot;;</span><br><span class="line"></span><br><span class="line">    //两次调用 CountCharacters 方法（下载某网站内容，并统计字符的个数）</span><br><span class="line">    //var result1 = CountCharacters(1, url1);</span><br><span class="line">    //var result2 = CountCharacters(2, url2);</span><br><span class="line">    Task&lt;int&gt; t1 = CountCharactersAsync(1, url1);//--改动</span><br><span class="line">    Task&lt;int&gt; t2 = CountCharactersAsync(2, url2);//--改动</span><br><span class="line"></span><br><span class="line">    //三次调用 ExtraOperation 方法（主要是通过拼接字符串达到耗时操作）</span><br><span class="line">    for (var i = 0; i &lt; 3; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        ExtraOperation(i + 1);</span><br><span class="line">    &#125;</span><br><span class="line">    //控制台输出</span><br><span class="line">    Console.WriteLine(string.Format(&quot;&#123;0&#125; 的字符个数：&#123;1&#125;&quot;, url1, t1.Result));//--改动</span><br><span class="line">    Console.WriteLine(string.Format(&quot;&#123;0&#125; 的字符个数：&#123;1&#125;&quot;, url2, t2.Result));//--改动</span><br><span class="line">    Console.Read();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/// &lt;summary&gt;</span><br><span class="line">/// 统计字符个数</span><br><span class="line">/// &lt;/summary&gt;</span><br><span class="line">/// &lt;param name=&quot;id&quot;&gt;&lt;/param&gt;</span><br><span class="line">/// &lt;param name=&quot;address&quot;&gt;&lt;/param&gt;</span><br><span class="line">/// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">private static async Task&lt;int&gt; CountCharactersAsync(int id, string address)//--改动</span><br><span class="line">&#123;</span><br><span class="line">    var wc = new WebClient();</span><br><span class="line">    Console.WriteLine(string.Format(&quot;开始调用 id = &#123;0&#125;：&#123;1&#125; ms&quot;, id, Watch.ElapsedMilliseconds));</span><br><span class="line">    var result = await wc.DownloadStringTaskAsync(address);//--改动</span><br><span class="line">    Console.WriteLine(string.Format(&quot;开始调用 id = &#123;0&#125;：&#123;1&#125; ms&quot;, id, Watch.ElapsedMilliseconds));</span><br><span class="line">    return result.Length;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/// &lt;summary&gt;</span><br><span class="line">/// 额外操作</span><br><span class="line">/// &lt;/summary&gt;</span><br><span class="line">/// &lt;param name=&quot;id&quot;&gt;&lt;/param&gt;</span><br><span class="line">private static void ExtraOperation(int id)</span><br><span class="line">&#123;</span><br><span class="line">    //这里是通过拼接字符串进行一些相对耗时的操作,实际项目中请使用StringBuilder</span><br><span class="line">    var s = &quot;&quot;;</span><br><span class="line"></span><br><span class="line">    for (var i = 0; i &lt; 6000; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        s += i;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Console.WriteLine(string.Format(&quot;id = &#123;0&#125; 的 ExtraOperation 方法完成：&#123;1&#125; ms&quot;, id, Watch.ElapsedMilliseconds));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再看一下改动后的执行结果怎样<br><img src="async.png" alt="async"><br>对比后发现，修改后的代码，执行速度快了很多，而且，我们没有启用新的线程哦，只是纯粹用到了异步的知识<br>第二段代码里我加了“改动”标识和第一段的区别，看起来就好像是写作文改了下写作格式，效率就提上去了，神奇的地方在哪里呢<br>1)、从 Main 方法执行到 CountCharactersAsync(1, url1) 方法时，该方法会立即返回，然后才会调用它内部的方法开始下载内容。该方法返回的是一个 Task<int> 类型的占位符对象，表示计划进行的工作。这个占位符最终会返回 int 类型的值。<br>2)、这样就可以不必等 CountCharactersAsync(1, url1) 方法执行完成就可以继续进行下一步操作。到执行 CountCharactersAsync(2, url2)方法时，跟1)一样返回 Task<int> 对象。<br>3)、然后，Main 方法继续执行三次 ExtraOperation 方法，同时两次 CountCharactersAsync 方法依然在持续工作。<br>4)、t1.Result 和 t2.Result 是指从 CountCharactersAsync 方法调用的 Task<int> 对象取结果，如果还没有结果的话，将阻塞，直有结果返回为止。</int></int></int></p>
+<p>2.async/await 结构<br>在程序开发中，很多默认封装好可直接调用的类或方法，都会以Async来代表异步进行<br>async/await 结构可以分成三个部分来理解<br>1)、调用方法：该方法调用异步方法，然后在异步方法执行其他任务时继续向下进行；（第二段代码中的main方法即为调用方法）<br>2)、异步方法：该方法异步执行工作，然后立刻返回到调用方法；（CountCharactersAsync即为异步方法）<br>3)、await表达式：用于异步方法内部，指出需要异步执行的任务。一个异步方法可以包含多个 await 表达式（不存在 await 表达式的话 IDE 会发出警告）。（在CountCharactersAsync中await wc.DownloadStringTaskAsync(address)为await运算）</p>
+<p>3.异步方法<br>异步方法：在执行完成前立即返回调用方法，在调用方法继续执行的过程中完成任务。<br>语法分析：<br>（1）关键字：方法头使用 async 修饰。<br>（2）要求：包含N（N&gt;0）个 await 表达式（不存在 await 表达式的话 IDE 会发出警告），表示需要异步执行的任务。<br>（3）返回类型：只能返回 3 种类型（void、Task 和 Task<t>）。Task 和 Task<t> 标识返回的对象会在将来完成工作，表示调用方法和异步方法可以继续执行。<br>（4）参数：数量不限，但不能使用 out 和 ref 关键字。<br>（5）命名约定：方法后缀名应以 Async 结尾。<br>（6）其它：匿名方法和 Lambda 表达式也可以作为异步对象；async 是一个上下文关键字；关键字 async 必须在返回类型前。<br><img src="keyword.png" alt="keyword"></t></t></p>
+<p>好了，今天的博文就先到这里了，只介绍了异步相关的内容，以后有时间，再继续聊这块，整理了一下知识点，我也该去重构自己的项目代码了(┬＿┬)</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/hexo/tags/开发笔记/" rel="tag"># 开发笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/2018/11/23/记一次实现群发红包功能的开发实现/" rel="next" title="记一次实现群发红包功能的开发实现">
+                <i class="fa fa-chevron-left"></i> 记一次实现群发红包功能的开发实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/hexo/2018/12/18/先用起来再细研究——游标（一）/" rel="prev" title="先用起来再细研究——游标（一）">
+                先用起来再细研究——游标（一） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbb2338b87602f0" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTA1My8xNTU4MA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tony</p>
+              <p class="site-description motion-element" itemprop="description">学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/hexo/archives/">
+              
+                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/hexo/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/hexo/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/hexo/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/hexo/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

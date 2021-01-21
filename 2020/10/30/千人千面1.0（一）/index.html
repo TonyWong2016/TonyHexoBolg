@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/hexo/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/hexo/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/hexo/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/hexo/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="开发笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="转眼10月份都要过完了，翻了翻博客记录，上次写博客都是9月8号了。后来琢磨了一下，10号就进项目了，做了3周多，然后紧接着就又进到另外一个项目，就这么折腾了俩项目，转眼10月份都快过完了。我其实一直记着写东西呢，但翻了翻之前写的，框架或者插件的用法偏多，昨天翻的时候，就感觉像是再翻自己的qq空间，略显幼稚。就想着换换思路，来点不一样的！年中的时候，记得在设计自己负责的一个项目的时候，有吹过牛说要做">
+<meta name="keywords" content="开发笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="千人千面1.0（一）">
+<meta property="og:url" content="https://tony_df.coding.net/2020/10/30/千人千面1.0（一）/index.html">
+<meta property="og:site_name" content="Tony&#39;s blog">
+<meta property="og:description" content="转眼10月份都要过完了，翻了翻博客记录，上次写博客都是9月8号了。后来琢磨了一下，10号就进项目了，做了3周多，然后紧接着就又进到另外一个项目，就这么折腾了俩项目，转眼10月份都快过完了。我其实一直记着写东西呢，但翻了翻之前写的，框架或者插件的用法偏多，昨天翻的时候，就感觉像是再翻自己的qq空间，略显幼稚。就想着换换思路，来点不一样的！年中的时候，记得在设计自己负责的一个项目的时候，有吹过牛说要做">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tony_df.coding.net/2020/10/30/千人千面1.0（一）/00.jpg">
+<meta property="og:image" content="https://tony_df.coding.net/2020/10/30/千人千面1.0（一）/0.jpg">
+<meta property="og:image" content="https://tony_df.coding.net/2020/10/30/千人千面1.0（一）/1.png">
+<meta property="og:image" content="https://tony_df.coding.net/2020/10/30/千人千面1.0（一）/2.png">
+<meta property="og:image" content="https://tony_df.coding.net/2020/10/30/千人千面1.0（一）/3.png">
+<meta property="og:image" content="https://tony_df.coding.net/2020/10/30/千人千面1.0（一）/4.png">
+<meta property="og:image" content="https://tony_df.coding.net/2020/10/30/千人千面1.0（一）/6.png">
+<meta property="og:image" content="https://tony_df.coding.net/2020/10/30/千人千面1.0（一）/7.png">
+<meta property="og:image" content="https://tony_df.coding.net/2020/10/30/千人千面1.0（一）/8.png">
+<meta property="og:updated_time" content="2021-01-21T01:44:35.708Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="千人千面1.0（一）">
+<meta name="twitter:description" content="转眼10月份都要过完了，翻了翻博客记录，上次写博客都是9月8号了。后来琢磨了一下，10号就进项目了，做了3周多，然后紧接着就又进到另外一个项目，就这么折腾了俩项目，转眼10月份都快过完了。我其实一直记着写东西呢，但翻了翻之前写的，框架或者插件的用法偏多，昨天翻的时候，就感觉像是再翻自己的qq空间，略显幼稚。就想着换换思路，来点不一样的！年中的时候，记得在设计自己负责的一个项目的时候，有吹过牛说要做">
+<meta name="twitter:image" content="https://tony_df.coding.net/2020/10/30/千人千面1.0（一）/00.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hexo/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Tony'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tony_df.coding.net/2020/10/30/千人千面1.0（一）/">
+
+
+
+
+
+  <title>千人千面1.0（一） | Tony's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hexo/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tony's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学着码代码,学着码人生;</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/hexo/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/hexo/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/hexo/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.coding.net/hexo/2020/10/30/千人千面1.0（一）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tony's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">千人千面1.0（一）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-10-30T20:03:25+08:00">
+                2020-10-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>转眼10月份都要过完了，翻了翻博客记录，上次写博客都是9月8号了。<br>后来琢磨了一下，10号就进项目了，做了3周多，然后紧接着就又进到另外一个项目，就这么折腾了俩项目，转眼10月份都快过完了。<br>我其实一直记着写东西呢，但翻了翻之前写的，框架或者插件的用法偏多，昨天翻的时候，就感觉像是再翻自己的qq空间，略显幼稚。就想着换换思路，来点不一样的！<br>年中的时候，记得在设计自己负责的一个项目的时候，有吹过牛说要做一个内容推荐的东西，然后就一直没弄，哈哈！<br>其实主要是光脑子里有想法，但是没招术，不会，别说大学了，高中的数学我都忘得那叫一个干净。。。<br>这周，前面提到的那俩事儿算是了了，稍微有点空闲时间，就琢磨着把这个东西落实一下。<br>我也看了一些有关推荐算法的文章，也了解了一些概念性的基础知识，涉及到一些高深的数学和统计学概念，理解不是很深，而且到算法设计的层面，也不是一篇两篇文字能说得清到的明的，最终的是，我这个设计也还没完全完成，就是想赶在11月之前写出点东西来，要不新项目就又来了，哈哈！<br>好了，来正题吧<br>先来看两张图，是我从知乎上看到的<br><img src="00.jpg" alt="00"><br><img src="0.jpg" alt="0"><br>前面提到，看了很多文章，但理解都不深，但要做出东西来，总要有个方向，这两个流程图我感觉还是多少给我指明了点方向。<br>要完成个性化的推荐，数据是基础，其次有了数据之后，还要分析数据，总结用户的访问规律，最后就可以针对性的给出推荐内容了。<br>所以，方向就清晰了许多，要把大象装冰箱，总共分几步？<br>第一步，先收集用户数据，主要包括登录数据和访问数据，而在一个有一定用户规模的系统中收集这些数据，肯定是会造成一定量请求压力和读写压力，所以为了削掉写数据带来的流量高峰，我用了redis的队列结构。其实标准的做法是使用消息队列，比如rabbitmq或者kafka之类的，但我这里用到的队列数据不会特别庞大，引入新的中间件到系统的框架里来，会增加系统的复杂性，给后续的运维带来一定的困难，我们也是个小公司，算是用DevOps的模式来进行技术团队的管理，因此使用redis的队列来充当“消息队列”的角色完全够用。<br>这样，采集到的记录数据暂存到队列里，不会造成流量突然的激增而导致系统瘫痪。看下采集后的截图<br><img src="1.png" alt="1"><br><img src="2.png" alt="2"><br>第二步，数据同步，图2里的两个队列分别是具体的课程浏览数据和登录数据。而队列里的数据肯定不能一直在那拍着，需要定期的把队列清空，然后新的数据进来，然后在清空，循环往复。<br>而清空的过程，就是一个持久化存储的过程，我这里是通过Quatz设定了一个定时的Schedule，把队列数据迁移到数据库里。<br><img src="3.png" alt="3"><br><img src="4.png" alt="4"><br>第三步，<br>采集到这两个数据后接下来就可以进行数据分析了，因为对那些高深的分析算法还弄不明白，我就先来点简单的。<br>我们这个课程数据，本身预设了两个标签，一个是自定义的标签，表明课程的关键信息。还有一个是领域标签，就像是数学，物理，语文等这些学科，前面的小标签算是这些大标签下的子类，但是不论是语义还是内容上都会有交叉，所以上来就分析这个小标签，难度有些大，主要是交叉学科的时候不好做划分，还会涉及到一些NLP相关的知识，所以我这个1.0的版本就先从这个大标签下手。<br>我的方法是，收集到这些浏览数据后，对数据进行一个宽泛的数据划分，然后计算访问权重，再根据权重的大小，得出用户感兴趣的类型学科是那个。<br>看下我这边的分析结果<br><img src="6.png" alt="6"><br><img src="7.png" alt="7"><br><img src="8.png" alt="8"><br>这样，便得到了一个简单的用户画像模型，再根据模型结果，定向的给用户推送内容就OK了。<br>目前，我就做到了这一步，推送那步还没做，也不知道我这么干最后结果到底是不是想要的。<br>但我感觉这个路应该是对的，然后就是推荐的时候也应该有算法支撑，不能说用户对数学感兴趣就只推荐数学的内容，这也不够合理，而是应该合理的添加一些噪声数据来影响推荐结果，达到感人的千人千面效果。<br>好了，大周末挺累的，等下篇再接着聊。<br>不过下篇可能又得再过一阵了，小老弟又来活了。。<br>哎，苦逼的打工人。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/hexo/tags/开发笔记/" rel="tag"># 开发笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/2020/09/30/从一个文件转换的小需求说起/" rel="next" title="从一个文件转换的小需求说起">
+                <i class="fa fa-chevron-left"></i> 从一个文件转换的小需求说起
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/hexo/2021/01/21/IdentityServer4-采坑实例/" rel="prev" title="IdentityServer4 采坑实例">
+                IdentityServer4 采坑实例 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbb2338b87602f0" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTA1My8xNTU4MA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tony</p>
+              <p class="site-description motion-element" itemprop="description">学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/hexo/archives/">
+              
+                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/hexo/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/hexo/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/hexo/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/hexo/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

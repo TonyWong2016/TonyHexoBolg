@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/hexo/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/hexo/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/hexo/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/hexo/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="开发笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近做的几个的项目里，都涉及到了很多关于文档的操作，比如word转pdf，excel转pdf，excel导入导出这些操作，不知道大家在做这些功能的时候是什么感觉，给我的感觉就是，这些功能都不困难，现成的代码也很多，可以拿来就用，但效率，通用性，便利性等不是很好。比如excel相关的操作，我以前是常用NPOI这个库，这个库可以说是在excel和word文档操作方面的神器，免费，开源，而且你不需要在操">
+<meta name="keywords" content="开发笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安利一个niubility的轮子--aspose">
+<meta property="og:url" content="https://tony_df.coding.net/2020/01/16/安利一个niubility的轮子-aspose/index.html">
+<meta property="og:site_name" content="Tony&#39;s blog">
+<meta property="og:description" content="最近做的几个的项目里，都涉及到了很多关于文档的操作，比如word转pdf，excel转pdf，excel导入导出这些操作，不知道大家在做这些功能的时候是什么感觉，给我的感觉就是，这些功能都不困难，现成的代码也很多，可以拿来就用，但效率，通用性，便利性等不是很好。比如excel相关的操作，我以前是常用NPOI这个库，这个库可以说是在excel和word文档操作方面的神器，免费，开源，而且你不需要在操">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tony_df.coding.net/2020/01/16/安利一个niubility的轮子-aspose/%E5%AF%B9%E6%AF%942.png">
+<meta property="og:image" content="https://tony_df.coding.net/2020/01/16/安利一个niubility的轮子-aspose/%E5%AF%B9%E6%AF%94.png">
+<meta property="og:image" content="https://tony_df.coding.net/2020/01/16/安利一个niubility的轮子-aspose/%E6%95%88%E6%9E%9C1.png">
+<meta property="og:image" content="https://tony_df.coding.net/2020/01/16/安利一个niubility的轮子-aspose/excel1.png">
+<meta property="og:image" content="https://tony_df.coding.net/2020/01/16/安利一个niubility的轮子-aspose/%E6%95%88%E6%9E%9C2.png">
+<meta property="og:image" content="https://tony_df.coding.net/2020/01/16/安利一个niubility的轮子-aspose/word2pdf.png">
+<meta property="og:image" content="https://tony_df.coding.net/2020/01/16/安利一个niubility的轮子-aspose/excel2pdf.png">
+<meta property="og:updated_time" content="2020-01-16T07:32:16.532Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="安利一个niubility的轮子--aspose">
+<meta name="twitter:description" content="最近做的几个的项目里，都涉及到了很多关于文档的操作，比如word转pdf，excel转pdf，excel导入导出这些操作，不知道大家在做这些功能的时候是什么感觉，给我的感觉就是，这些功能都不困难，现成的代码也很多，可以拿来就用，但效率，通用性，便利性等不是很好。比如excel相关的操作，我以前是常用NPOI这个库，这个库可以说是在excel和word文档操作方面的神器，免费，开源，而且你不需要在操">
+<meta name="twitter:image" content="https://tony_df.coding.net/2020/01/16/安利一个niubility的轮子-aspose/%E5%AF%B9%E6%AF%942.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hexo/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Tony'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tony_df.coding.net/2020/01/16/安利一个niubility的轮子-aspose/">
+
+
+
+
+
+  <title>安利一个niubility的轮子--aspose | Tony's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hexo/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tony's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学着码代码,学着码人生;</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/hexo/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/hexo/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/hexo/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.coding.net/hexo/2020/01/16/安利一个niubility的轮子-aspose/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tony's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">安利一个niubility的轮子--aspose</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-01-16T10:47:31+08:00">
+                2020-01-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近做的几个的项目里，都涉及到了很多关于文档的操作，比如word转pdf，excel转pdf，excel导入导出这些操作，不知道大家在做这些功能的时候是什么感觉，给我的感觉就是，这些功能都不困难，现成的代码也很多，可以拿来就用，但效率，通用性，便利性等不是很好。<br>比如excel相关的操作，我以前是常用NPOI这个库，这个库可以说是在excel和word文档操作方面的神器，免费，开源，而且你不需要在操作的环境下安装office，可以避免版权问题，还有重要的一点是，这个库是国人开发的，文档也很齐全，2019年初的时候，NPOI也宣布支持.net core了，所以活力指数还是相当高的。相信相当多的同学对它已经很熟悉了，如果我们的场景里只是文档操作，excel导入导出，那么，有NPOI就足够了，当然还有很多优秀的插件，就不多说了。<br>但当你遇到的场景里，除了以上操作，还多出了word转pdf，excel转pdf的时候，就又需要其他的工具来满足，当然如果你牛逼到可以自己造轮子，那小弟佩服！但绝大多数同学肯定不会这么干，即便是有能力也不太可能，一是成本太高，不论是时间成本还是人力成本，二是现有的解决方案足够优秀，且有专们的团队维护，无需自造。<br>到这里，轮到我们的主角登场了，aspose套件。<br>提前声明一下，这套组件，并不是免费的！而且收费价格颇高！但是呢…我们还是有办法用到它的…咳咳…就像我们总能用到windows,office一样…明白了吗？我这里呢只分享解决方案，至于其他的…<br>好了，因为aspose是一个收费组件，所以，在使用的时候，是需要授权的，授权的方法呢，我就不多说了，官方的非官方的文档都有<a href="https://www.aspose.com/" target="_blank" rel="noopener">https://www.aspose.com/</a>。<br>直接来看业务场景吧。<br>我遇到的业务需求是：<br>1.提供pdf文件上传的接口，<br>2.并可以自动将word，excel文件转换成pdf,<br>3.高效率的导入大数据量的excel文件到系统，并支持导出操作<br>总结一下，主要就是两点，一是word，exce转pdf，二是excel的导入导出。<br>但客户专门提到了效率，excel导入导出一定要高效，文档的转换虽然没提，但也是要保证高效的，<br>那么这几点，都可以借助aspose组件来完成。<br>先来看转换<br>在使用aspose之前，将word转换成pdf我是这么做的</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">WordToPDF</span>(<span class="params"><span class="keyword">string</span> sourcePath</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">bool</span> result = <span class="literal">false</span>;</span><br><span class="line">    Microsoft.Office.Interop.Word.Application application = <span class="keyword">new</span> Microsoft.Office.Interop.Word.Application();</span><br><span class="line">    Microsoft.Office.Interop.Word.Document document = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        application.Visible = <span class="literal">false</span>;</span><br><span class="line">        document = application.Documents.Open(sourcePath);</span><br><span class="line">        <span class="keyword">string</span> extend = Path.GetExtension(sourcePath);</span><br><span class="line">        <span class="keyword">string</span> PDFPath = sourcePath.Replace(extend, <span class="string">".pdf"</span>);<span class="comment">//pdf存放位置</span></span><br><span class="line">        <span class="keyword">if</span> (!File.Exists(@PDFPath))<span class="comment">//存在PDF，不需要继续转换</span></span><br><span class="line">        &#123;</span><br><span class="line">            document.ExportAsFixedFormat(PDFPath, Microsoft.Office.Interop.Word.WdExportFormat.wdExportFormatPDF);</span><br><span class="line">        &#125;</span><br><span class="line">        result = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (Exception e)</span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(e.Message);</span><br><span class="line">        result = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">finally</span></span><br><span class="line">    &#123;</span><br><span class="line">        document.Close();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么这么做的问题就是，首先得依赖office组件，就是你的环境下得装office，其次，这样生成出来的pdf会很大，比如你原来的word文档可能只有2M，通过这种方式转换的pdf最终可能达到7,8M，而且效率很低，很快就被否掉了。<br><img src="%E5%AF%B9%E6%AF%942.png" alt="对比2"><br>再来看下引入aspose之后的做法</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">WordToPDF2</span>(<span class="params"><span class="keyword">string</span> sourcePath</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">string</span> extend = Path.GetExtension(sourcePath);</span><br><span class="line">        <span class="keyword">string</span> PDFPath = sourcePath.Replace(extend, <span class="string">".pdf"</span>);<span class="comment">//pdf存放位置</span></span><br><span class="line">        <span class="keyword">if</span> (!File.Exists(@PDFPath))<span class="comment">//存在PDF，不需要继续转换</span></span><br><span class="line">        &#123;</span><br><span class="line">            Document doc = <span class="keyword">new</span> Document(sourcePath);</span><br><span class="line">            <span class="comment">// 保存转换的pdf文件</span></span><br><span class="line">            doc.Save(PDFPath, Aspose.Words.SaveFormat.Pdf);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (Exception e)</span><br><span class="line">    &#123;</span><br><span class="line">        Logger.Default.Error(<span class="string">"pdf转换失败:"</span> + e.Message);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先代码行数上，就少了许多，而且，你们不觉得这个太简单了吗，简直就是拿来直接用，而且效果也非常好，看下页面效果和转换后的文件对比<br><img src="%E5%AF%B9%E6%AF%94.png" alt="对比"><br><img src="%E6%95%88%E6%9E%9C1.png" alt="效果1"><br>上面是word转pdf再来看下excel转pdf</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">ExcelToPdf</span>(<span class="params"><span class="keyword">string</span> sourcePath</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">bool</span> result = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">string</span> extend = Path.GetExtension(sourcePath);</span><br><span class="line">        <span class="keyword">string</span> PDFPath = sourcePath.Replace(extend, <span class="string">".pdf"</span>);<span class="comment">//pdf存放位置</span></span><br><span class="line">        Workbook xls = <span class="keyword">new</span> Workbook(sourcePath);</span><br><span class="line">        CellsPdfDocument xlsSaveOption = <span class="keyword">new</span> CellsPdfDocument();</span><br><span class="line">        xlsSaveOption.SecurityOptions = <span class="keyword">new</span> Aspose.Cells.Rendering.PdfSecurity.PdfSecurityOptions();</span><br><span class="line">        xlsSaveOption.SecurityOptions.ExtractContentPermission = <span class="literal">false</span>;</span><br><span class="line">        xlsSaveOption.SecurityOptions.PrintPermission = <span class="literal">false</span>;</span><br><span class="line">        xlsSaveOption.AllColumnsInOnePagePerSheet = <span class="literal">true</span>;</span><br><span class="line">        xls.Save(PDFPath, xlsSaveOption);</span><br><span class="line">        result = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (Exception e)</span><br><span class="line">    &#123;</span><br><span class="line">        Logger.Default.Error(<span class="string">"pdf转换失败:"</span> + e.Message);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码也不多，再看下转换后的效果<br><img src="excel1.png" alt="excel1"><br><img src="%E6%95%88%E6%9E%9C2.png" alt="效果2"><br>再看一下文件打开后的效果<br><img src="word2pdf.png" alt="word2pdf"><br><img src="excel2pdf.png" alt="excel2pdf"><br>至此，转换的部分就介绍完了，再来看下导入导出的部分。<br>其实NPOI的导入导出已经很优秀了，这里aspose就不拼效率了，主要是拼通用性，一套组件，到处使用，当然效率也是极好的。<br>先来看下导出的核心代码</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">DataTable2ExcelAsp</span>(<span class="params">DataTable dt, TableCell[] header, <span class="keyword">string</span> fileName, Dictionary&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; mergeCellNums, <span class="keyword">int</span>? mergeKey, <span class="keyword">bool</span> is_sum=<span class="literal">false</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    GridView gvExport = <span class="literal">null</span>;</span><br><span class="line">    StringWriter strWriter = <span class="literal">null</span>;</span><br><span class="line">    HtmlTextWriter htmlWriter = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (dt != <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        DataTable dt2 = dt.Copy();</span><br><span class="line">        <span class="keyword">if</span> (!is_sum)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//处理身份证写入Excel时，避免按数字形式写入</span></span><br><span class="line">            <span class="keyword">foreach</span> (DataRow dr <span class="keyword">in</span> dt2.Rows)</span><br><span class="line">            &#123;</span><br><span class="line">                dr[<span class="number">3</span>] = <span class="string">"'"</span> + dr[<span class="number">3</span>];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//导出Excel文件</span></span><br><span class="line">        strWriter = <span class="keyword">new</span> StringWriter();</span><br><span class="line">        htmlWriter = <span class="keyword">new</span> HtmlTextWriter(strWriter);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//重新定义一个gridview</span></span><br><span class="line">        gvExport = <span class="keyword">new</span> GridView();</span><br><span class="line">        gvExport.DataSource = dt2.DefaultView;</span><br><span class="line">        gvExport.AllowPaging = <span class="literal">false</span>;</span><br><span class="line">        gvExport.DataBind();</span><br><span class="line">        <span class="comment">//处理表头</span></span><br><span class="line">        <span class="keyword">if</span> (header != <span class="literal">null</span> &amp;&amp; header.Length &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            gvExport.HeaderRow.Cells.Clear();</span><br><span class="line">            gvExport.HeaderRow.Cells.AddRange(header);</span><br><span class="line">            gvExport.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//合并单元格</span></span><br><span class="line">        <span class="keyword">if</span> (mergeCellNums != <span class="literal">null</span> &amp;&amp; mergeCellNums.Count &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">int</span> cellNum <span class="keyword">in</span> mergeCellNums.Keys)</span><br><span class="line">            &#123;</span><br><span class="line">                MergeRows(gvExport, cellNum, mergeCellNums[cellNum], mergeKey);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//返回客户端</span></span><br><span class="line">        gvExport.RenderControl(htmlWriter);</span><br><span class="line">        MemoryStream stream = <span class="keyword">new</span> MemoryStream();</span><br><span class="line">        LoadOptions lo = <span class="keyword">new</span> LoadOptions(LoadFormat.Html);</span><br><span class="line">        StreamWriter sw = <span class="keyword">new</span> StreamWriter(stream);</span><br><span class="line">        sw.Write(strWriter.ToString());</span><br><span class="line">        sw.Flush();</span><br><span class="line">        Workbook workbook = <span class="keyword">new</span> Workbook(stream, lo);</span><br><span class="line">        Worksheet workSheet = workbook.Worksheets[<span class="number">0</span>];</span><br><span class="line">        <span class="comment">//加上边框</span></span><br><span class="line">        Aspose.Cells.Style style = workbook.CreateStyle();</span><br><span class="line">        style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;</span><br><span class="line">        style.Borders[BorderType.TopBorder].Color = Color.Black;</span><br><span class="line">        style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;</span><br><span class="line">        style.Borders[BorderType.BottomBorder].Color = Color.Black;</span><br><span class="line">        style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;</span><br><span class="line">        style.Borders[BorderType.LeftBorder].Color = Color.Black;</span><br><span class="line">        style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;</span><br><span class="line">        style.Borders[BorderType.RightBorder].Color = Color.Black;</span><br><span class="line">        style.HorizontalAlignment = TextAlignmentType.Center;</span><br><span class="line">        style.IsTextWrapped = <span class="literal">true</span>;</span><br><span class="line">        Range wstrange = workSheet.Cells.CreateRange(<span class="number">0</span>, <span class="number">0</span>, workSheet.Cells.MaxRow + <span class="number">1</span>, workSheet.Cells.MaxColumn + <span class="number">1</span>);</span><br><span class="line">        StyleFlag stFlag = <span class="keyword">new</span> StyleFlag();</span><br><span class="line">        stFlag.All = <span class="literal">true</span>;</span><br><span class="line">        wstrange.ApplyStyle(style, stFlag);</span><br><span class="line">        workSheet.AutoFitColumn(<span class="number">3</span>, <span class="number">0</span>, workSheet.Cells.MaxRow);</span><br><span class="line">        workSheet.AutoFitColumn(<span class="number">1</span>, <span class="number">0</span>, workSheet.Cells.MaxRow);</span><br><span class="line">        workbook.Save(fileName, SaveFormat.Excel97To2003);</span><br><span class="line">        sw.Close();</span><br><span class="line">        sw.Dispose();</span><br><span class="line">        strWriter.Close();</span><br><span class="line">        strWriter.Dispose();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>额，这段代码没有整理，略显凌乱，也是为了保证功能一体化，可以看到，aspose在处理excel时的操作非常简单，这里我把主要的几行代码在摘一下</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//将画好的表格转成流，然后定义好来源；</span></span><br><span class="line">MemoryStream stream = <span class="keyword">new</span> MemoryStream();</span><br><span class="line"><span class="comment">//这里我们是把表格画成了html的形式，也可以是其他形式,比如csv，ods等</span></span><br><span class="line">LoadOptions lo = <span class="keyword">new</span> LoadOptions(LoadFormat.Html);</span><br><span class="line">StreamWriter sw = <span class="keyword">new</span> StreamWriter(stream);</span><br><span class="line">sw.Write(strWriter.ToString());</span><br><span class="line">sw.Flush();</span><br><span class="line">Workbook workbook = <span class="keyword">new</span> Workbook(stream, lo);</span><br><span class="line">Worksheet workSheet = workbook.Worksheets[<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义单元格格式</span></span><br><span class="line">Aspose.Cells.Style style = workbook.CreateStyle();</span><br><span class="line">style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;</span><br><span class="line">style.Borders[BorderType.TopBorder].Color = Color.Black;</span><br><span class="line">style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;</span><br><span class="line">style.Borders[BorderType.BottomBorder].Color = Color.Black;</span><br><span class="line">style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;</span><br><span class="line">style.Borders[BorderType.LeftBorder].Color = Color.Black;</span><br><span class="line">style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;</span><br><span class="line">style.Borders[BorderType.RightBorder].Color = Color.Black;</span><br><span class="line">style.HorizontalAlignment = TextAlignmentType.Center;</span><br><span class="line"><span class="comment">//自动换行</span></span><br><span class="line">style.IsTextWrapped = <span class="literal">true</span>;</span><br><span class="line"><span class="comment">//设定一个合适的宽度</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> columnindex = <span class="number">2</span>; columnindex &lt; dt.Columns.Count; columnindex++)</span><br><span class="line">&#123;</span><br><span class="line">    workSheet.Cells.SetColumnWidthPixel(columnindex, workSheet.Cells.GetColumnWidthPixel(columnindex) + <span class="number">30</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//宽度自适应</span></span><br><span class="line">workSheet.AutoFitColumn(<span class="number">1</span>, <span class="number">0</span>, workSheet.Cells.MaxRow);</span><br><span class="line"><span class="comment">//保存，保存格式可以指定为多种，我这里是按兼容模式保存</span></span><br><span class="line">workbook.Save(fileName, SaveFormat.Excel97To2003);</span><br></pre></td></tr></table></figure>
+
+<p>这里呢，为了展示aspose效率之强大，我放一个视频演示，功能是按照不同的类别将结果导出到excel，目前我的测试数据是3900多条，然后分为78个组，导出到78个excel文件中，看一下效果</p>
+<iframe height="600" width="600" src="https://api.xiaoxiaotong.org/demo/1ffba3753a64359800afbb1d18f379de.mp4"></iframe>
+
+<p>然后再看一下导入<br>导入其实很简单，只要我们把excel的数据读取到，后续的操作就是根据业务来了，看一下主要的代码吧</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//读取excel文件</span></span><br><span class="line">Workbook workbook = <span class="keyword">new</span> Workbook(filepath);</span><br><span class="line">Cells cells = workbook.Worksheets[<span class="number">0</span>].Cells;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = startRowIndex + <span class="number">1</span>; i &lt; cells.MaxDataRow + <span class="number">1</span>; i++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//这里就是我们的业务代码了，比如我读取某个单元格的值</span></span><br><span class="line">    <span class="keyword">int</span> j=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">var</span> cell = cells[i, j].Value;<span class="comment">//或者是cells[i, j].StringValue</span></span><br><span class="line">    j++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>来看下执行效果，我导入一个测试excel表，有1991条数据，10M左右</p>
+<iframe height="600" width="600" src="https://api.xiaoxiaotong.org/demo/9c6b41eea96bb588261f68059156b8c8.mp4"></iframe>
+
+<p>可以看到，视频中进度条反复了几次，其中只有第一次就是才是读取的进度，非常快，后边的就都是业务处理的进度了与aspose插件无关。<br>好了，今天就到这。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/hexo/tags/开发笔记/" rel="tag"># 开发笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/2020/01/08/有时候忙碌起来，也不是件好事儿/" rel="next" title="有时候忙碌起来，也不是件好事儿">
+                <i class="fa fa-chevron-left"></i> 有时候忙碌起来，也不是件好事儿
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/hexo/2020/02/06/2020年，开启地狱模式/" rel="prev" title="2020年，开启地狱模式">
+                2020年，开启地狱模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbb2338b87602f0" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTA1My8xNTU4MA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tony</p>
+              <p class="site-description motion-element" itemprop="description">学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/hexo/archives/">
+              
+                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/hexo/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/hexo/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/hexo/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/hexo/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

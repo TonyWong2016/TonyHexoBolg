@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/hexo/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/hexo/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/hexo/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/hexo/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="开发笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="关于sql注入应该是一个老生常谈的问题了，最近也是犯了一些“左倾”错误（为了赶进度，不顾其他），导致写了一些明知故犯的东西，检索的时候通过拼接sql字符串去检索，发生了注入风险，很是自责，痛定思痛，及时修补了程序，然后决定再简单总结一下。关于概念上的解释，相信大家都很清楚，百度上的解释是这样的所谓SQL注入，就是通过把SQL命令插入到Web表单提交或输入域名或页面请求的查询字符串，最终达到欺骗服务">
+<meta name="keywords" content="开发笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="聊聊sql注入要注意的一些问题">
+<meta property="og:url" content="https://tony_df.coding.net/2019/05/16/聊聊sql注入要注意的一些问题/index.html">
+<meta property="og:site_name" content="Tony&#39;s blog">
+<meta property="og:description" content="关于sql注入应该是一个老生常谈的问题了，最近也是犯了一些“左倾”错误（为了赶进度，不顾其他），导致写了一些明知故犯的东西，检索的时候通过拼接sql字符串去检索，发生了注入风险，很是自责，痛定思痛，及时修补了程序，然后决定再简单总结一下。关于概念上的解释，相信大家都很清楚，百度上的解释是这样的所谓SQL注入，就是通过把SQL命令插入到Web表单提交或输入域名或页面请求的查询字符串，最终达到欺骗服务">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-05-17T02:03:06.619Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="聊聊sql注入要注意的一些问题">
+<meta name="twitter:description" content="关于sql注入应该是一个老生常谈的问题了，最近也是犯了一些“左倾”错误（为了赶进度，不顾其他），导致写了一些明知故犯的东西，检索的时候通过拼接sql字符串去检索，发生了注入风险，很是自责，痛定思痛，及时修补了程序，然后决定再简单总结一下。关于概念上的解释，相信大家都很清楚，百度上的解释是这样的所谓SQL注入，就是通过把SQL命令插入到Web表单提交或输入域名或页面请求的查询字符串，最终达到欺骗服务">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hexo/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Tony'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tony_df.coding.net/2019/05/16/聊聊sql注入要注意的一些问题/">
+
+
+
+
+
+  <title>聊聊sql注入要注意的一些问题 | Tony's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hexo/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tony's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学着码代码,学着码人生;</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/hexo/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/hexo/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/hexo/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.coding.net/hexo/2019/05/16/聊聊sql注入要注意的一些问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tony's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">聊聊sql注入要注意的一些问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-16T16:24:10+08:00">
+                2019-05-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>关于sql注入应该是一个老生常谈的问题了，最近也是犯了一些“左倾”错误（为了赶进度，不顾其他），导致写了一些明知故犯的东西，检索的时候通过拼接sql字符串去检索，发生了注入风险，很是自责，痛定思痛，及时修补了程序，然后决定再简单总结一下。<br>关于概念上的解释，相信大家都很清楚，百度上的解释是这样的<br>所谓SQL注入，就是通过把SQL命令插入到Web表单提交或输入域名或页面请求的查询字符串，最终达到欺骗服务器执行恶意的SQL命令。具体来说，它是利用现有应用程序，将（恶意的）SQL命令注入到后台数据库引擎执行的能力，它可以通过在Web表单中输入（恶意）SQL语句得到一个存在安全漏洞的网站上的数据库，而不是按照设计者意图去执行SQL语句。</p>
+<p>具体怎么去测sql注入，大家肯定也都有所了解，网上的帖子也有很多，什么 ‘ or 1=1之类的，还有一些专门的测试软件。。。我也不展开说了，当然，发生sql注入的后果是非常严重的，所以咱就专注说说怎么防护吧。多说一句，如果你用的关系数据库是近些年，比较新的版本，它其实开放的程序开发接口已经考虑的这些问题了，所以现在sql注入的风险应该说是普遍下降了很多，但还是存在的。<br>我理解，在项目框架上来说，我们可以从多个角度来进行防护，我这里归类为，上游，中游，下游三点采取措施</p>
+<p>方法一，不管是mvc，webapi还是webform程序，我们都可以从所有请求的入口处就进行过滤拦截，把请求中所有的危险，敏感内容通通过滤或者拦截，以保证所有的请求都是安全的，这种做法，优点是效率高，全局拦截，但优点同样也是缺点，全局拦截的后果是可能会出现一些误伤，比如有时候我需要在界面里直接输入sql进行一些操作，当然这一般是由开发人员操作的，但这种需求是存在的，那么如果采用全局拦截，此类需求便不好完成，当然我们可以根据请求路径或者路由来筛选，但摊子大了以后还是会很麻烦，这就跟吃广谱抗炎药似的，开始吃管用，老吃老吃，就越来越不管用了~~</p>
+<p>举个例子，<br>就是之前提到的那个项目，是基于webform的，由于我是刚进项目，发现项目里很多出拼接sql的现象，框架结构也比较乱，我为了求一时之快，也就采用了同样的方式，后来我虽然调整了我的代码，但之前的部分，有的是不太容易修改的，因为还没搞清楚具体的业务逻辑，所以为了安全，采用了全局拦截的方式，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">//预定义一些危险字符</span><br><span class="line">private const string StrKeyWord = @&quot;and|or|exec|execute|insert|delete|select|update|alter|create|drop|\*|chr|char|asc|mid|substring|master|truncate|declare|xp_cmdshell|restore|backup|net +user|net +localgroup +administrators&quot;;</span><br><span class="line">protected void Application_BeginRequest(object sender, EventArgs e)</span><br><span class="line">&#123;</span><br><span class="line">    //过滤一下请求的危险字符</span><br><span class="line">    try</span><br><span class="line">    &#123;</span><br><span class="line">        string isLogRequest = System.Configuration.ConfigurationManager.AppSettings[&quot;IsLogRequest&quot;];</span><br><span class="line">        if (!string.IsNullOrEmpty(isLogRequest) &amp;&amp; isLogRequest.Trim() == &quot;false&quot;)</span><br><span class="line">        &#123;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        if (!Request.Url.AbsoluteUri.Contains(&quot;manager&quot;))</span><br><span class="line">        &#123;</span><br><span class="line">            //遍历Post/表单参数</span><br><span class="line">            foreach (string key in Request.Form.AllKeys)</span><br><span class="line">            &#123;                       </span><br><span class="line">                if (key == &quot;__VIEWSTATE&quot; || key == &quot;__VIEWSTATEGENERATOR&quot; || key == &quot;__EVENTVALIDATION&quot;)</span><br><span class="line">                &#123;</span><br><span class="line">                    continue;</span><br><span class="line">                &#125;</span><br><span class="line">                string post_param = key + &quot;:&quot; + Convert.ToString(Request.Form[key]);</span><br><span class="line">                WriteLog(post_param);</span><br><span class="line">                if (!CheckParams(post_param.ToLower()))</span><br><span class="line">                &#123;</span><br><span class="line">                    Response resp = new Response() &#123; code = -1, message = &quot;参数错误，请确认输入的参数是否合法&quot; &#125;;</span><br><span class="line">                    Response.Write(JsonHelper.ObjectToJSON(resp));</span><br><span class="line">                    Response.End();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            //遍历Get参数</span><br><span class="line">            foreach (string key in this.Request.QueryString.AllKeys)</span><br><span class="line">            &#123;</span><br><span class="line">                string post_param = key + &quot;:&quot; + Convert.ToString(Request.QueryString[key]);</span><br><span class="line">                WriteLog(post_param);</span><br><span class="line">                if (!CheckParams(post_param.ToLower()))</span><br><span class="line">                &#123;</span><br><span class="line">                    Response resp = new Response() &#123; code = -1, message = &quot;参数错误，请确认输入的参数是否合法&quot; &#125;;</span><br><span class="line">                    Response.Write(JsonHelper.ObjectToJSON(resp));</span><br><span class="line">                    Response.End();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    catch (Exception ex)</span><br><span class="line">    &#123;</span><br><span class="line">        WriteLog(ex.StackTrace, 1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">private bool CheckParams(string input)</span><br><span class="line">&#123;</span><br><span class="line">    string str_Regex = @&quot;\b(&quot; + StrKeyWord + @&quot;)\b&quot;;</span><br><span class="line">    Regex Regex = new Regex(str_Regex, RegexOptions.IgnoreCase);</span><br><span class="line">    if (Regex.IsMatch(input))</span><br><span class="line">        return false;</span><br><span class="line">    else</span><br><span class="line">        return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>方法二，面向对象编程最大的特点就是引入了模型的概念，那么我们就可以在模型中进行个性化的配置，来完成数据的验证工作，这样可以保证我们和数据库交互的数据是符合要求的，这种做法最大的优点就是个性化配置，缺点就是当模型多了以后，要进行的配置也多，但是，我想说的是，当我们在项目开始阶段，采用了orm框架，而且我们的开发模式是代码优先的模式，那我所说的缺点也就不存在了，因为当我们采用代码优先的方式进行开发的时候，我们是不用去创建库表的，所有关于库表里字段的描述我们会都写在模型里，然后通过migration完成库表的同步，而我们在创建模型的时候，必然会把对应属性的数据类型，相关限制，验证，模型间的关联关系等一并完成，所以推荐采用代码优先的方式；<br>举个例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">public class Employee</span><br><span class="line">&#123;</span><br><span class="line">    [Key]</span><br><span class="line">    public int ID &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    [Required(ErrorMessage=&quot;&#123;0&#125;不可为空&quot;)]</span><br><span class="line">    [Display(Name = &quot;员工编号&quot;)]</span><br><span class="line">    [StringLength(10,ErrorMessage=&quot;员工编号不可超过10位&quot;)]</span><br><span class="line">    public string Num &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    [Required(ErrorMessage = &quot;&#123;0&#125;不可为空&quot;)]</span><br><span class="line">    [StringLength(10,MinimumLength=2,ErrorMessage=&quot;亲，你的名字太长了，要么缩写要么改名，长度不能超出&#123;1&#125;个字符&quot;)]</span><br><span class="line">    [Display(Name = &quot;员工姓名&quot;)]</span><br><span class="line">    public string Name &#123; get; set; &#125;        </span><br><span class="line"></span><br><span class="line">    [DataType(DataType.Password)]</span><br><span class="line">    [Required(ErrorMessage = &quot;&#123;0&#125;不可为空&quot;)]</span><br><span class="line">    [StringLength(50, MinimumLength = 6, ErrorMessage = &quot;密码长度不能少于&#123;2&#125;个字符且不能超出&#123;1&#125;个字符&quot;)]</span><br><span class="line">    [Display(Name = &quot;密码&quot;)]</span><br><span class="line">    public string Password &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    //[Required(ErrorMessage = &quot;&#123;0&#125;不可为空&quot;)]</span><br><span class="line">    [DataType(DataType.EmailAddress)]</span><br><span class="line">    [Display(Name = &quot;Email&quot;)]</span><br><span class="line">    public string Email &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    [StringLength(12, MinimumLength = 11, ErrorMessage = &quot;电话长度不能少于&#123;2&#125;个字符且不能超出&#123;1&#125;个字符&quot;)]</span><br><span class="line">    [Display(Name = &quot;联系方式&quot;)]</span><br><span class="line">    public string Phone &#123; get; set; &#125;</span><br><span class="line">    </span><br><span class="line">    [StringLength(50, ErrorMessage = &quot;长度不能超出&#123;1&#125;个字符&quot;)]</span><br><span class="line">    [Display(Name = &quot;备注&quot;)]</span><br><span class="line">    public string Remark &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    /// &lt;summary&gt;</span><br><span class="line">    /// 0-在职，1-离职，2-其他</span><br><span class="line">    /// &lt;/summary&gt;</span><br><span class="line">    [Display(Name = &quot;在职状态&quot;)]</span><br><span class="line">    public int Status &#123; get; set; &#125;</span><br><span class="line">            </span><br><span class="line">    [Display(Name = &quot;创建时间&quot;)]</span><br><span class="line">    public DateTime Created_at &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    [Display(Name = &quot;更新时间&quot;)]</span><br><span class="line">    public DateTime Updated_at &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    [Display(Name = &quot;上次登录时间&quot;)]</span><br><span class="line">    public DateTime Logined_at &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    [Display(Name = &quot;登陆IP&quot;)]</span><br><span class="line">    public string LoginedIP &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    [Display(Name = &quot;登陆次数&quot;)]</span><br><span class="line">    public int LoginCnt &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    public int DepartmentID &#123; get; set; &#125;</span><br><span class="line">    //关联部门模型 多对一</span><br><span class="line">    public virtual DepartmentModel Department &#123; get; set; &#125;</span><br><span class="line">    //关联角色模型 一对多</span><br><span class="line">    public virtual ICollection&lt;EmployeeRole&gt; EmployeeRole &#123; get; set; &#125;</span><br><span class="line">    //关联项目组模型 一对多</span><br><span class="line">    public virtual ICollection&lt;EmployeeProject&gt; EmployeeProject &#123; get; set; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上是一个简单的员工表模型，在模型里，做了关于长度，类型，是否为空的判定，其实还可以做正则的判定，数据范围，和远程验证等，这样我们在使用模型的时候，框架就会帮我们做好数据验证，进而可以避免字符串拼接导致的注入风险；<br>第三点，我们可以在框架底层，通过编程语言提供的一些sql预编译类型来保证数据安全，这点应该是用的比较普遍的方式了，通用一点的方式也是要结合一下模型的知识来完成，举个例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">public int Add(Model.MyModel model)</span><br><span class="line">&#123;</span><br><span class="line">    StringBuilder strSql = new StringBuilder();</span><br><span class="line">    StringBuilder str1 = new StringBuilder();//数据字段</span><br><span class="line">    StringBuilder str2 = new StringBuilder();//数据参数</span><br><span class="line">    //利用反射获得属性的所有公共属性</span><br><span class="line">    PropertyInfo[] pros = model.GetType().GetProperties();</span><br><span class="line">    List&lt;SqlParameter&gt; paras = new List&lt;SqlParameter&gt;();</span><br><span class="line">    strSql.Append(&quot;insert into  &quot; + table_name + &quot;(&quot;);</span><br><span class="line">    foreach (PropertyInfo pi in pros)</span><br><span class="line">    &#123;</span><br><span class="line">        //如果不是主键则追加sql字符串，这里需要确定使用该方法的时候，要保证对应的库表主键名为id</span><br><span class="line">        if (!pi.Name.Equals(&quot;id&quot;))</span><br><span class="line">        &#123;</span><br><span class="line">            //判断属性值是否为空</span><br><span class="line">            if (pi.GetValue(model, null) != null)</span><br><span class="line">            &#123;</span><br><span class="line">                str1.Append(pi.Name + &quot;,&quot;);//拼接字段</span><br><span class="line">                str2.Append(&quot;@&quot; + pi.Name + &quot;,&quot;);//声明参数</span><br><span class="line">                paras.Add(new SqlParameter(&quot;@&quot; + pi.Name, pi.GetValue(model, null)));//通过SqlParameter对参数赋值</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    strSql.Append(str1.ToString().Trim(&apos;,&apos;));</span><br><span class="line">    strSql.Append(&quot;) values (&quot;);</span><br><span class="line">    strSql.Append(str2.ToString().Trim(&apos;,&apos;));</span><br><span class="line">    strSql.Append(&quot;) &quot;);</span><br><span class="line">    strSql.Append(&quot;;select @@IDENTITY;&quot;);            </span><br><span class="line">    object obj = DBUtility.SqlHelper.GetInt(strSql.ToString(), DBUtility.SqlHelper.ConnStr);</span><br><span class="line"></span><br><span class="line">    if (obj == null)</span><br><span class="line">    &#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        return Convert.ToInt32(obj);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上，通过模型反射出库表的结构，之后我们就可以采用安全的方式进行数据的写入，就可以避免注入的发生。<br>至此，我们总结了在整个系统框架的上游，中游，下游，分别完成避免sql注入的一些姿势，其实还有很多很多方式没有举出，比如我们可以对交互的数据加密，可以借助数据库的存储过程等等，可以说，没有最好的方法，只有最适合的方法，在大的数据处理级别上，无非也是我列举的这上中下三块，只不过是处理方式的不同，只要我们清楚注入的风险，原理，根据项目的框架结构，搭配采用多种综合手段，就可以很大程度确保我们的系统是安全的。其实说形象点，sql注入就好比是我们装修的时候肯定会有甲醛问题一样，所以我们在做装修规划的时候就要考虑这个问题，即便是没考虑，后续也有很多补救措施，可能代价稍微昂贵一些，做项目也是这样，理想的状态是，我们在框架搭建伊始，就应该把诸如sql注入之类的风险考虑进来，当然，没考虑也有没考虑的办法，总而言之呢，sql注入是个很严重的问题，庆幸的是我们有多种成熟的，通用的手段来预防，只要写代码的时候多留点心，这个问题完全是分分钟就给避免了~<br>对了，在这我还是想安利一下ElasticSearch，虽然我自己现在对ES也不是很熟，但也算是了解了一些ELK结构上的一些知识，前面我说的，预防sql注入，多数时候在写数据的时候可以控制的很完美，但是读的时候可能就不是那么方便，有时候真是着急的时候，可能还是会按捺不住去拼sql，那么如果我们引入了ES，我们就可以做到真正意义上的读写分离，写数据，入关系型数据库，出现错误的时候，入redis或其他缓存，同时，一定要尽量保证写数据的时候（增删改），做好日志记录，而ELK体系中的L，也就是logstash，可以提供数据管道，将关系数据库的数据同步到ES，我们再读数据的时候，就完全脱离了sql，只是和ES交互，而ES的数据存储是json结构的，通过http协议来完成数据操作，也就完全没有sql注入的风险了，结合ES，我们就可以非常完美的避开所谓的SQL注入了~~（突然很期待自己有底气写ES相关内容博客的那天..）</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/hexo/tags/开发笔记/" rel="tag"># 开发笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/2019/05/13/聊一下关于代码重构的一些事儿/" rel="next" title="聊一下关于代码重构的一些事儿">
+                <i class="fa fa-chevron-left"></i> 聊一下关于代码重构的一些事儿
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/hexo/2019/05/21/致老婆大人/" rel="prev" title="致老婆大人">
+                致老婆大人 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbb2338b87602f0" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTA1My8xNTU4MA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tony</p>
+              <p class="site-description motion-element" itemprop="description">学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/hexo/archives/">
+              
+                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/hexo/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/hexo/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/hexo/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/hexo/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

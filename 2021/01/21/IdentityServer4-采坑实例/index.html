@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/hexo/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/hexo/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/hexo/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/hexo/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="开发笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="近期研究了一下Ids(最新的版本是id4)，主要是想把我们近期项目中的一些接口能力，开放出来，供其他项目使用。为了避免安全问题，集成了一下id4，在集成的过程中，踩了很多累，着实折腾了一番，现在感觉脑子里这条线算是跑通了，也大概明白这到底是咋回事儿了，趁着现在还明白，赶紧总结下。开始之前，先推荐几篇文章，正如刚才说的，如果你是刚开始接触id4，那网上的各种资料应该会让你有点摸不着头脑，看了这个看那">
+<meta name="keywords" content="开发笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IdentityServer4 采坑实例">
+<meta property="og:url" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/index.html">
+<meta property="og:site_name" content="Tony&#39;s blog">
+<meta property="og:description" content="近期研究了一下Ids(最新的版本是id4)，主要是想把我们近期项目中的一些接口能力，开放出来，供其他项目使用。为了避免安全问题，集成了一下id4，在集成的过程中，踩了很多累，着实折腾了一番，现在感觉脑子里这条线算是跑通了，也大概明白这到底是咋回事儿了，趁着现在还明白，赶紧总结下。开始之前，先推荐几篇文章，正如刚才说的，如果你是刚开始接触id4，那网上的各种资料应该会让你有点摸不着头脑，看了这个看那">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/1.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/0.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/2.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF1-ClientCredentials-1.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF1-idserver-3.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF1-postmandemo-4.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF1-result-5.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF1-GrantTypes-2.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF2-1.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF2-notlogin-2.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF2-login-3.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF2-logined-4.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF2-callapi-5.png">
+<meta property="og:updated_time" content="2021-01-21T09:33:35.575Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="IdentityServer4 采坑实例">
+<meta name="twitter:description" content="近期研究了一下Ids(最新的版本是id4)，主要是想把我们近期项目中的一些接口能力，开放出来，供其他项目使用。为了避免安全问题，集成了一下id4，在集成的过程中，踩了很多累，着实折腾了一番，现在感觉脑子里这条线算是跑通了，也大概明白这到底是咋回事儿了，趁着现在还明白，赶紧总结下。开始之前，先推荐几篇文章，正如刚才说的，如果你是刚开始接触id4，那网上的各种资料应该会让你有点摸不着头脑，看了这个看那">
+<meta name="twitter:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hexo/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Tony'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/">
+
+
+
+
+
+  <title>IdentityServer4 采坑实例 | Tony's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hexo/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tony's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学着码代码,学着码人生;</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/hexo/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/hexo/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/hexo/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.coding.net/hexo/2021/01/21/IdentityServer4-采坑实例/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tony's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">IdentityServer4 采坑实例</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-01-21T09:37:50+08:00">
+                2021-01-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>近期研究了一下Ids(最新的版本是id4)，主要是想把我们近期项目中的一些接口能力，开放出来，供其他项目使用。为了避免安全问题，集成了一下id4，在集成的过程中，踩了很多累，着实折腾了一番，现在感觉脑子里这条线算是跑通了，也大概明白这到底是咋回事儿了，趁着现在还明白，赶紧总结下。<br>开始之前，先推荐几篇文章，正如刚才说的，如果你是刚开始接触id4，那网上的各种资料应该会让你有点摸不着头脑，看了这个看那个，好像都差不多，又好像都不太一样。<br>首推当然是官方文档</p>
+<blockquote>
+<p>英文官方：<a href="https://identityserver4.readthedocs.io/en/latest/" target="_blank" rel="noopener">https://identityserver4.readthedocs.io/en/latest/</a>（首推）<br>中文官方：<a href="http://www.identityserver.com.cn/" target="_blank" rel="noopener">http://www.identityserver.com.cn/</a></p>
+</blockquote>
+<p>这里呢，首推还是英文的，版本是最新的，虽然都是英文，但技术类文档写的都比较直白，借助下翻译软件，理解应该没问题，但需要读者能坐得住（如果你是英文大牛那就另当别论了）！<br>中文文档其实也没什么毛病，除了框架版本低一些，它还反而比英文文档更精炼。但我的感觉是，中文文档，更适合你在折腾了一番以后，再回过头来重温一下，这样会更有收获。<br>官方文档，写的都比较枯燥，因为内容太干了，都是干货，所以阅读的时候，需要有耐心。<br>另外，我还想推荐一篇，介绍Oauth2.0和openid connect（oidc）区别的文章，我觉得对理解整个id4的工作流程是很有帮助的，地址是：<a href="https://www.jianshu.com/p/d453076e6433" target="_blank" rel="noopener">https://www.jianshu.com/p/d453076e6433</a>,再有就是官方的demo</p>
+<blockquote>
+<p>官方demo：<a href="https://github.com.cnpmjs.org/IdentityServer/IdentityServer4.git" target="_blank" rel="noopener">https://github.com.cnpmjs.org/IdentityServer/IdentityServer4.git</a></p>
+</blockquote>
+<p>这个是github的中文镜像地址，克隆速度比较快。<br>现在网上关于id4的介绍以及案例非常多，所以我也不准备从头到尾都说一遍，当然了，我大概也说不清。<br>这篇只是就我遇到的场景（我觉得也是比较常见的场景）来介绍一下Id4的使用案例，以及我遇到的一些问题。</p>
+<h2 id="场景一：服务端和服务端之间的接口调用，类似于接入第三方的开放平台"><a href="#场景一：服务端和服务端之间的接口调用，类似于接入第三方的开放平台" class="headerlink" title="#场景一：服务端和服务端之间的接口调用，类似于接入第三方的开放平台"></a>#场景一：服务端和服务端之间的接口调用，类似于接入第三方的开放平台</h2><p>这个场景，就是为了解决我开始提到的，我想把我们项目中开发出来的一些解决特定问题的能力开放出来供其他有同样需求的项目来调用，为了保证安全问题，可以引入id4来为提供认证服务。<br>这里先声明一点，ids虽然有很高的开发自由度，但毕竟还是属于新的应用框架，如果你所用的项目之前有统一的认证服务端，或者有其他的统一认证方式，那我建议在引入id4之前，先考虑一下系统的复杂度，是否兼容等问题。<br>因为这里的接口调用，是在服务端进行的，且均为内部系统，当然外部也可以，只要是授信的就可以，所以我们选择ClientCredentials的形式来完成授权（Authorization）<br>（注意，Authorization是授权，还有一个和他非常接近的词是Authentication，这个是认证的意思，在ids里认证一般是只身份认证，授权和认证代表的是不同的意思，不同的流程，要区分开）。<br>这个场景流程图是这样<br><img src="1.png" alt="1"><br>这个模型，文档上说的都很清楚，我在简单介绍下，<br>模型里的资源所有者(resource owner,下简称RO)，应该是指用户，客户端（client）就是浏览器，桌面软件或者其他终端，受保护的资源（protected resource，下简称PR）就是我们的api；<br>那么为了让RO通过client访问到PR，我们需要授权服务器对客户端进行授权（Authorization）<br><img src="0.png" alt="0"><br>增加授权服务器后上面图1 会变成这样<br><img src="2.png" alt="2"><br>其实我们可以通过实际生活的场景，来模拟一下这个过程；<br>比如，我这里把这个流程当成一个出入境的整个流程，首先我们作为地球人，有权利去地球上大部分的国家或地区去旅行，当我们要出国或者取港澳台地区旅行的时候，需要先去行政大厅办理护照或者通行证等证件，持有对应的证件，我们就可以在目的地停留，当然这个证件也是有有效期的，当我们停留时间过长的时候，可能要计时延长有效期或者即时返回；<br>在这个过程里，我们把授权服务器当做是行政大厅，我们就是资源所有者，我们旅行的目的地就是受保护的资源，我们只有持有行政大厅颁发给我们的证件，才能到达目的地，而该证件也是有有效期的。<br>好了，大概的流程就是这样，看下代码吧，我这里就以官方的demo在结合一些自己的项目实例来演示（其实演示的部分等你看多了网上的案例，会觉得这部分最无聊了~）<br>先看下服务端的代码结构<br><img src="%E5%9C%BA%E6%99%AF1-ClientCredentials-1.png" alt="场景1-ClientCredentials-1"><br>这里引用了IdentityServer4这个包，另外两个一个是做第三方登录的，另一个是日志组件，我们先不管；<br>这个官方的demo里，集成了QuickStartUI,里面有一些基本的控制器和界面模型代码，但我们的关注点也暂时不放在这里，因为这部分如果正式使用的话，一定会有调整。<br>只看服务注入的部分，<br>对了，identityserver4是.net core框架下的认证授权组件，不支持.netframework框架，所以我们的授权服务只能采用.net core框架，这个因为是以侵入式的形式集成到现有项目中的，所以问题不大，我们只需要新建一个.net core框架的项目就可以了。<br>来看下代码，<br>先是config类，这个类里，划定了我们要保护的API范围，客户端和用户认证信息（这部分我就简单过一下，官方文档里都有，只说下我觉得需要注意的地方）</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 用户认证信息</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> IEnumerable&lt;IdentityResource&gt; IdentityResources =&gt;</span><br><span class="line"><span class="keyword">new</span> List&lt;IdentityResource&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">new</span> IdentityResources.OpenId(),</span><br><span class="line">    <span class="keyword">new</span> IdentityResources.Profile(),</span><br><span class="line">    <span class="keyword">new</span> IdentityResources.Address(),</span><br><span class="line">    <span class="keyword">new</span> IdentityResources.Email(),</span><br><span class="line">    <span class="keyword">new</span> IdentityResources.Phone()</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> API 资源，可以根据实际情况，绑定多个scope</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> IEnumerable&lt;ApiScope&gt; ApiScopes =&gt;</span><br><span class="line"><span class="keyword">new</span> List&lt;ApiScope&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">new</span> ApiScope(<span class="string">"api1"</span>, <span class="string">"My API"</span>),</span><br><span class="line">    <span class="keyword">new</span> ApiScope(<span class="string">"cyscc_auth"</span>,<span class="string">"cyscc_api"</span>)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 客户端应用</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> IEnumerable&lt;Client&gt; Clients =&gt;</span><br><span class="line"><span class="keyword">new</span> List&lt;Client&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// machine to machine client</span></span><br><span class="line">    <span class="keyword">new</span> Client</span><br><span class="line">    &#123;</span><br><span class="line">        ClientId = <span class="string">"client"</span>,</span><br><span class="line">        ClientSecrets = &#123; <span class="keyword">new</span> Secret(<span class="string">"secret"</span>.Sha256()) &#125;,</span><br><span class="line">        AllowedGrantTypes = GrantTypes.ClientCredentials,</span><br><span class="line">        <span class="comment">// scopes that client has access to</span></span><br><span class="line">        AllowedScopes = &#123; <span class="string">"api1"</span>,<span class="string">"cyscc_auth"</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">new</span> Client</span><br><span class="line">    &#123;</span><br><span class="line">        ClientId = <span class="string">"pwd"</span>,</span><br><span class="line">        AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,</span><br><span class="line"></span><br><span class="line">        ClientSecrets =&#123; <span class="keyword">new</span> Secret(<span class="string">"secret"</span>.Sha256()) &#125;,</span><br><span class="line">        AllowedScopes = &#123; <span class="string">"api1"</span>, <span class="string">"cyscc_auth"</span> &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// JavaScript Client</span></span><br><span class="line">    <span class="keyword">new</span> Client</span><br><span class="line">    &#123;</span><br><span class="line">        ClientId = <span class="string">"js"</span>,</span><br><span class="line">        ClientName = <span class="string">"JavaScript Client"</span>,</span><br><span class="line">        AllowedGrantTypes = GrantTypes.Code,</span><br><span class="line">        RequireClientSecret = <span class="literal">false</span>,</span><br><span class="line"></span><br><span class="line">        RedirectUris =           &#123; <span class="string">"https://localhost:5003/callback.html"</span>,<span class="string">"http://localhost:5005/callback.html"</span> &#125;,</span><br><span class="line">        PostLogoutRedirectUris = &#123; <span class="string">"https://localhost:5003/index.html"</span>,<span class="string">"http://localhost:5005/callback.html"</span> &#125;,</span><br><span class="line">        AllowedCorsOrigins =     &#123; <span class="string">"https://localhost:5003"</span>,<span class="string">"http://localhost:5005"</span> &#125;,</span><br><span class="line"></span><br><span class="line">        AllowedScopes =</span><br><span class="line">        &#123;</span><br><span class="line">            IdentityServerConstants.StandardScopes.OpenId,</span><br><span class="line">            IdentityServerConstants.StandardScopes.Profile,</span><br><span class="line">            <span class="string">"api1"</span>,<span class="string">"cyscc_auth"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>代码一灌，东西就多了。。。<br>config只是个类名，想叫啥都行，比如OauthConfig，然后在startup里注册服务</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddControllersWithViews();</span><br><span class="line">    <span class="comment">// 配置cookie策略，如果我们用js或者MVC或者基于owin来实现认证服务，需要增加这部分内容，因chrome浏览器的最新版本更改了cookie策略    </span></span><br><span class="line">    services.Configure&lt;CookiePolicyOptions&gt;(options =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//https://docs.microsoft.com/zh-cn/aspnet/core/security/samesite?view=aspnetcore-3.1&amp;viewFallbackFrom=aspnetcore-3</span></span><br><span class="line">        options.MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.Lax;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">var</span> builder = services.AddIdentityServer(options =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        options.AccessTokenJwtType = <span class="string">"JWT"</span>;<span class="comment">//为兼容IdentityServer3.AccessTokenValidation的接口验证端，is4默认为at+jwt，is3不兼容,这部分官方文档里也是没有的</span></span><br><span class="line">        options.EmitStaticAudienceClaim = <span class="literal">true</span>;</span><br><span class="line">    &#125;)</span><br><span class="line">        .AddInMemoryIdentityResources(OauthConfig.IdentityResources)</span><br><span class="line">        .AddInMemoryApiScopes(OauthConfig.ApiScopes)</span><br><span class="line">        .AddInMemoryClients(OauthConfig.Clients)</span><br><span class="line">        .AddTestUsers(TestUsers.Users);</span><br><span class="line">    builder.AddDeveloperSigningCredential();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (env.IsDevelopment())</span><br><span class="line">    &#123;</span><br><span class="line">        app.UseDeveloperExceptionPage();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    app.UseStaticFiles();</span><br><span class="line">    app.UseRouting();</span><br><span class="line">    <span class="comment">//注册cookie策略，注意要放在identityserver服务之前</span></span><br><span class="line">    app.UseCookiePolicy();</span><br><span class="line">    <span class="comment">//再注册identityserver</span></span><br><span class="line">    app.UseIdentityServer();</span><br><span class="line">    <span class="comment">//再注册授权服务</span></span><br><span class="line">    app.UseAuthorization();</span><br><span class="line">    <span class="comment">//再注册认证服务</span></span><br><span class="line">    app.UseAuthentication();</span><br><span class="line">    app.UseEndpoints(endpoints =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        endpoints.MapDefaultControllerRoute();</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>配置完成后，我们访问链接地址：<a href="http://localhost:5000/.well-known/openid-configuration，来检查我们的配置是否正确" target="_blank" rel="noopener">http://localhost:5000/.well-known/openid-configuration，来检查我们的配置是否正确</a><br>看到如下界面，则证明我们配置成功，同时在该界面，我们可以看到非常多有用的信息<br><img src="%E5%9C%BA%E6%99%AF1-idserver-3.png" alt="配置成功"><br>在通过postman来调试下获取token<br><img src="%E5%9C%BA%E6%99%AF1-postmandemo-4.png" alt="配置成功"></p>
+<p>在完成服务端的流程后，看下要保护的资源项目，也就是我们的API接口<br>创建接口的部分直接跳过，直接看配置</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    services.AddControllers();</span><br><span class="line">    <span class="comment">// accepts any access token issued by identity server</span></span><br><span class="line">    services.AddAuthentication(<span class="string">"Bearer"</span>)</span><br><span class="line">        .AddJwtBearer(<span class="string">"Bearer"</span>, options =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// IdentityServer 地址</span></span><br><span class="line">            <span class="comment">//options.Authority = "https://localhost:5001";</span></span><br><span class="line">            options.Authority = <span class="string">"http://localhost:5000"</span>;</span><br><span class="line">            <span class="comment">//根据实际情况看是否需要https，我这里暂时不需要</span></span><br><span class="line">            options.RequireHttpsMetadata = <span class="literal">false</span>;</span><br><span class="line">            options.TokenValidationParameters = <span class="keyword">new</span> TokenValidationParameters</span><br><span class="line">            &#123;</span><br><span class="line">                ValidateAudience = <span class="literal">false</span></span><br><span class="line">            &#125;;</span><br><span class="line">            IdentityModelEventSource.ShowPII = <span class="literal">true</span>;</span><br><span class="line">        &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// adds an authorization policy to make sure the token is for scope 'api1'</span></span><br><span class="line">    services.AddAuthorization(options =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        options.AddPolicy(<span class="string">"ApiScope"</span>, policy =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            policy.RequireAuthenticatedUser();</span><br><span class="line">            <span class="comment">//这里要和 IdentityServer 定义的 api1 保持一致</span></span><br><span class="line">            policy.RequireClaim(<span class="string">"scope"</span>, <span class="string">"api1"</span>);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="comment">//增加跨域配置（服务端间调用不需要）</span></span><br><span class="line">    services.AddCors(options =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// this defines a CORS policy called "default"</span></span><br><span class="line">        options.AddPolicy(<span class="string">"default"</span>, policy =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            policy.WithOrigins(<span class="string">"http://localhost:5005"</span>,<span class="string">"https://localhost:5003"</span>)</span><br><span class="line">                .AllowAnyHeader()</span><br><span class="line">                .AllowAnyMethod();</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注册服务中间件</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.UseAuthentication();</span><br></pre></td></tr></table></figure>
+
+<p>再在接口controller添加特性认证标识[Authorize]</p>
+<p>接口部分完成后，开始客户端，因为是服务端间调用，我们还是以demo为例，我就不贴整段的代码了，就看关键的部分<br>先到令牌服务端获取token</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> disco = <span class="keyword">await</span> client.GetDiscoveryDocumentAsync(<span class="string">"http://localhost:5000"</span>);</span><br><span class="line"><span class="keyword">if</span> (disco.IsError)</span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(disco.Error);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// request token</span></span><br><span class="line"><span class="keyword">var</span> tokenResponse = <span class="keyword">await</span> client.RequestClientCredentialsTokenAsync(<span class="keyword">new</span> ClientCredentialsTokenRequest</span><br><span class="line">&#123;</span><br><span class="line">    Address = disco.TokenEndpoint,</span><br><span class="line">    ClientId = <span class="string">"client"</span>,</span><br><span class="line">    ClientSecret = <span class="string">"secret"</span>,</span><br><span class="line"></span><br><span class="line">    Scope = <span class="string">"api1"</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (tokenResponse.IsError)</span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(tokenResponse.Error);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line">Console.WriteLine(tokenResponse.Json);<span class="comment">//获取token</span></span><br></pre></td></tr></table></figure>
+
+<p>在把token写入到header，获取接口资源</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">// call api</span></span><br><span class="line"><span class="keyword">var</span> apiClient = <span class="keyword">new</span> HttpClient();</span><br><span class="line">apiClient.SetBearerToken(tokenResponse.AccessToken);</span><br><span class="line"><span class="keyword">var</span> response = <span class="keyword">await</span> apiClient.GetAsync(<span class="string">"http://localhost:6002/identity"</span>);</span><br><span class="line"><span class="keyword">if</span> (!response.IsSuccessStatusCode)</span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(response.StatusCode);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> content = <span class="keyword">await</span> response.Content.ReadAsStringAsync();</span><br><span class="line">    Console.WriteLine(JArray.Parse(content));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看下结果<br><img src="%E5%9C%BA%E6%99%AF1-result-5.png" alt="场景1-result-5"><br>到此通过凭证的形式完成整个授权，鉴权的流程就跑完了<br>这个场景其实整体评估下来，还是比较容易跑通的，结合文档和官方的demo应该不会有什么难点，应该很快就可以走通。<br>但是有一个场景内的场景，就是，我们的接口如果采用的是.netframework平台，那么就需要依赖identityserver3，或者基于Owin来自己实现接口端的授权认证配置<br>我这里介绍一个id3的配置案例,新建或者在程序入口函数处增加Startup类</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">internal</span> <span class="keyword">class</span> <span class="title">Startup</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configuration</span>(<span class="params">IAppBuilder app</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;   </span><br><span class="line">        app.UseIdentityServerBearerTokenAuthentication(<span class="keyword">new</span> IdentityServerBearerTokenAuthenticationOptions</span><br><span class="line">        &#123;</span><br><span class="line">            Authority = <span class="string">"http://localhost:5000"</span>,</span><br><span class="line">            RequiredScopes = <span class="keyword">new</span>[] &#123; <span class="string">"cyscc_auth"</span> &#125;,            </span><br><span class="line">            ClientId = <span class="string">"client"</span>,</span><br><span class="line">            ClientSecret = <span class="string">"secret"</span>,</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">var</span> config = <span class="keyword">new</span> HttpConfiguration();</span><br><span class="line">        config.MapHttpAttributeRoutes();</span><br><span class="line">        app.UseWebApi(config);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们公司内部有一个统一用户中心的服务，其也实现了一个基于owin的实现方案，</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureAuth</span>(<span class="params">IAppBuilder app</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();</span><br><span class="line">    app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);</span><br><span class="line">    app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);</span><br><span class="line">    app.UseCookieAuthentication(<span class="keyword">new</span> CookieAuthenticationOptions());</span><br><span class="line">    app.UseOpenIdConnectAuthentication(<span class="keyword">new</span> OpenIdConnectAuthenticationOptions</span><br><span class="line">    &#123;</span><br><span class="line">        ClientId = _clientId,</span><br><span class="line">        ClientSecret = _clientSecret,</span><br><span class="line">        Authority = _authority,</span><br><span class="line">        RedirectUri = _redirectUri,</span><br><span class="line">        ResponseType = OpenIdConnectResponseType.CodeIdTokenToken,</span><br><span class="line">        RequireHttpsMetadata = <span class="literal">false</span>,</span><br><span class="line">        Scope = OpenIdConnectScope.OpenIdProfile,</span><br><span class="line">        TokenValidationParameters = <span class="keyword">new</span> TokenValidationParameters &#123; NameClaimType = <span class="string">"name"</span> &#125;,        </span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，这种方式需要以配件的形式注入到现有的项目</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">assembly: OwinStartup(typeof(CYSCC_NET.Startup))</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Startup</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configuration</span>(<span class="params">IAppBuilder app</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;        </span><br><span class="line">        ConfigureAuth(app);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>说几个注意点吧,客户端没什么可说的，主要在授权服务端和RP端<br>1.如果我们的授权服务，只是接入当前场景也就是基于凭证的授权模式，那startup里不需要增加配置cookie的策略，在注册服务的时候，也不需要注册Authorization和Authentication，只注册IdentityServer服务即可，官方的demo里包含了quickstart.ui也就是包含了openid connect（oidc）的认证流程，所以这里的服务配置和注册显得繁琐一些。<br>也就是说，如果我们只是准备把授权流程应用在服务端之间调用的场景，那完全没必要写这么多<br>2.在配置IdentityServer的时候，我增加了一个默认规则，定义了AccessTokenJwtType是“JWT”，这点是用于跨版本情况的，比如你的API项目版本是.netframework的版本，无法引入id4的验证包，只能引入id3的验证包，而在id4的服务中，tokentype的默认值是“at+jwt”,在接口端进行认证的时候会无法通过，提示头部不合法，调整后问题解决；<br>3.在config配置类里，我配置了3种类型的client，分别对应了3中不同的应用场景，分别是，凭证，密码，和授权码三种授权类型，这也是常用的几种。<br>在id4的结构里，还包含其他多种类型，我这里截了张图看一下<br><img src="%E5%9C%BA%E6%99%AF1-GrantTypes-2.png" alt="场景1-GrantTypes-2"><br>更多关于OIDC的授权类型的内容，大家还是去看文档吧；<br>4.注册服务的时候，要注意顺序。<br>5.刚开始遇到服务端发证和pr端验证的版本不一致的情况，其实处理起来还是挺费劲的，还是需要结合文档自己折腾一边，跑通后再看，就顺畅许多</p>
+<h2 id="场景2：前端站点通过网络请求和后端通信，来完成认证授权"><a href="#场景2：前端站点通过网络请求和后端通信，来完成认证授权" class="headerlink" title="#场景2：前端站点通过网络请求和后端通信，来完成认证授权"></a>#场景2：前端站点通过网络请求和后端通信，来完成认证授权</h2><p>其实这种场景就是文档里提到的JavaScript客户端场景，或者mvc客户端场景，比较类似。<br>中文文档里，关于这两种场景给的授权类形式Implicit类型的，而官方的demo里给的是授权码也就是code的类型。<br>这种场景比较特殊，因为这种类型的客户端都是要经过浏览器的，这种场景，应该来说更加的大众化。<br>在场景1里贴出的关于服务端和pr端的代码，已经包含了兼容js客户端的内容，这里就着重说下客户端的代码；<br>官方已经介绍了Implicit的授权方式，我前面在服务端贴出的代码里，没有增加Implicit的授权类型，而是Code类型，这里就以code类型来介绍好了<br>从结果上来看，两种方式都能打到效果，至于他们的区别，建议大家还是看下文档，我个人还是比较推荐code的形式<br>直接看官方的demo，<br><img src="%E5%9C%BA%E6%99%AF2-1.png" alt="场景2-结构-1"><br>其实可以使用任意前端框架，在静态文件中引入oidc-client.js，剩下的就是逻辑代码了；<br>html页面，我们直接跳过，来看app.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// &lt;reference path="oidc-client.js" /&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">log</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.getElementById(<span class="string">'results'</span>).innerText = <span class="string">''</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Array</span>.prototype.forEach.call(<span class="built_in">arguments</span>, <span class="function"><span class="keyword">function</span> (<span class="params">msg</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (msg <span class="keyword">instanceof</span> <span class="built_in">Error</span>) &#123;</span><br><span class="line">            msg = <span class="string">"Error: "</span> + msg.message;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> msg !== <span class="string">'string'</span>) &#123;</span><br><span class="line">            msg = <span class="built_in">JSON</span>.stringify(msg, <span class="literal">null</span>, <span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">document</span>.getElementById(<span class="string">'results'</span>).innerText += msg + <span class="string">'\r\n'</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">"login"</span>).addEventListener(<span class="string">"click"</span>, login, <span class="literal">false</span>);</span><br><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">"api"</span>).addEventListener(<span class="string">"click"</span>, api, <span class="literal">false</span>);</span><br><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">"api2"</span>).addEventListener(<span class="string">"click"</span>, api2, <span class="literal">false</span>);</span><br><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">"logout"</span>).addEventListener(<span class="string">"click"</span>, logout, <span class="literal">false</span>);</span><br><span class="line"><span class="comment">//配置获取token的请求模型，注意和服务端的配置保持一致，scope范围不要丢啦</span></span><br><span class="line"><span class="keyword">var</span> config = &#123;</span><br><span class="line">    authority: <span class="string">"http://localhost:5000"</span>,</span><br><span class="line">    client_id: <span class="string">"js"</span>,</span><br><span class="line">    redirect_uri: <span class="string">"http://localhost:5005/callback.html"</span>,</span><br><span class="line">    response_type: <span class="string">"code"</span>,</span><br><span class="line">    scope:<span class="string">"openid profile api1"</span>,</span><br><span class="line">    <span class="comment">//scope: "openid profile",</span></span><br><span class="line">    post_logout_redirect_uri : <span class="string">"http://localhost:5005/index.html"</span>,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> mgr = <span class="keyword">new</span> Oidc.UserManager(config);</span><br><span class="line"></span><br><span class="line">mgr.getUser().then(<span class="function"><span class="keyword">function</span> (<span class="params">user</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (user) &#123;</span><br><span class="line">        <span class="comment">//登录成功，获取到用户信息</span></span><br><span class="line">        log(<span class="string">"User logged in"</span>, user.profile);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        log(<span class="string">"User not logged in"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">login</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    mgr.signinRedirect();<span class="comment">//</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">api</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    mgr.getUser().then(<span class="function"><span class="keyword">function</span> (<span class="params">user</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> url = <span class="string">"http://localhost:6002/identity"</span>;</span><br><span class="line">        <span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">        xhr.open(<span class="string">"GET"</span>, url);</span><br><span class="line">        xhr.onload = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            log(xhr.status, <span class="built_in">JSON</span>.parse(xhr.responseText));</span><br><span class="line">        &#125;</span><br><span class="line">        xhr.setRequestHeader(<span class="string">"Authorization"</span>, <span class="string">"Bearer "</span> + user.access_token);</span><br><span class="line">        xhr.send();</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">api2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    mgr.getUser().then(<span class="function"><span class="keyword">function</span> (<span class="params">user</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> url = <span class="string">"http://localhost:6002/test"</span>;</span><br><span class="line">        <span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">        xhr.open(<span class="string">"GET"</span>, url);</span><br><span class="line">        xhr.onload = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            log(xhr.status, <span class="built_in">JSON</span>.parse(xhr.responseText));</span><br><span class="line">        &#125;</span><br><span class="line">        xhr.setRequestHeader(<span class="string">"Authorization"</span>, <span class="string">"Bearer "</span> + user.access_token);</span><br><span class="line">        xhr.send();</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">logout</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    mgr.signoutRedirect();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看下页面的执行效果<br><img src="%E5%9C%BA%E6%99%AF2-notlogin-2.png" alt="场景2-未登录"><br><img src="%E5%9C%BA%E6%99%AF2-login-3.png" alt="场景2-登录"><br><img src="%E5%9C%BA%E6%99%AF2-logined-4.png" alt="场景2-已登录"><br><img src="%E5%9C%BA%E6%99%AF2-callapi-5.png" alt="场景2-调用接口"><br>如此，完成客户端的认证，授权流程</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/hexo/tags/开发笔记/" rel="tag"># 开发笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/2020/10/30/千人千面1.0（一）/" rel="next" title="千人千面1.0（一）">
+                <i class="fa fa-chevron-left"></i> 千人千面1.0（一）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbb2338b87602f0" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTA1My8xNTU4MA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tony</p>
+              <p class="site-description motion-element" itemprop="description">学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/hexo/archives/">
+              
+                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/hexo/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#场景一：服务端和服务端之间的接口调用，类似于接入第三方的开放平台"><span class="nav-number">1.</span> <span class="nav-text">#场景一：服务端和服务端之间的接口调用，类似于接入第三方的开放平台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#场景2：前端站点通过网络请求和后端通信，来完成认证授权"><span class="nav-number">2.</span> <span class="nav-text">#场景2：前端站点通过网络请求和后端通信，来完成认证授权</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/hexo/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/hexo/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/hexo/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
