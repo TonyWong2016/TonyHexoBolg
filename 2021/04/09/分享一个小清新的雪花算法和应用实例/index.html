@@ -88,7 +88,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://tony_df.coding.net/2021/04/09/分享一个小清新的雪花算法和应用实例/1.png">
 <meta property="og:image" content="https://tony_df.coding.net/2021/04/09/分享一个小清新的雪花算法和应用实例/2.png">
-<meta property="og:updated_time" content="2021-04-09T00:35:07.204Z">
+<meta property="og:updated_time" content="2021-04-09T00:41:01.791Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分享一个小清新的雪花算法和应用实例">
 <meta name="twitter:description" content="又好久不写东西了，最近在开发一个新项目的时候，需要用到发号器，之前有CV过一个雪花算法（snowflakes）的实现方法，但那个比较传统，也有一个大多数雪花算法的通病，就是生成的id过长，传到前端的时候需要转成字符串，不然js解析会失准。说到这，简单说一下为什么要用雪花算法来做发号器，当然网上也有各种看法，我就简单说说自己的看法。在关系型数据库的表结构里，主键的作用是非常重要的，在以前的项目里，我">
@@ -325,7 +325,7 @@
 <p>然后就可以在需要的地方进行调用了生成了</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class UserAdminTeamRespo :RespositoryBase&lt;User_AdminTeam&gt;,Interfaces.IUserAdminTeamRespo</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> IYitIdHelper yitId;</span><br><span class="line">    <span class="comment">//构造函数注入IYitId服务</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UserAdminTeamRespo</span>(<span class="params">IFreeSql fsql, IYitIdHelper yitId</span>) : <span class="title">base</span>(<span class="params">fsql</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.yitId = yitId;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//定义你自己的实现方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">yourMethod</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> model = <span class="keyword">new</span> YourModel()&#123;</span><br><span class="line">            id=yitId.NextId(),</span><br><span class="line">            <span class="comment">//其他字段</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//其他业务代码</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>如此便完成了集成的工作，看下生成的效果。<br><img src="2.png" alt="2"></p>
+<p>如此便完成了集成的工作，看下生成的效果。<br><img src="2.png" alt="2"><br>小而美，小清新。</p>
 
       
     </div>
