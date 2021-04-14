@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/hexo/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/hexo/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/hexo/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/hexo/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="开发笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="说起来，我自己写的第一篇博客，就是关于集成在线支付的https://tony_df.gitee.io/hexo/2018/08/20/webapi%E9%9B%86%E6%88%90%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E9%99%86/，转眼都过去两年多了，今天看了一眼原来那篇，发现之前文章里分享的很多支付宝文档的链接都已经失效了，但整体的接入流程还是没有变化">
+<meta name="keywords" content="开发笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="聊聊有关集成在线支付那点事儿">
+<meta property="og:url" content="https://tony_df.coding.net/2021/04/14/聊聊有关集成在线支付那点事儿/index.html">
+<meta property="og:site_name" content="Tony&#39;s blog">
+<meta property="og:description" content="说起来，我自己写的第一篇博客，就是关于集成在线支付的https://tony_df.gitee.io/hexo/2018/08/20/webapi%E9%9B%86%E6%88%90%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E9%99%86/，转眼都过去两年多了，今天看了一眼原来那篇，发现之前文章里分享的很多支付宝文档的链接都已经失效了，但整体的接入流程还是没有变化">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tony_df.coding.net/2021/04/14/聊聊有关集成在线支付那点事儿/key.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/04/14/聊聊有关集成在线支付那点事儿/sandbox.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/04/14/聊聊有关集成在线支付那点事儿/setting.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/04/14/聊聊有关集成在线支付那点事儿/client.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/04/14/聊聊有关集成在线支付那点事儿/pay.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/04/14/聊聊有关集成在线支付那点事儿/alipay-query.png">
+<meta property="og:image" content="https://tony_df.coding.net/2021/04/14/聊聊有关集成在线支付那点事儿/reback.png">
+<meta property="og:updated_time" content="2021-04-14T03:45:22.151Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="聊聊有关集成在线支付那点事儿">
+<meta name="twitter:description" content="说起来，我自己写的第一篇博客，就是关于集成在线支付的https://tony_df.gitee.io/hexo/2018/08/20/webapi%E9%9B%86%E6%88%90%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E9%99%86/，转眼都过去两年多了，今天看了一眼原来那篇，发现之前文章里分享的很多支付宝文档的链接都已经失效了，但整体的接入流程还是没有变化">
+<meta name="twitter:image" content="https://tony_df.coding.net/2021/04/14/聊聊有关集成在线支付那点事儿/key.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hexo/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Tony'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tony_df.coding.net/2021/04/14/聊聊有关集成在线支付那点事儿/">
+
+
+
+
+
+  <title>聊聊有关集成在线支付那点事儿 | Tony's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hexo/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tony's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学着码代码,学着码人生;</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/hexo/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/hexo/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/hexo/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.coding.net/hexo/2021/04/14/聊聊有关集成在线支付那点事儿/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tony's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">聊聊有关集成在线支付那点事儿</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-04-14T10:23:14+08:00">
+                2021-04-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>说起来，我自己写的第一篇博客，就是关于集成在线支付的<a href="https://tony_df.gitee.io/hexo/2018/08/20/webapi%E9%9B%86%E6%88%90%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E9%99%86/" target="_blank" rel="noopener">https://tony_df.gitee.io/hexo/2018/08/20/webapi%E9%9B%86%E6%88%90%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E9%99%86/</a>，转眼都过去两年多了，今天看了一眼原来那篇，发现之前文章里分享的很多支付宝文档的链接都已经失效了，但整体的接入流程还是没有变化，正好，接这个机会，重温一下。<br>首先，我想先聊聊关于集成在线支付，我个人的看法。<br>支付这件事儿，我们始终是使用别人的服务，我们最多就是写写接口，对接下文档，这本身没什么太费力的脑力劳动，所以我的意见是，如果官方正好有提供我们所使用的开发语言的sdk，那就尽量使用sdk来集成，可以很大程度的节省集成时间和流程，如果没有在对接官方API，对接的时候，应该严格安装官方API规定的方式，结合自己框架的规则来集成，这也不用多说。<br>还有一种集成的方式，我个人也是十分推崇的，就是，如果社区里有成熟的关于支付的插件或者三方框架，可以近乎无缝或者以非常小的开发成本来接入我们现有的业务，那我也是推荐积极使用的，当然，前提是我们之前没有集成过适用自己项目的支付流程。如果自己已经开发过支付的流程，且可以稳定运行，那就不建议更换，优化自己的模块就好。<br>我认为是这样。支付，是整个流程体系中可以单独独立出来的模块，或者可以把它作为订单模块或其他相关模块里的一个子模块，总之，它是相对独立的，支付需要的参数，在支付流程之前构造完成，支付之后的回调以及后续的处理，如优惠券扣减，积分增加等等，也是在支付完成后，收到第三方支付网关的回调信息后进行。因此，在大多数情况下，与其花费大量的时间和精力去逐条对接官方API，然后自己从头开始集成支付流程，我认为这是不太明智的，这几乎完全就是体力活动，除非能有很大的创新点在里面。在支付技术已经相当成熟的今天，开源社区里，已经有足够多的支付框架了，我们完全可以站在前人的肩膀上，更进一步，比如给现有的开源项目提issue或者pr，来帮助开源项目更好的发展，提供自己的思路，而不是全部从头再来。这样就能集中更多的精力去处理好项目其他的环节。<br>说到开源项目，我再推荐一个比较好的开源支付框架，基于.net core，最新的版本是.net core 5.0的，我在本地尝试了一下，还是非常好用的，这里简单介绍一下。<br>先上开源地址：<a href="https://github.com/essensoft/paylink" target="_blank" rel="noopener">https://github.com/essensoft/paylink</a>。<br>项目本身提供了sample，我这里就简单展示下，我这是集成了支付宝的沙箱环境，只能展示部分的框架能力，相信做过支付的都理解。<br>首先，配置好自己的公钥证书和私钥证书，相关文档地址：<a href="https://opendocs.alipay.com/open/291/introduce" target="_blank" rel="noopener">https://opendocs.alipay.com/open/291/introduce</a>，<br>这里，我建议大家用支付宝提供的web在线工具，这个是新上线的，不用下载.<br><img src="key.png" alt="key"><br>这个页面非常简洁，而且，人家都给你把顺序码好了，按从左到右的顺序，挨个点一下，密钥的相关操作，就完成了。注意要保存好csr证书。<br>配置好后，在支付宝开发者中心里，打开沙箱环境，上传自己生成的公钥和私钥，然后下载证书，分别是支付宝根证书，支付宝公钥证书，应用公钥证书<br><img src="sandbox.png" alt="sandbox"><br>下载好的证书，保存到项目里，然后根据项目的提示配置好证书路径（或base64内容，或证书源文件内容）<br><img src="setting.png" alt="setting"><br>这个根据项目文件里的提示操作就好，不用多说，appid就直接使用沙箱环境里的appid即可。<br>注意，要先在沙箱环境页面下载支付宝沙箱客户端（只有安卓系统的手机能用）<br><img src="client.png" alt="client"><br>准备完成后，即可在本地运行项目。<br>通过当面付（也就是付款二维码）支付的效果，<br><img src="pay.png" alt="pay"><br>查询订单<br><img src="alipay-query.png" alt="alipay-query"><br>退款<br><img src="reback.png" alt="reback"><br>我这里在自己的服务器准备了一个测试站点，大家可以试一下<a href="http://pay.tonydf.cn" target="_blank" rel="noopener">http://pay.tonydf.cn</a>，目前只能测试支付宝的部分功能。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/hexo/tags/开发笔记/" rel="tag"># 开发笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/2021/04/09/分享一个小清新的雪花算法和应用实例/" rel="next" title="分享一个小清新的雪花算法和应用实例">
+                <i class="fa fa-chevron-left"></i> 分享一个小清新的雪花算法和应用实例
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbb2338b87602f0" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTA1My8xNTU4MA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tony</p>
+              <p class="site-description motion-element" itemprop="description">学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/hexo/archives/">
+              
+                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/hexo/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/hexo/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/hexo/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/hexo/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
