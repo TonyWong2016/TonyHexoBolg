@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/hexo/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/hexo/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/hexo/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexo/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexo/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexo/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/hexo/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="开发笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近在极客时间上学习蒋德钧老师的《Redis核心技术与实战》地址如下：https://time.geekbang.org/column/intro/100056701，获益良多，这里先实名推荐下这个课程。我这里分享一个在两个不同的Linux发行版系统上安装redis实例的方法，给不熟悉redis或者之前一直在用Windows环境下的redis实例的小伙伴缩短点折腾的时间。首先链接linux实例后，">
+<meta name="keywords" content="开发笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在不同的linux发行版里安装redis">
+<meta property="og:url" content="https://tony_df.coding.net/2021/05/07/在不同的linux发行版里安装redis/index.html">
+<meta property="og:site_name" content="Tony&#39;s blog">
+<meta property="og:description" content="最近在极客时间上学习蒋德钧老师的《Redis核心技术与实战》地址如下：https://time.geekbang.org/column/intro/100056701，获益良多，这里先实名推荐下这个课程。我这里分享一个在两个不同的Linux发行版系统上安装redis实例的方法，给不熟悉redis或者之前一直在用Windows环境下的redis实例的小伙伴缩短点折腾的时间。首先链接linux实例后，">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tony_df.coding.net/2021/05/07/在不同的linux发行版里安装redis/ubuntu.png">
+<meta property="og:updated_time" content="2021-05-07T02:44:32.654Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在不同的linux发行版里安装redis">
+<meta name="twitter:description" content="最近在极客时间上学习蒋德钧老师的《Redis核心技术与实战》地址如下：https://time.geekbang.org/column/intro/100056701，获益良多，这里先实名推荐下这个课程。我这里分享一个在两个不同的Linux发行版系统上安装redis实例的方法，给不熟悉redis或者之前一直在用Windows环境下的redis实例的小伙伴缩短点折腾的时间。首先链接linux实例后，">
+<meta name="twitter:image" content="https://tony_df.coding.net/2021/05/07/在不同的linux发行版里安装redis/ubuntu.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/hexo/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Tony'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tony_df.coding.net/2021/05/07/在不同的linux发行版里安装redis/">
+
+
+
+
+
+  <title>在不同的linux发行版里安装redis | Tony's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/hexo/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tony's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">学着码代码,学着码人生;</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/hexo/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/hexo/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/hexo/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tony_df.coding.net/hexo/2021/05/07/在不同的linux发行版里安装redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tony">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/hexo/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tony's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">在不同的linux发行版里安装redis</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-05-07T09:52:10+08:00">
+                2021-05-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在极客时间上学习蒋德钧老师的《Redis核心技术与实战》地址如下：<a href="https://time.geekbang.org/column/intro/100056701" target="_blank" rel="noopener">https://time.geekbang.org/column/intro/100056701</a>，获益良多，这里先实名推荐下这个课程。<br>我这里分享一个在两个不同的Linux发行版系统上安装redis实例的方法，给不熟悉redis或者之前一直在用Windows环境下的redis实例的小伙伴缩短点折腾的时间。<br>首先链接linux实例后，查看下自己的linux的发行版信息，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsb_release -a</span><br></pre></td></tr></table></figure>
+
+<p>我这里分别介绍下centos7和Ubuntu 20.04的环境下安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">LSB Version:    :core-4.1-amd64:core-4.1-noarch</span><br><span class="line">Distributor ID: CentOS</span><br><span class="line">Description:    CentOS Linux release 7.9.2009 (Core)</span><br><span class="line">Release:        7.9.2009</span><br><span class="line">Codename:       Core</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Distributor ID: Ubuntu</span><br><span class="line">Description:    Ubuntu 20.04.1 LTS</span><br><span class="line">Release:        20.04</span><br><span class="line">Codename:       focal</span><br></pre></td></tr></table></figure>
+
+<h2 id="CentOS-7"><a href="#CentOS-7" class="headerlink" title="CentOS 7"></a>CentOS 7</h2><ol>
+<li>检查GCC是否安装，如果没有安装，安装下GCC<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install gcc</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>安装过程中如遇到提示，按提示输入y继续安装即可。<br>注意，在centos 7中默认安装的gcc版本是4.8.5，如果我们要安装的redis版本是5.0以上的版本，需要把gcc的版本进行下升级。可以输入如下命令查看当前gcc版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -v 或者 gcc --version</span><br></pre></td></tr></table></figure>
+
+<p>先列出一个参考链接<a href="https://baijiahao.baidu.com/s?id=1667197295239073048&amp;wfr=spider&amp;for=pc" target="_blank" rel="noopener">https://baijiahao.baidu.com/s?id=1667197295239073048&amp;wfr=spider&amp;for=pc</a>，然后为了避免以后链接找不到了，在我这里也重新罗列下升级操作。<br>1).  分别输入如下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install centos-release-scl</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-binutils</span><br></pre></td></tr></table></figure>
+
+<p>2).  升级完成后，切换版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"source /opt/rh/devtoolset-9/enable"</span> &gt;&gt; /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>完成如上操作后，再次查看gcc版本，看到已经升级到9.x版本（注意升级完成后，可能需要重连下ssh才会正确打印）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@instance-a0uu0dv0 proc]<span class="comment"># gcc -v</span></span><br><span class="line">Using built-in specs.</span><br><span class="line">COLLECT_GCC=gcc</span><br><span class="line">COLLECT_LTO_WRAPPER=/opt/rh/devtoolset-9/root/usr/libexec/gcc/x86_64-redhat-linux/9/lto-wrapper</span><br><span class="line">Target: x86_64-redhat-linux</span><br><span class="line">Configured with: ../configure --<span class="built_in">enable</span>-bootstrap --<span class="built_in">enable</span>-languages=c,c++,fortran,lto --prefix=/opt/rh/devtoolset-9/root/usr --mandir=/opt/rh/devtoolset-9/root/usr/share/man --infodir=/opt/rh/devtoolset-9/root/usr/share/info --with-bugurl=http://bugzilla.redhat.com/bugzilla --<span class="built_in">enable</span>-shared --<span class="built_in">enable</span>-threads=posix --<span class="built_in">enable</span>-checking=release --<span class="built_in">enable</span>-multilib --with-system-zlib --<span class="built_in">enable</span>-__cxa_atexit --<span class="built_in">disable</span>-libunwind-exceptions --<span class="built_in">enable</span>-gnu-unique-object --<span class="built_in">enable</span>-linker-build-id --with-gcc-major-version-only --with-linker-hash-style=gnu --with-default-libstdcxx-abi=gcc4-compatible --<span class="built_in">enable</span>-plugin --<span class="built_in">enable</span>-initfini-array --with-isl=/builddir/build/BUILD/gcc-9.3.1-20200408/obj-x86_64-redhat-linux/isl-install --<span class="built_in">disable</span>-libmpx --<span class="built_in">enable</span>-gnu-indirect-function --with-tune=generic --with-arch_32=x86-64 --build=x86_64-redhat-linux</span><br><span class="line">Thread model: posix</span><br><span class="line">gcc version 9.3.1 20200408 (Red Hat 9.3.1-2) (GCC)</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>GCC安装升级完成后，进入redis官方页面，下载redis安装包<br><a href="https://redis.io/download" target="_blank" rel="noopener">https://redis.io/download</a></p>
+</li>
+<li><p>官网页面有下载最新安装包的相关介绍和命令操作介绍，当前最新的操作是</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://download.redis.io/releases/redis-6.2.3.tar.gz</span><br><span class="line">$ tar xzf redis-6.2.3.tar.gz</span><br><span class="line">$ <span class="built_in">cd</span> redis-6.2.3</span><br><span class="line">$ make</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装完成后，即可运行redis实例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ src/redis-server</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果服务器使用的是云服务器，可以调整下redis的配置文件，使本地可以连接测试。<br>1).  更改下默认端口（也可以不改）默认是6379，改一个自己定义的端口号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Accept connections on the specified port, default is 6379 (IANA #815344).</span><br><span class="line"># If port 0 is specified Redis will not listen on a TCP socket.</span><br><span class="line">port 6400</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>2).  以后台进程方式启动<br>修改daemonize no 为daemonize yes</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">################################# GENERAL #####################################</span><br><span class="line"></span><br><span class="line"># By default Redis does not run as a daemon. Use &apos;yes&apos; if you need it.</span><br><span class="line"># Note that Redis will write a pid file in /var/run/redis.pid when daemonized.</span><br><span class="line"># When Redis is supervised by upstart or systemd, this parameter has no impact.</span><br><span class="line">daemonize yes</span><br></pre></td></tr></table></figure>
+
+<p>3).  设置redis远程连接<br>a、先放行你设置的端口号，一般在云服务器的安全组中设置<br>b、注释掉bind 127.0.0.1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#bind 127.0.0.1 -::1</span><br></pre></td></tr></table></figure>
+
+<p>c、设置redis连接密码：在requirepass foobard改为requirepass 你的密码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">requirepass 1qaz2wsx</span><br></pre></td></tr></table></figure>
+
+<p>4).  重启redis服务<br>启动redis，若你的redis已经启动，则先关闭，按以下方式进行关闭（关闭默认端口）</p>
+<p>停止redis（关闭默认端口）：<br>./redis-cli shutdown<br>查找进程号并杀死进程：<br>ps -aux|grep redis kill -9 你找到的端口号<br>5).  重启redis的<br>指定配置文件启动，进src目录下，输入命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-server /usr/<span class="built_in">local</span>/redis-6.2.3/redis.conf</span><br></pre></td></tr></table></figure>
+
+<p>之后就可以在本地链接redis</p>
+<h2 id="Ubuntu-20-04"><a href="#Ubuntu-20-04" class="headerlink" title="Ubuntu 20.04"></a>Ubuntu 20.04</h2><p>Ubuntu 20.04默认安装了最新版本的gcc，如果没有，就按如上方式安装一下，步骤差不多一样<br>同样的方式下载安装redis，并进行配置，完成后直接启动即可，高版本的发行版安装redis会更加的简单<br><img src="ubuntu.png" alt="ubuntu"></p>
+<p>好了大概就是这样。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/hexo/tags/开发笔记/" rel="tag"># 开发笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/hexo/2021/04/14/聊聊有关集成在线支付那点事儿/" rel="next" title="聊聊有关集成在线支付那点事儿">
+                <i class="fa fa-chevron-left"></i> 聊聊有关集成在线支付那点事儿
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbb2338b87602f0" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTA1My8xNTU4MA"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Tony</p>
+              <p class="site-description motion-element" itemprop="description">学习总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/hexo/archives/">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/hexo/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CentOS-7"><span class="nav-number">1.</span> <span class="nav-text">CentOS 7</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ubuntu-20-04"><span class="nav-number">2.</span> <span class="nav-text">Ubuntu 20.04</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tony</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/hexo/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/hexo/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/hexo/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/hexo/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/hexo/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
