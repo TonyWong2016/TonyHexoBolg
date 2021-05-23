@@ -1,0 +1,6 @@
+[0507/113506:INFO:http_cache_transaction.cc(72)] IgnoreZeroCacheError: 0
+[0507/113731:WARNING:url_request_job_manager.cc(89)] Failed to map: weixin://resourceid/blank
+[0507/132756:WARNING:url_request_job_manager.cc(89)] Failed to map: weixin://resourceid/blank
+[0507/154537:WARNING:url_request_job_manager.cc(89)] Failed to map: weixin://resourceid/blank
+[0507/172400:ERROR:tcp_socket_win.cc(647)] closesocket: 应用程序没有调用 WSAStartup，或者 WSAStartup 失败。 (0x276D)
+[0507/172400:ERROR:tcp_socket_win.cc(647)] closesocket: 应用程序没有调用 WSAStartup，或者 WSAStartup 失败。 (0x276D)
