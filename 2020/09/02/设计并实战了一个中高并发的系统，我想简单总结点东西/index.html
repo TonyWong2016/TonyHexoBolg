@@ -83,22 +83,22 @@
 <meta name="keywords" content="开发笔记">
 <meta property="og:type" content="article">
 <meta property="og:title" content="设计并实战了一个中高并发的系统，我想简单总结点东西">
-<meta property="og:url" content="https://tony_df.coding.net/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/index.html">
+<meta property="og:url" content="https://tonywong2016.github.io/Hexo/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/index.html">
 <meta property="og:site_name" content="Tony&#39;s blog">
 <meta property="og:description" content="刚刚过去的7，8月份，参与了三个项目，其中包含一个规模较大的系统。因为之前对高并发系统的知识基本停留在理论知识层面，没有多少实战经验，通过此项目，或论证或推翻了一些以往的知识，这里我想简单分享一下。我们都知道，关于高并发系统的设计，思路有很多，做法也不尽相同，对高并发的定义也不一样。提到高并发，这里，我想先简单列举几个和我们生活十分接近的例子1.在微博中，明星动辄拥有几千万甚至上亿的粉丝，你要怎么">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://tony_df.coding.net/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/structure.png">
-<meta property="og:image" content="https://tony_df.coding.net/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/cdn1.png">
-<meta property="og:image" content="https://tony_df.coding.net/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/cdn2.png">
-<meta property="og:image" content="https://tony_df.coding.net/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/summary1.png">
-<meta property="og:image" content="https://tony_df.coding.net/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/summary2.png">
-<meta property="og:image" content="https://tony_df.coding.net/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/summary3.png">
-<meta property="og:image" content="https://tony_df.coding.net/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/summary4.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/structure.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/cdn1.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/cdn2.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/summary1.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/summary2.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/summary3.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/summary4.png">
 <meta property="og:updated_time" content="2020-09-02T09:15:41.519Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="设计并实战了一个中高并发的系统，我想简单总结点东西">
 <meta name="twitter:description" content="刚刚过去的7，8月份，参与了三个项目，其中包含一个规模较大的系统。因为之前对高并发系统的知识基本停留在理论知识层面，没有多少实战经验，通过此项目，或论证或推翻了一些以往的知识，这里我想简单分享一下。我们都知道，关于高并发系统的设计，思路有很多，做法也不尽相同，对高并发的定义也不一样。提到高并发，这里，我想先简单列举几个和我们生活十分接近的例子1.在微博中，明星动辄拥有几千万甚至上亿的粉丝，你要怎么">
-<meta name="twitter:image" content="https://tony_df.coding.net/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/structure.png">
+<meta name="twitter:image" content="https://tonywong2016.github.io/Hexo/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/structure.png">
 
 
 
@@ -128,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="https://tony_df.coding.net/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/">
+  <link rel="canonical" href="https://tonywong2016.github.io/Hexo/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/">
 
 
 
@@ -251,7 +251,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://tony_df.coding.net/hexo/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/">
+    <link itemprop="mainEntityOfPage" href="https://tonywong2016.github.io/Hexo/hexo/2020/09/02/设计并实战了一个中高并发的系统，我想简单总结点东西/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Tony">

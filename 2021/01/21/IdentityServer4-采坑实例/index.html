@@ -83,28 +83,28 @@
 <meta name="keywords" content="开发笔记">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IdentityServer4 采坑实例">
-<meta property="og:url" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/index.html">
+<meta property="og:url" content="https://tonywong2016.github.io/Hexo/2021/01/21/IdentityServer4-采坑实例/index.html">
 <meta property="og:site_name" content="Tony&#39;s blog">
 <meta property="og:description" content="近期研究了一下Ids(最新的版本是id4)，主要是想把我们近期项目中的一些接口能力，开放出来，供其他项目使用。为了避免安全问题，集成了一下id4，在集成的过程中，踩了很多累，着实折腾了一番，现在感觉脑子里这条线算是跑通了，也大概明白这到底是咋回事儿了，趁着现在还明白，赶紧总结下。开始之前，先推荐几篇文章，正如刚才说的，如果你是刚开始接触id4，那网上的各种资料应该会让你有点摸不着头脑，看了这个看那">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/1.png">
-<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/0.png">
-<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/2.png">
-<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF1-ClientCredentials-1.png">
-<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF1-idserver-3.png">
-<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF1-postmandemo-4.png">
-<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF1-result-5.png">
-<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF1-GrantTypes-2.png">
-<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF2-1.png">
-<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF2-notlogin-2.png">
-<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF2-login-3.png">
-<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF2-logined-4.png">
-<meta property="og:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF2-callapi-5.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2021/01/21/IdentityServer4-采坑实例/1.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2021/01/21/IdentityServer4-采坑实例/0.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2021/01/21/IdentityServer4-采坑实例/2.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF1-ClientCredentials-1.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF1-idserver-3.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF1-postmandemo-4.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF1-result-5.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF1-GrantTypes-2.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF2-1.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF2-notlogin-2.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF2-login-3.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF2-logined-4.png">
+<meta property="og:image" content="https://tonywong2016.github.io/Hexo/2021/01/21/IdentityServer4-采坑实例/%E5%9C%BA%E6%99%AF2-callapi-5.png">
 <meta property="og:updated_time" content="2021-01-21T09:44:12.675Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IdentityServer4 采坑实例">
 <meta name="twitter:description" content="近期研究了一下Ids(最新的版本是id4)，主要是想把我们近期项目中的一些接口能力，开放出来，供其他项目使用。为了避免安全问题，集成了一下id4，在集成的过程中，踩了很多累，着实折腾了一番，现在感觉脑子里这条线算是跑通了，也大概明白这到底是咋回事儿了，趁着现在还明白，赶紧总结下。开始之前，先推荐几篇文章，正如刚才说的，如果你是刚开始接触id4，那网上的各种资料应该会让你有点摸不着头脑，看了这个看那">
-<meta name="twitter:image" content="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/1.png">
+<meta name="twitter:image" content="https://tonywong2016.github.io/Hexo/2021/01/21/IdentityServer4-采坑实例/1.png">
 
 
 
@@ -134,7 +134,7 @@
 
 
 
-  <link rel="canonical" href="https://tony_df.coding.net/2021/01/21/IdentityServer4-采坑实例/">
+  <link rel="canonical" href="https://tonywong2016.github.io/Hexo/2021/01/21/IdentityServer4-采坑实例/">
 
 
 
@@ -257,7 +257,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://tony_df.coding.net/hexo/2021/01/21/IdentityServer4-采坑实例/">
+    <link itemprop="mainEntityOfPage" href="https://tonywong2016.github.io/Hexo/hexo/2021/01/21/IdentityServer4-采坑实例/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Tony">
